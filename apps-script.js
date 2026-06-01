@@ -309,6 +309,10 @@ function _adminCriar(dados) {
   set("data_venda", d.data_venda || "");
 
   sheet.appendRow(linha);
+  // Força data_venda como texto para evitar auto-conversão do Sheets para tipo Date
+  if (cols["data_venda"]) {
+    sheet.getRange(sheet.getLastRow(), cols["data_venda"]).setNumberFormat("@");
+  }
   return _resposta(200, "Imóvel criado com ID " + novoId);
 }
 
@@ -338,7 +342,10 @@ function _adminEditar(dados) {
     if (campo === "fotos") val = Array.isArray(val) ? val.join("|") : (val || "");
     else if (campo === "destaque") val = val ? "true" : "false";
     else if (camposNum.indexOf(campo) !== -1) val = _num(val);
-    sheet.getRange(rowNum, cols[campo]).setValue(val === null ? "" : val);
+    var range = sheet.getRange(rowNum, cols[campo]);
+    // Força texto para evitar que Sheets auto-converta datas para tipo Date
+    if (campo === "data_venda") range.setNumberFormat("@");
+    range.setValue(val === null ? "" : val);
   });
 
   return _resposta(200, "Atualizado: " + ref);

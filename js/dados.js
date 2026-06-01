@@ -54,7 +54,18 @@ function _parseCSV(csv) {
       } else if (numericos.includes(h)) {
         obj[h] = v === "" || v === "null" ? null : Number(v);
       } else if (h === "destaque") {
-        obj[h] = v === "true" || v === "1" || v === "sim";
+        // Sheets auto-converte "true" → TRUE (maiúsculo) → usar toLowerCase
+        obj[h] = v.toLowerCase() === "true" || v === "1" || v === "sim";
+      } else if (h === "data_venda") {
+        // Normaliza para ISO "YYYY-MM-DD" independente do formato exportado pelo Sheets
+        if (!v || v === "null") {
+          obj[h] = null;
+        } else if (/^\d{4}-\d{2}-\d{2}$/.test(v)) {
+          obj[h] = v; // já em ISO
+        } else {
+          const m = v.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+          obj[h] = m ? `${m[3]}-${m[2].padStart(2, "0")}-${m[1].padStart(2, "0")}` : v; // DD/MM/YYYY → ISO
+        }
       } else if (h === "fotos") {
         try { obj[h] = v.startsWith("[") ? JSON.parse(v) : v.split("|").filter(Boolean); }
         catch { obj[h] = v ? [v] : []; }
