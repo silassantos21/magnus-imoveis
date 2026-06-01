@@ -573,8 +573,6 @@ function abrirFormEditar(ref) {
     (im.fotos ? String(im.fotos).split("\n").map(s => s.trim()).filter(Boolean) : []);
   setFotosFromPaths(paths);
 
-  console.log("[Magnus] data_venda no state ao abrir form:", im.data_venda);
-
   if (fpDataVenda) {
     if (im.data_venda) {
       fpDataVenda.setDate(im.data_venda, false);
