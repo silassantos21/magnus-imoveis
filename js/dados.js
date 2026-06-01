@@ -31,7 +31,7 @@ function _parseLinhaCSV(linha) {
 function _parseCSV(csv) {
   const linhas = csv.trim().split("\n");
   if (linhas.length < 2) return [];
-  const headers = _parseLinhaCSV(linhas[0]);
+  const headers = _parseLinhaCSV(linhas[0]).map(h => h.trim());
   const numericos = ["id", "quartos", "suites", "banheiros", "vagas", "area_util", "area_construida", "area_terreno"];
 
   return linhas.slice(1).map(linha => {
