@@ -634,11 +634,12 @@ async function salvarImovel(e) {
 
     if (res.status === 200) {
       showToast(state.editandoRef ? "Imóvel atualizado!" : "Imóvel criado!", "success");
+      const refEditando = state.editandoRef; // captura ANTES de fecharDrawer() zerar
       fecharDrawer();
 
       // Atualiza estado local imediatamente — não espera o cache do CSV do Google (até 5 min)
-      if (state.editandoRef) {
-        const idx = state.imoveis.findIndex(i => i.ref === state.editandoRef);
+      if (refEditando) {
+        const idx = state.imoveis.findIndex(i => i.ref === refEditando);
         if (idx !== -1) state.imoveis[idx] = Object.assign({}, state.imoveis[idx], imovel);
         else            state.imoveis.push(imovel);
       } else {
