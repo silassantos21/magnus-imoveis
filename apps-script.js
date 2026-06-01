@@ -269,6 +269,14 @@ function _adminCriar(dados) {
   }
 
   const cols = _getColMap(sheet);
+
+  // Garante coluna data_venda (pode faltar em planilhas criadas antes deste campo)
+  if (!cols["data_venda"]) {
+    var _dvCol = sheet.getLastColumn() + 1;
+    sheet.getRange(1, _dvCol).setValue("data_venda");
+    cols["data_venda"] = _dvCol;
+  }
+
   const lastRow = sheet.getLastRow();
 
   var novoId = 1;
@@ -319,6 +327,14 @@ function _adminCriar(dados) {
 function _adminEditar(dados) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Imóveis");
   const cols = _getColMap(sheet);
+
+  // Garante coluna data_venda (pode faltar em planilhas criadas antes deste campo)
+  if (!cols["data_venda"]) {
+    var _dvCol = sheet.getLastColumn() + 1;
+    sheet.getRange(1, _dvCol).setValue("data_venda");
+    cols["data_venda"] = _dvCol;
+  }
+
   const ref = String(dados.ref || "").trim();
   const lastRow = sheet.getLastRow();
 
