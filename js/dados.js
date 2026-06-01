@@ -121,4 +121,4 @@ function invalidarCache() {
   sessionStorage.removeItem(CACHE_KEY);
 }
 
-window.dadosImoveis = { carregarImoveis, invalidarCache };
+window.dadosImoveis = { carregarImoveis, invalidarCache, salvarCache: _salvarCache };

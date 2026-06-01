@@ -647,8 +647,9 @@ async function salvarImovel(e) {
       }
       renderImoveis();
 
-      // Invalida cache para que o próximo carregamento manual puxe dados frescos
-      window.dadosImoveis.invalidarCache();
+      // Persiste o estado atualizado no cache — sobrevive a reload de página
+      // sem depender do cache CDN do Google Sheets (até 5 min de atraso)
+      window.dadosImoveis.salvarCache(state.imoveis);
     } else {
       showToast("Erro: " + res.mensagem, "error");
     }
