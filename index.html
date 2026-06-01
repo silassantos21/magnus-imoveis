@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Magnus Imóveis — Compra, Venda e Aluguel em Belo Horizonte</title>
+  <meta name="description" content="Magnus Imóveis — encontre apartamentos, casas e terrenos em Belo Horizonte e região. CRECI 32.402. (31) 3321-6775.">
+
+  <!-- SEO -->
+  <link rel="canonical" href="https://magnus-imoveis.vercel.app/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Magnus Imóveis">
+  <meta property="og:title" content="Magnus Imóveis — Compra, Venda e Aluguel em Belo Horizonte">
+  <meta property="og:description" content="Encontre apartamentos, casas e terrenos em Belo Horizonte e região com o suporte de quem conhece o mercado. CRECI 32.402.">
+  <meta property="og:image" content="https://magnus-imoveis.vercel.app/images/og-cover.jpg">
+  <meta property="og:url" content="https://magnus-imoveis.vercel.app/">
+  <meta property="og:locale" content="pt_BR">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Magnus Imóveis — Compra, Venda e Aluguel em BH">
+  <meta name="twitter:description" content="Encontre apartamentos, casas e terrenos em BH e região. CRECI 32.402.">
+  <meta name="twitter:image" content="https://magnus-imoveis.vercel.app/images/og-cover.jpg">
+
+  <!-- Schema.org RealEstateAgent -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "RealEstateAgent",
+    "name": "Magnus Imóveis",
+    "description": "Especialistas em compra, venda e locação de imóveis em Belo Horizonte e região. CRECI 32.402.",
+    "url": "https://magnus-imoveis.vercel.app/",
+    "telephone": "+55-31-3321-6775",
+    "email": "magnusimoveisbh@hotmail.com",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Av. Senador Levindo Coelho, 54 - Loja - Tirol",
+      "addressLocality": "Belo Horizonte",
+      "addressRegion": "MG",
+      "postalCode": "30662-290",
+      "addressCountry": "BR"
+    },
+    "areaServed": "Belo Horizonte e região metropolitana",
+    "hasCredential": "CRECI 32.402"
+  }
+  </script>
+
+  <!-- Google Analytics 4 — substitua G-V355TXQ9Q3 pelo seu Measurement ID -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-V355TXQ9Q3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-V355TXQ9Q3');
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="shortcut icon" type="image/png" href="images/logo-icone.png?v=3">
+  <link rel="icon" type="image/png" href="images/logo-icone.png?v=3">
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="inner">
+      <div class="topbar-contacts">
+        <a href="tel:3133216775">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.5 1.18 2 2 0 012.48 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.16 6.16l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          (31) 3321-6775
+        </a>
+        <a href="https://wa.me/5531999845813" target="_blank">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.118 1.532 5.845L.057 23.737a.5.5 0 00.614.61l5.995-1.567A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a10 10 0 01-5.17-1.438l-.371-.22-3.844 1.004 1.026-3.742-.241-.386A10 10 0 1112 22z"/></svg>
+          (31) 99984-5813
+        </a>
+        <a href="mailto:magnusimoveisbh@hotmail.com">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          magnusimoveisbh@hotmail.com
+        </a>
+      </div>
+      <span class="creci">CRECI 32.402</span>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <a href="/" class="logo">
+        <img src="images/logo.png" alt="Magnus Imóveis" style="display:none"
+          onload="this.style.display='block'; this.nextElementSibling.style.display='none'"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <div class="logo-fallback">MAGNUS<br><span>IMÓVEIS</span></div>
+      </a>
+
+      <nav>
+        <a href="#imoveis" class="active">Imóveis</a>
+        <a href="#servicos">Serviços</a>
+        <a href="#sobre">Sobre</a>
+        <a href="#contato">Contato</a>
+      </nav>
+
+      <a href="https://wa.me/5531999845813" target="_blank" class="header-cta">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.118 1.532 5.845L.057 23.737a.5.5 0 00.614.61l5.995-1.567A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a10 10 0 01-5.17-1.438l-.371-.22-3.844 1.004 1.026-3.742-.241-.386A10 10 0 1112 22z"/></svg>
+        Falar no WhatsApp
+      </a>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Encontre o imóvel<br>perfeito em <span>BH e região</span></h1>
+      <p>Casas, apartamentos e terrenos com o suporte de quem conhece o mercado há anos.</p>
+
+      <div class="search-box">
+        <div class="search-tabs">
+          <button class="tab-btn active" data-finalidade="venda">Comprar</button>
+          <button class="tab-btn" data-finalidade="aluguel">Alugar</button>
+          <button class="tab-btn" data-finalidade="todos">Todos</button>
+        </div>
+
+        <div class="search-filters">
+          <select class="filter-select" id="sel-tipo">
+            <option value="todos">Tipo de imóvel</option>
+            <option value="Apartamento">Apartamento</option>
+            <option value="Casa">Casa</option>
+            <option value="Terreno">Terreno</option>
+          </select>
+
+          <select class="filter-select" id="sel-cidade">
+            <option value="todos">Cidade</option>
+          </select>
+
+          <select class="filter-select" id="sel-bairro">
+            <option value="todos">Bairro</option>
+          </select>
+
+          <select class="filter-select" id="sel-valor">
+            <option value="todos">Faixa de preço</option>
+            <option value="0-400000">Até R$ 400 mil</option>
+            <option value="400000-600000">R$ 400 mil – R$ 600 mil</option>
+            <option value="600000-900000">R$ 600 mil – R$ 900 mil</option>
+            <option value="900000-1500000">R$ 900 mil – R$ 1,5 mi</option>
+            <option value="1500000-99999999">Acima de R$ 1,5 mi</option>
+          </select>
+        </div>
+
+        <button class="btn-search" onclick="buscar()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          Buscar Imóveis
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="inner">
+      <div class="stat">
+        <div class="stat-number">14+</div>
+        <div class="stat-label">Imóveis disponíveis</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">BH</div>
+        <div class="stat-label">e região</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">32.402</div>
+        <div class="stat-label">CRECI</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">100%</div>
+        <div class="stat-label">Atendimento personalizado</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IMÓVEIS -->
+  <section class="properties-section" id="imoveis">
+    <div class="section-header">
+      <span class="section-label">Portfólio</span>
+      <h2 class="section-title">Imóveis em <span>destaque</span></h2>
+      <p class="section-desc">Explore nosso portfólio e encontre a opção ideal para você.</p>
+    </div>
+
+    <div class="properties-toolbar">
+      <div class="results-count" id="results-count">Carregando...</div>
+      <select class="sort-select" id="sel-ordenar">
+        <option value="preco-asc">Menor preço</option>
+        <option value="preco-desc">Maior preço</option>
+        <option value="area-desc">Maior área</option>
+      </select>
+    </div>
+
+    <div class="properties-grid" id="properties-grid"></div>
+
+    <div class="load-more-wrap" id="load-more-wrap" style="display:none">
+      <button class="btn-load-more" id="btn-load-more">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+        Ver mais imóveis
+      </button>
+    </div>
+  </section>
+
+  <!-- SERVIÇOS / CTAs -->
+  <section class="ctas-section" id="servicos">
+    <div class="section-header">
+      <span class="section-label">Serviços</span>
+      <h2 class="section-title">O que você <span>precisa</span></h2>
+      <p class="section-desc">Da busca à escritura, estamos com você em cada etapa.</p>
+    </div>
+
+    <div class="ctas-grid">
+      <div class="cta-card fade-in" onclick="window.open('https://wa.me/5531999845813?text=Quero%20cadastrar%20meu%20imóvel', '_blank')">
+        <div class="cta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </div>
+        <h3>Cadastre seu Imóvel</h3>
+        <p>Anuncie seu imóvel com a Magnus e alcance compradores e inquilinos qualificados.</p>
+        <span class="cta-link">Anunciar agora <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      </div>
+
+      <div class="cta-card fade-in" onclick="window.open('https://wa.me/5531999845813?text=Quero%20encomendar%20um%20imóvel', '_blank')">
+        <div class="cta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        </div>
+        <h3>Encomende seu Imóvel</h3>
+        <p>Não encontrou o imóvel ideal? Descreva o que quer e buscamos para você.</p>
+        <span class="cta-link">Encomendar <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      </div>
+
+      <div class="cta-card fade-in" onclick="window.openCalculadora ? openCalculadora(0) : window.open('https://wa.me/5531999845813?text=Quero%20informações%20sobre%20financiamento', '_blank')">
+        <div class="cta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+        </div>
+        <h3>Financie seu Imóvel</h3>
+        <p>Simulação gratuita com os melhores bancos. Encontramos a melhor taxa para você.</p>
+        <span class="cta-link">Simular financiamento <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      </div>
+
+      <div class="cta-card fade-in" onclick="document.getElementById('imoveis').scrollIntoView({behavior:'smooth'})">
+        <div class="cta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+        </div>
+        <h3>Compre ou Alugue</h3>
+        <p>Explore todo nosso portfólio de imóveis e encontre seu próximo lar ou investimento.</p>
+        <span class="cta-link">Ver imóveis <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOBRE / MAPA -->
+  <section class="about-section" id="sobre">
+    <div class="about-inner">
+      <div class="about-text fade-in">
+        <span class="section-label">Sobre nós</span>
+        <h2 class="section-title">Especialistas em<br>imóveis em BH</h2>
+        <p>
+          A Magnus Imóveis atua no mercado imobiliário de Belo Horizonte e região com foco em atendimento personalizado, transparência e resultado. Somos corretores registrados no CRECI com amplo conhecimento do mercado da região do Barreiro e entorno.
+        </p>
+        <p>
+          Seja para comprar, vender, alugar ou financiar, nossa equipe está pronta para encontrar a melhor solução para o seu momento de vida.
+        </p>
+        <div class="about-highlights">
+          <div class="highlight">
+            <div class="highlight-num">CRECI</div>
+            <div class="highlight-label">32.402 — registro ativo</div>
+          </div>
+          <div class="highlight">
+            <div class="highlight-num">BH +</div>
+            <div class="highlight-label">Grande BH e cidades satélite</div>
+          </div>
+          <div class="highlight">
+            <div class="highlight-num">100%</div>
+            <div class="highlight-label">Atendimento direto</div>
+          </div>
+          <div class="highlight">
+            <div class="highlight-num">0800</div>
+            <div class="highlight-label">Sem taxa de cadastro</div>
+          </div>
+        </div>
+        <a href="https://wa.me/5531999845813" target="_blank" class="about-cta">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.118 1.532 5.845L.057 23.737a.5.5 0 00.614.61l5.995-1.567A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a10 10 0 01-5.17-1.438l-.371-.22-3.844 1.004 1.026-3.742-.241-.386A10 10 0 1112 22z"/></svg>
+          Falar com um corretor
+        </a>
+      </div>
+
+      <div class="about-map fade-in" id="contato">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3752.2!2d-44.0!3d-20.0!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjDCsDA0JzUxLjIiUyA0NMKwMDAnMDAuMCJX!5e0!3m2!1spt!2sbr!4v1"
+          allowfullscreen=""
+          loading="lazy"
+          title="Localização Magnus Imóveis — Av. Senador Levindo Coelho, 54 - Tirol, Belo Horizonte">
+        </iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="images/logo.png" alt="Magnus Imóveis" class="footer-logo" style="display:none"
+          onload="this.style.display='block'; this.nextElementSibling.style.display='none'"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <div class="footer-logo-text">MAGNUS <span>IMÓVEIS</span></div>
+        <p>Especialistas em compra, venda e locação de imóveis em Belo Horizonte e região. CRECI 32.402.</p>
+        <div class="social-links">
+          <a href="#" class="social-link" target="_blank" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="#" class="social-link" target="_blank" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+          </a>
+          <a href="https://wa.me/5531999845813" class="social-link" target="_blank" aria-label="WhatsApp">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.118 1.532 5.845L.057 23.737a.5.5 0 00.614.61l5.995-1.567A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a10 10 0 01-5.17-1.438l-.371-.22-3.844 1.004 1.026-3.742-.241-.386A10 10 0 1112 22z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Institucional</h4>
+        <ul>
+          <li><a href="#sobre">Quem Somos</a></li>
+          <li><a href="#">Trabalhe Conosco</a></li>
+          <li><a href="#contato">Localização</a></li>
+          <li><a href="#">Mapa do Site</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Imóveis</h4>
+        <ul>
+          <li><a href="#imoveis">Comprar</a></li>
+          <li><a href="#imoveis">Alugar</a></li>
+          <li><a href="#">Cadastre seu Imóvel</a></li>
+          <li><a href="#">Encomende seu Imóvel</a></li>
+          <li><a href="#">Favoritos</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Contato</h4>
+        <div class="footer-contact-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>Av. Senador Levindo Coelho, 54 - Loja - Tirol<br>CEP: 30662-290 — Belo Horizonte, MG</span>
+        </div>
+        <div class="footer-contact-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.5 1.18 2 2 0 012.48 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.16 6.16l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          <a href="tel:3133216775">(31) 3321-6775</a>
+        </div>
+        <div class="footer-contact-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <a href="mailto:magnusimoveisbh@hotmail.com">magnusimoveisbh@hotmail.com</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2024 Magnus Imóveis. Todos os direitos reservados.</span>
+      <span>Desenvolvido com ♥ · CRECI 32.402</span>
+    </div>
+  </footer>
+
+  <!-- WHATSAPP FLUTUANTE -->
+  <div class="wa-float">
+    <span class="wa-tooltip">Falar com corretor</span>
+    <a href="https://wa.me/5531999845813?text=Olá!%20Vim%20pelo%20site%20e%20gostaria%20de%20informações%20sobre%20imóveis."
+       target="_blank" class="wa-float-btn" aria-label="WhatsApp">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.118 1.532 5.845L.057 23.737a.5.5 0 00.614.61l5.995-1.567A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a10 10 0 01-5.17-1.438l-.371-.22-3.844 1.004 1.026-3.742-.241-.386A10 10 0 1112 22z"/></svg>
+    </a>
+  </div>
+
+  <script src="js/dados.js"></script>
+  <script src="js/analytics.js"></script>
+  <script src="js/leads.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/calculadora.js"></script>
+</body>
+</html>

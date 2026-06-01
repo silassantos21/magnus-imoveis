@@ -1,0 +1,1104 @@
+// ===== CONFIGURAÇÃO =====
+// CONFIGURAR: mesma URL do Apps Script que está em js/leads.js
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyn31FIreCa2vrdXxFgJOeJrBs-am1b2JGP5TSrHZ9rnvFhxRulrY948XM-A5UAmMhr/exec";
+
+const SESSION_KEY  = "magnus_admin_session";
+const HASH_KEY     = "magnus_admin_hash";
+const TOKEN_KEY    = "magnus_admin_token";
+const SESSION_DURATION = 8 * 60 * 60 * 1000; // 8h em ms
+let fpDataVenda, fpLeadDe, fpLeadAte; // instâncias Flatpickr
+
+const FP_LOCALE = {
+  weekdays: {
+    shorthand: ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"],
+    longhand:  ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"]
+  },
+  months: {
+    shorthand: ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"],
+    longhand:  ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"]
+  },
+  firstDayOfWeek: 0
+};
+
+// ===== UTILITÁRIOS =====
+
+async function sha256(text) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+function fmtPreco(v) {
+  const n = Number(v) || 0;
+  return n.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
+}
+
+function fmtTelefone(tel) {
+  const n = (tel || "").replace(/\D/g, "");
+  if (n.length === 11) return `(${n.slice(0,2)}) ${n.slice(2,7)}-${n.slice(7)}`;
+  if (n.length === 10) return `(${n.slice(0,2)}) ${n.slice(2,6)}-${n.slice(6)}`;
+  return tel || "—";
+}
+
+function esc(str) {
+  return String(str || "").replace(/'/g, "\\'").replace(/"/g, "&quot;");
+}
+
+// ===== AUTENTICAÇÃO =====
+
+const Auth = {
+  async login(senha) {
+    const hash  = await sha256(senha);
+    const stored = localStorage.getItem(HASH_KEY);
+    if (hash !== stored) return false;
+    const expires = Date.now() + SESSION_DURATION;
+    localStorage.setItem(SESSION_KEY, JSON.stringify({ expires }));
+    return true;
+  },
+
+  logout() {
+    localStorage.removeItem(SESSION_KEY);
+    showScreen("login");
+  },
+
+  isAuthenticated() {
+    try {
+      const sess = JSON.parse(localStorage.getItem(SESSION_KEY) || "null");
+      if (!sess || Date.now() > sess.expires) {
+        localStorage.removeItem(SESSION_KEY);
+        return false;
+      }
+      // renova a sessão a cada verificação (8h de inatividade)
+      localStorage.setItem(SESSION_KEY, JSON.stringify({ expires: Date.now() + SESSION_DURATION }));
+      return true;
+    } catch { return false; }
+  },
+
+  getToken() { return localStorage.getItem(TOKEN_KEY) || ""; },
+
+  isSetupDone() { return !!localStorage.getItem(HASH_KEY); },
+
+  async setup(senha, token) {
+    const hash = await sha256(senha);
+    localStorage.setItem(HASH_KEY, hash);
+    localStorage.setItem(TOKEN_KEY, token);
+  },
+
+  resetSetup() {
+    localStorage.removeItem(HASH_KEY);
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(SESSION_KEY);
+  }
+};
+
+// ===== API (Apps Script) =====
+
+const Api = {
+  async post(tipo, payload) {
+    const body = Object.assign({ tipo, token: Auth.getToken() }, payload || {});
+    const r = await fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify(body)
+    });
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    return r.json();
+  }
+};
+
+// ===== ESTADO =====
+
+const state = {
+  imoveis: [],
+  leads: [],
+  agendamentos: [],
+  tabAtual: "imoveis",
+  filtroStatus: "",
+  filtroTipo: "",
+  filtroStatusAgend: "",
+  busca: "",
+  buscaLead: "",
+  filtroLeadDe: "",
+  filtroLeadAte: "",
+  editandoRef: null
+};
+
+// ===== NAVEGAÇÃO DE TELAS =====
+
+function showScreen(nome) {
+  ["login","setup","admin"].forEach(id => {
+    document.getElementById("screen-" + id).style.display = nome === id ? "flex" : "none";
+  });
+}
+
+function showTab(tab) {
+  state.tabAtual = tab;
+  document.querySelectorAll(".tab-content").forEach(el => el.style.display = "none");
+  document.querySelectorAll(".nav-btn").forEach(btn =>
+    btn.classList.toggle("active", btn.dataset.tab === tab));
+  document.getElementById("tab-" + tab).style.display = "block";
+
+  if (tab === "imoveis"      && state.imoveis.length === 0)      carregarImoveis();
+  if (tab === "leads"        && state.leads.length === 0)        carregarLeads();
+  if (tab === "agendamentos" && state.agendamentos.length === 0) carregarAgendamentos();
+}
+
+// ===== UTILITÁRIOS DE DATA =====
+
+function parsePtBRDate(str) {
+  const m = String(str || "").match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (!m) return null;
+  return new Date(+m[3], +m[2] - 1, +m[1]);
+}
+
+// ===== IMÓVEIS — CARREGAMENTO =====
+
+async function carregarImoveis() {
+  setLoading(true);
+  try {
+    window.dadosImoveis.invalidarCache();
+    state.imoveis = await window.dadosImoveis.carregarImoveis();
+    renderStats();
+    renderImoveis();
+  } catch (err) {
+    showToast("Erro ao carregar imóveis: " + err.message, "error");
+  } finally {
+    setLoading(false);
+  }
+}
+
+function getImoveisFiltrados() {
+  return state.imoveis.filter(im => {
+    if (state.filtroStatus && im.status !== state.filtroStatus) return false;
+    if (state.filtroTipo   && im.tipo   !== state.filtroTipo)   return false;
+    if (state.busca) {
+      const b = state.busca.toLowerCase();
+      return (im.ref    || "").toLowerCase().includes(b) ||
+             (im.titulo || "").toLowerCase().includes(b) ||
+             (im.bairro || "").toLowerCase().includes(b);
+    }
+    return true;
+  });
+}
+
+function getAgendamentosFiltrados() {
+  const filtro = state.filtroStatusAgend;
+  return state.agendamentos.filter(a => !filtro || a.status === filtro);
+}
+
+// ===== IMÓVEIS — STATS =====
+
+function renderStats() {
+  const t    = state.imoveis.length;
+  const disp = state.imoveis.filter(i => i.status === "disponivel").length;
+  const res  = state.imoveis.filter(i => i.status === "reservado").length;
+  const vend = state.imoveis.filter(i => i.status === "vendido").length;
+  const dest = state.imoveis.filter(i => i.destaque).length;
+  const set  = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  set("stat-total", t);
+  set("stat-disp",  disp);
+  set("stat-reserv",res);
+  set("stat-vend",  vend);
+  set("stat-dest",  dest);
+}
+
+// ===== IMÓVEIS — LISTA =====
+
+function renderImoveis() {
+  const lista = getImoveisFiltrados();
+  const tbody = document.getElementById("imoveis-tbody");
+  if (!tbody) return;
+
+  if (!lista.length) {
+    tbody.innerHTML = `<tr><td colspan="7" class="empty-row">Nenhum imóvel encontrado</td></tr>`;
+    return;
+  }
+
+  const statusMap  = { disponivel: ["badge-green","Disponível"], reservado: ["badge-yellow","Reservado"], vendido: ["badge-red","Vendido"] };
+  const totalLabel = `${lista.length} ${lista.length !== 1 ? "imóveis" : "imóvel"}`;
+  const countEl    = document.getElementById("imoveis-count");
+  if (countEl) countEl.textContent = totalLabel;
+
+  tbody.innerHTML = lista.map(im => {
+    const [cls, label] = statusMap[im.status] || ["badge-gray", im.status];
+    const destStar  = im.destaque ? "★" : "☆";
+    const destClass = im.destaque ? " active" : "";
+    return `<tr>
+      <td class="td-ref"><code>${im.ref || "—"}</code></td>
+      <td class="td-titulo">${im.titulo || "—"}</td>
+      <td class="td-tipo">${im.tipo || "—"}</td>
+      <td><span class="badge ${cls}">${label}</span></td>
+      <td class="td-preco">${im.preco ? fmtPreco(im.preco) : "—"}</td>
+      <td class="td-star">
+        <button class="btn-star${destClass}" title="${im.destaque ? "Remover destaque" : "Marcar destaque"}"
+          onclick="toggleDestaque('${esc(im.ref)}', ${!im.destaque})">${destStar}</button>
+      </td>
+      <td class="td-acoes">
+        <button class="btn-sm btn-editar" onclick="abrirFormEditar('${esc(im.ref)}')" title="Editar">✏️</button>
+        <button class="btn-sm btn-duplicar" onclick="duplicarImovel('${esc(im.ref)}')" title="Duplicar">📋</button>
+        <select class="sel-status" title="Mudar status"
+          onchange="mudarStatus('${esc(im.ref)}', this.value)">
+          <option value="disponivel"${im.status==="disponivel"?" selected":""}>Disponível</option>
+          <option value="reservado"${im.status==="reservado"?" selected":""}>Reservado</option>
+          <option value="vendido"${im.status==="vendido"?" selected":""}>Vendido</option>
+        </select>
+        <button class="btn-sm btn-deletar" title="Excluir"
+          onclick="confirmarDeletar('${esc(im.ref)}','${esc(im.titulo)}')">🗑️</button>
+      </td>
+    </tr>`;
+  }).join("");
+}
+
+// ===== IMÓVEIS — AÇÕES RÁPIDAS =====
+
+async function mudarStatus(ref, novoStatus) {
+  try {
+    const res = await Api.post("admin_status", { ref, status: novoStatus });
+    if (res.status === 200) {
+      const im = state.imoveis.find(i => i.ref === ref);
+      if (im) im.status = novoStatus;
+      renderImoveis(); renderStats();
+      showToast("Status atualizado!", "success");
+      window.dadosImoveis.invalidarCache();
+    } else {
+      showToast("Erro: " + res.mensagem, "error");
+    }
+  } catch { showToast("Erro de conexão", "error"); }
+}
+
+async function toggleDestaque(ref, novoDestaque) {
+  try {
+    const res = await Api.post("admin_status", { ref, destaque: novoDestaque });
+    if (res.status === 200) {
+      const im = state.imoveis.find(i => i.ref === ref);
+      if (im) im.destaque = novoDestaque;
+      renderImoveis(); renderStats();
+      showToast(novoDestaque ? "Marcado como destaque!" : "Destaque removido!", "success");
+      window.dadosImoveis.invalidarCache();
+    } else {
+      showToast("Erro: " + res.mensagem, "error");
+    }
+  } catch { showToast("Erro de conexão", "error"); }
+}
+
+function duplicarImovel(ref) {
+  const im = state.imoveis.find(i => i.ref === ref);
+  if (!im) return;
+  state.editandoRef = null;
+  document.getElementById("form-header-titulo").textContent = "Duplicar Imóvel";
+
+  const form = document.getElementById("form-imovel");
+  form.reset();
+  if (fpDataVenda) fpDataVenda.clear();
+
+  const campos = ["tipo","finalidade","status","bairro","cidade","estado",
+    "preco","quartos","suites","banheiros","vagas","area_util","area_construida","area_terreno","descricao"];
+  campos.forEach(c => {
+    const el = form.querySelector(`[name="${c}"]`);
+    if (el) el.value = im[c] ?? "";
+  });
+
+  const tituloEl = form.querySelector('[name="titulo"]');
+  if (tituloEl) tituloEl.value = "Cópia — " + (im.titulo || "");
+
+  const destEl = form.querySelector('[name="destaque"]');
+  if (destEl) destEl.checked = false;
+
+  form.querySelector('[name="ref"]').disabled = false;
+  form.querySelector('[name="ref"]').value = "";
+
+  const paths = Array.isArray(im.fotos) ? im.fotos.filter(Boolean)
+    : (im.fotos ? String(im.fotos).split("\n").map(s => s.trim()).filter(Boolean) : []);
+  setFotosFromPaths(paths);
+
+  if (fpDataVenda && im.data_venda) fpDataVenda.setDate(im.data_venda, false);
+
+  atualizarPreview();
+  abrirDrawer();
+}
+
+async function confirmarDeletar(ref, titulo) {
+  if (!confirm(`Excluir "${titulo}" (${ref})?\n\nEsta ação não pode ser desfeita.`)) return;
+  try {
+    const res = await Api.post("admin_deletar", { ref });
+    if (res.status === 200) {
+      state.imoveis = state.imoveis.filter(i => i.ref !== ref);
+      renderImoveis(); renderStats();
+      showToast("Imóvel excluído!", "success");
+      window.dadosImoveis.invalidarCache();
+    } else {
+      showToast("Erro: " + res.mensagem, "error");
+    }
+  } catch { showToast("Erro de conexão", "error"); }
+}
+
+// ===== FOTOS — UPLOAD UI =====
+
+const fotosState = { items: [] };
+
+function initFotosUpload() {
+  const inputFile = document.getElementById("input-foto-file");
+  const btnAdd    = document.getElementById("btn-add-foto");
+  if (!btnAdd || !inputFile) return;
+  btnAdd.addEventListener("click", () => inputFile.click());
+  inputFile.addEventListener("change", e => {
+    Array.from(e.target.files).forEach(file => {
+      if (file.type.startsWith("video/")) {
+        const preview = URL.createObjectURL(file);
+        fotosState.items.push({ name: file.name, preview, path: "images/" + file.name, isVideo: true });
+        renderFotosList();
+      } else {
+        const reader = new FileReader();
+        reader.onload = evt => {
+          fotosState.items.push({ name: file.name, preview: evt.target.result, path: "images/" + file.name, isVideo: false });
+          renderFotosList();
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+    inputFile.value = "";
+  });
+}
+
+function initFotosLink() {
+  const btnLink    = document.getElementById("btn-add-link");
+  const linkRow    = document.getElementById("fotos-link-row");
+  const inputUrl   = document.getElementById("input-foto-url");
+  const btnConfirm = document.getElementById("btn-confirmar-link");
+  const btnCancel  = document.getElementById("btn-cancelar-link");
+  if (!btnLink) return;
+  btnLink.addEventListener("click", () => { linkRow.classList.add("show"); inputUrl.focus(); });
+  btnCancel.addEventListener("click", () => { linkRow.classList.remove("show"); inputUrl.value = ""; });
+  btnConfirm.addEventListener("click", () => {
+    const url = inputUrl.value.trim();
+    if (url) { addLinkItem(url); linkRow.classList.remove("show"); inputUrl.value = ""; }
+  });
+  inputUrl.addEventListener("keydown", e => {
+    if (e.key === "Enter") { e.preventDefault(); btnConfirm.click(); }
+    if (e.key === "Escape") btnCancel.click();
+  });
+}
+
+function addLinkItem(url) {
+  const isVideoExt = /\.(mp4|webm|mov|avi|mkv)$/i.test(url);
+  const isYoutube  = /youtube\.com\/watch|youtu\.be\//i.test(url);
+  const isVimeo    = /vimeo\.com\//i.test(url);
+  const isVideo    = isVideoExt || isYoutube || isVimeo;
+
+  let preview = url;
+  if (isYoutube) {
+    const m = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    if (m) preview = `https://img.youtube.com/vi/${m[1]}/hqdefault.jpg`;
+  }
+
+  const name = isYoutube ? "YouTube" : isVimeo ? "Vimeo" : (url.split("/").pop() || "link");
+  fotosState.items.push({ name, preview, path: url, isVideo });
+  renderFotosList();
+}
+
+function removeFoto(idx) {
+  fotosState.items.splice(idx, 1);
+  renderFotosList();
+}
+
+function renderFotosList() {
+  const list   = document.getElementById("fotos-list");
+  const hidden = document.getElementById("fotos-hidden");
+  if (!list || !hidden) return;
+  if (!fotosState.items.length) {
+    list.innerHTML = '<span class="fotos-empty">Nenhuma mídia adicionada</span>';
+    hidden.value = "";
+  } else {
+    list.innerHTML = fotosState.items.map((f, i) => {
+      const thumb = f.isVideo
+        ? `<video src="${f.preview}" class="foto-video-thumb" muted preload="metadata"></video><span class="foto-badge-video">🎬</span>`
+        : `<img src="${f.preview}" alt="${esc(f.name)}">`;
+      return `<div class="foto-item">
+        ${thumb}
+        <span class="foto-name" title="${esc(f.name)}">${esc(f.name)}</span>
+        <button type="button" class="foto-remove" onclick="removeFoto(${i})" title="Remover">✕</button>
+      </div>`;
+    }).join("");
+    hidden.value = fotosState.items.map(f => f.path).join("\n");
+  }
+  atualizarPreview();
+}
+
+function setFotosFromPaths(paths) {
+  fotosState.items = paths.map(p => ({ name: p.split("/").pop() || p, preview: p, path: p }));
+  renderFotosList();
+}
+
+// ===== FORMULÁRIO — DRAWER =====
+
+function abrirFormNovo() {
+  state.editandoRef = null;
+  document.getElementById("form-header-titulo").textContent = "Novo Imóvel";
+  const form = document.getElementById("form-imovel");
+  form.reset();
+  if (fpDataVenda) fpDataVenda.clear();
+  setFotosFromPaths([]);
+  form.querySelector('[name="ref"]').disabled    = false;
+  form.querySelector('[name="estado"]').value    = "MG";
+  form.querySelector('[name="status"]').value    = "disponivel";
+  form.querySelector('[name="finalidade"]').value = "";
+  form.querySelector('[name="tipo"]').value       = "";
+  atualizarPreview();
+  abrirDrawer();
+}
+
+function abrirFormEditar(ref) {
+  const im = state.imoveis.find(i => i.ref === ref);
+  if (!im) return;
+  state.editandoRef = ref;
+  document.getElementById("form-header-titulo").textContent = "Editar Imóvel";
+
+  const form = document.getElementById("form-imovel");
+  const campos = ["ref","tipo","finalidade","status","titulo","bairro","cidade","estado",
+    "preco","quartos","suites","banheiros","vagas","area_util","area_construida","area_terreno","descricao"];
+
+  campos.forEach(c => {
+    const el = form.querySelector(`[name="${c}"]`);
+    if (el) el.value = im[c] ?? "";
+  });
+
+  const destEl = form.querySelector('[name="destaque"]');
+  if (destEl) destEl.checked = !!im.destaque;
+
+  const paths = Array.isArray(im.fotos) ? im.fotos.filter(Boolean) :
+    (im.fotos ? String(im.fotos).split("\n").map(s => s.trim()).filter(Boolean) : []);
+  setFotosFromPaths(paths);
+
+  if (fpDataVenda) fpDataVenda.setDate(im.data_venda || null, false);
+
+  form.querySelector('[name="ref"]').disabled = true;
+  atualizarPreview();
+  abrirDrawer();
+}
+
+function abrirDrawer() {
+  document.getElementById("form-drawer").classList.add("open");
+  document.getElementById("drawer-overlay").classList.add("show");
+}
+
+function fecharDrawer() {
+  document.getElementById("form-drawer").classList.remove("open");
+  document.getElementById("drawer-overlay").classList.remove("show");
+  state.editandoRef = null;
+}
+
+// ===== FORMULÁRIO — SALVAR =====
+
+async function salvarImovel(e) {
+  e.preventDefault();
+  const form = e.target;
+
+  const gStr = n => (form.querySelector(`[name="${n}"]`)?.value || "").trim();
+  const gNum = n => {
+    const v = gStr(n);
+    return v === "" ? null : (Number(v) || 0);
+  };
+
+  const imovel = {
+    ref:            state.editandoRef || gStr("ref"),
+    tipo:           gStr("tipo"),
+    finalidade:     gStr("finalidade"),
+    status:         gStr("status") || "disponivel",
+    titulo:         gStr("titulo"),
+    bairro:         gStr("bairro"),
+    cidade:         gStr("cidade"),
+    estado:         gStr("estado") || "MG",
+    preco:          gNum("preco"),
+    quartos:        gNum("quartos"),
+    suites:         gNum("suites"),
+    banheiros:      gNum("banheiros"),
+    vagas:          gNum("vagas"),
+    area_util:      gNum("area_util"),
+    area_construida: gNum("area_construida"),
+    area_terreno:   gNum("area_terreno"),
+    fotos:          gStr("fotos").split("\n").map(s => s.trim()).filter(Boolean),
+    descricao:      gStr("descricao"),
+    destaque:       form.querySelector('[name="destaque"]').checked
+  };
+
+  if (!imovel.ref)        return showToast("Referência obrigatória", "error");
+  if (!imovel.tipo)       return showToast("Tipo obrigatório", "error");
+  if (!imovel.finalidade) return showToast("Finalidade obrigatória", "error");
+  if (!imovel.titulo)     return showToast("Título obrigatório", "error");
+  if (!imovel.bairro)     return showToast("Bairro obrigatório", "error");
+  if (!imovel.cidade)     return showToast("Cidade obrigatória", "error");
+  if (!imovel.preco)      return showToast("Preço obrigatório", "error");
+
+  const btn = form.querySelector(".btn-salvar");
+  btn.disabled = true; btn.textContent = "Salvando…";
+
+  try {
+    const tipo    = state.editandoRef ? "admin_editar" : "admin_criar";
+    const payload = state.editandoRef ? { ref: state.editandoRef, imovel } : { imovel };
+    const res     = await Api.post(tipo, payload);
+
+    if (res.status === 200) {
+      showToast(state.editandoRef ? "Imóvel atualizado!" : "Imóvel criado!", "success");
+      fecharDrawer();
+      window.dadosImoveis.invalidarCache();
+      await carregarImoveis();
+    } else {
+      showToast("Erro: " + res.mensagem, "error");
+    }
+  } catch (err) {
+    showToast("Erro de conexão: " + err.message, "error");
+  } finally {
+    btn.disabled = false; btn.textContent = "Salvar imóvel";
+  }
+}
+
+// ===== PREVIEW DO CARD =====
+
+function atualizarPreview() {
+  const form = document.getElementById("form-imovel");
+  if (!form) return;
+  const g = n => {
+    const el = form.querySelector(`[name="${n}"]`);
+    return el ? (el.type === "checkbox" ? el.checked : el.value) : "";
+  };
+
+  const tipo      = g("tipo") || "Tipo";
+  const titulo    = g("titulo") || "Título do imóvel";
+  const bairro    = g("bairro") || "Bairro";
+  const cidade    = g("cidade") || "Cidade";
+  const preco     = g("preco") ? fmtPreco(Number(g("preco")) || 0) : "R$ 0";
+  const quartos   = g("quartos");
+  const vagas     = g("vagas");
+  const area      = g("area_util");
+  const finalidade = (g("finalidade") || "VENDA").toUpperCase();
+  const destaque  = g("destaque");
+
+  const fotosRaw = fotosState.items
+    .filter(f => !(f.isVideo && f.preview.startsWith("blob:")))
+    .map(f => f.preview || f.path).filter(Boolean);
+  const imgSrc    = fotosRaw[0] ||
+    `images/${tipo.toLowerCase().includes("casa") ? "casa" :
+      tipo.toLowerCase().includes("apartamento") ? "apartamento" : "terreno"}.jpg`;
+
+  const pc = document.getElementById("preview-card");
+  if (!pc) return;
+  pc.innerHTML = `
+    <div class="pc-img" style="background-image:url('${imgSrc}')">
+      <span class="pc-badge">${finalidade}</span>
+      ${destaque ? '<span class="pc-dest">★ Destaque</span>' : ""}
+    </div>
+    <div class="pc-body">
+      <div class="pc-tipo">${tipo}</div>
+      <div class="pc-titulo">${titulo}</div>
+      <div class="pc-loc">📍 ${bairro}, ${cidade}</div>
+      <div class="pc-specs">
+        ${quartos ? `🛏 ${quartos}` : ""}
+        ${vagas   ? `🚗 ${vagas}`   : ""}
+        ${area    ? `📐 ${area}m²`  : ""}
+      </div>
+      <div class="pc-preco">${preco}</div>
+    </div>`;
+}
+
+// ===== LEADS =====
+
+function getLeadsFiltrados() {
+  const b = state.buscaLead.toLowerCase();
+  let lista = state.leads.filter(l => !b ||
+    (l.nome     || "").toLowerCase().includes(b) ||
+    (l.telefone || "").includes(b) ||
+    (l.ref_imovel || "").toLowerCase().includes(b));
+
+  if (state.filtroLeadDe || state.filtroLeadAte) {
+    const de  = state.filtroLeadDe  ? new Date(state.filtroLeadDe  + "T00:00:00") : null;
+    const ate = state.filtroLeadAte ? new Date(state.filtroLeadAte + "T23:59:59") : null;
+    lista = lista.filter(l => {
+      const d = parsePtBRDate(l.data);
+      if (!d) return true;
+      if (de  && d < de)  return false;
+      if (ate && d > ate) return false;
+      return true;
+    });
+  }
+
+  return lista;
+}
+
+async function carregarLeads() {
+  setLoading(true);
+  try {
+    const res = await Api.post("admin_listar_leads");
+    if (res.status === 200) { state.leads = res.leads || []; renderLeads(); }
+    else showToast("Erro ao carregar leads: " + res.mensagem, "error");
+  } catch (err) {
+    showToast("Erro de conexão: " + err.message, "error");
+  } finally { setLoading(false); }
+}
+
+function renderLeads() {
+  const lista   = getLeadsFiltrados();
+  const tbody   = document.getElementById("leads-tbody");
+  const countEl = document.getElementById("leads-count");
+  if (countEl) countEl.textContent = `${lista.length} lead${lista.length !== 1 ? "s" : ""}`;
+  if (!tbody) return;
+
+  if (!lista.length) {
+    tbody.innerHTML = `<tr><td colspan="6" class="empty-row">Nenhum lead encontrado</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = lista.map(l => {
+    const waNum = (l.telefone || "").replace(/\D/g,"");
+    return `<tr>
+      <td class="td-data">${l.data || "—"}</td>
+      <td class="td-nome">${l.nome || "—"}</td>
+      <td>${waNum
+        ? `<a href="https://wa.me/55${waNum}" target="_blank" class="link-wa">${fmtTelefone(l.telefone)}</a>`
+        : (l.telefone || "—")}</td>
+      <td>${l.interesse || "—"}</td>
+      <td><code>${l.ref_imovel || "—"}</code></td>
+      <td><span class="badge badge-gray">${l.origem || "site"}</span></td>
+    </tr>`;
+  }).join("");
+}
+
+// ===== AGENDAMENTOS =====
+
+async function carregarAgendamentos() {
+  setLoading(true);
+  try {
+    const res = await Api.post("admin_listar_agendamentos");
+    if (res.status === 200) { state.agendamentos = res.agendamentos || []; renderAgendamentos(); }
+    else showToast("Erro ao carregar agendamentos: " + res.mensagem, "error");
+  } catch (err) {
+    showToast("Erro de conexão: " + err.message, "error");
+  } finally { setLoading(false); }
+}
+
+function renderAgendamentos() {
+  const lista  = getAgendamentosFiltrados();
+
+  const tbody   = document.getElementById("agend-tbody");
+  const countEl = document.getElementById("agend-count");
+  if (countEl) countEl.textContent = `${lista.length} agendamento${lista.length !== 1 ? "s" : ""}`;
+  if (!tbody) return;
+
+  if (!lista.length) {
+    tbody.innerHTML = `<tr><td colspan="8" class="empty-row">Nenhum agendamento encontrado</td></tr>`;
+    return;
+  }
+
+  const statusMap = {
+    pendente:   ["badge-yellow","Pendente"],
+    confirmado: ["badge-green","Confirmado"],
+    realizado:  ["badge-blue","Realizado"],
+    cancelado:  ["badge-red","Cancelado"]
+  };
+
+  tbody.innerHTML = lista.map(a => {
+    const [cls, label] = statusMap[a.status] || ["badge-gray", a.status];
+    const dataFmt = a.data ? new Date(a.data + "T12:00:00").toLocaleDateString("pt-BR") : "—";
+    const waNum   = (a.telefone || "").replace(/\D/g,"");
+
+    const acoesPendente = a.status === "pendente" ? `
+      <button class="btn-sm btn-confirmar" title="Confirmar"
+        onclick="atualizarStatusAgend(${a.row},'confirmado','${esc(a.nome)}','${a.data}','${a.horario}','${waNum}')">✅</button>
+      <button class="btn-sm btn-cancelar" title="Cancelar"
+        onclick="atualizarStatusAgend(${a.row},'cancelado','${esc(a.nome)}','${a.data}','${a.horario}','${waNum}')">❌</button>` : "";
+    const acoesConfirmado = a.status === "confirmado" ? `
+      <button class="btn-sm btn-realizado" title="Marcar realizado"
+        onclick="atualizarStatusAgend(${a.row},'realizado','${esc(a.nome)}','${a.data}','${a.horario}','')">🏁</button>
+      <button class="btn-sm btn-cancelar" title="Cancelar"
+        onclick="atualizarStatusAgend(${a.row},'cancelado','${esc(a.nome)}','${a.data}','${a.horario}','${waNum}')">❌</button>` : "";
+
+    return `<tr>
+      <td class="td-data">${a.data_criacao || "—"}</td>
+      <td class="td-nome">${a.nome || "—"}</td>
+      <td>${waNum
+        ? `<a href="https://wa.me/55${waNum}" target="_blank" class="link-wa">${fmtTelefone(a.telefone)}</a>`
+        : (a.telefone || "—")}</td>
+      <td>${dataFmt} ${a.horario ? a.horario.replace(":","h") : ""}</td>
+      <td>${a.tipo_visita || "—"}</td>
+      <td><code>${a.ref_imovel || "—"}</code></td>
+      <td><span class="badge ${cls}">${label}</span></td>
+      <td class="td-acoes-agend">${acoesPendente}${acoesConfirmado}</td>
+    </tr>`;
+  }).join("");
+}
+
+async function atualizarStatusAgend(row, novoStatus, nome, data, horario, waNum) {
+  try {
+    const res = await Api.post("admin_status_agendamento", { row, status: novoStatus });
+    if (res.status === 200) {
+      const a = state.agendamentos.find(ag => ag.row === row);
+      if (a) a.status = novoStatus;
+      renderAgendamentos();
+      showToast("Status atualizado!", "success");
+
+      // Abre WhatsApp para notificar o cliente
+      if (waNum && (novoStatus === "confirmado" || novoStatus === "cancelado")) {
+        const dataFmt = data ? new Date(data + "T12:00:00").toLocaleDateString("pt-BR") : "";
+        const hora    = (horario || "").replace(":","h");
+        const msg     = novoStatus === "confirmado"
+          ? `Olá ${nome}! Sua visita foi *confirmada* para ${dataFmt} às ${hora}. Contamos com sua presença! — Magnus Imóveis`
+          : `Olá ${nome}! Infelizmente precisamos *cancelar* sua visita de ${dataFmt}. Entre em contato para reagendar. — Magnus Imóveis`;
+        setTimeout(() => window.open(`https://wa.me/55${waNum}?text=${encodeURIComponent(msg)}`, "_blank"), 400);
+      }
+    } else {
+      showToast("Erro: " + res.mensagem, "error");
+    }
+  } catch { showToast("Erro de conexão", "error"); }
+}
+
+// ===== TOAST =====
+
+function showToast(msg, tipo) {
+  const el = document.getElementById("toast");
+  if (!el) return;
+  el.textContent = msg;
+  el.className = "toast toast-" + (tipo || "info") + " show";
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove("show"), 3500);
+}
+
+// ===== LOADING =====
+
+function setLoading(v) {
+  const el = document.getElementById("loading-overlay");
+  if (el) el.style.display = v ? "flex" : "none";
+}
+
+// ===== EXPORTAÇÃO PDF =====
+
+function _pdfCabecalho(doc, titulo, filtroTexto, totalTexto) {
+  const W = doc.internal.pageSize.getWidth();
+  doc.setFillColor(26, 26, 26);
+  doc.rect(0, 0, W, 24, "F");
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(13);
+  doc.setFont("helvetica", "bold");
+  doc.text("MAGNUS IMOVEIS", 12, 10);
+  doc.setTextColor(201, 162, 43);
+  doc.setFontSize(8);
+  doc.setFont("helvetica", "normal");
+  doc.text("CRECI 32.402", 12, 17);
+  doc.setTextColor(200, 200, 200);
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "bold");
+  doc.text(titulo, W - 12, 10, { align: "right" });
+  doc.setFontSize(7);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(160, 160, 160);
+  doc.text("Gerado em: " + new Date().toLocaleString("pt-BR"), W - 12, 17, { align: "right" });
+  doc.setDrawColor(201, 162, 43);
+  doc.setLineWidth(0.8);
+  doc.line(0, 24, W, 24);
+
+  let y = 31;
+  if (filtroTexto) {
+    doc.setTextColor(90, 100, 120);
+    doc.setFontSize(8);
+    doc.setFont("helvetica", "normal");
+    doc.text(filtroTexto, 12, y);
+    y += 6;
+  }
+  if (totalTexto) {
+    doc.setTextColor(50, 60, 80);
+    doc.setFontSize(8.5);
+    doc.setFont("helvetica", "bold");
+    doc.text(totalTexto, 12, y);
+    doc.setFont("helvetica", "normal");
+    y += 7;
+  }
+  return y;
+}
+
+function _pdfRodape(doc) {
+  const W = doc.internal.pageSize.getWidth();
+  const H = doc.internal.pageSize.getHeight();
+  const pages = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= pages; i++) {
+    doc.setPage(i);
+    doc.setDrawColor(220, 225, 235);
+    doc.setLineWidth(0.2);
+    doc.line(12, H - 12, W - 12, H - 12);
+    doc.setTextColor(160, 160, 160);
+    doc.setFontSize(7);
+    doc.setFont("helvetica", "normal");
+    doc.text("Magnus Imoveis  |  CRECI 32.402  |  magnusimoveisbh@hotmail.com  |  (31) 3321-6775", 12, H - 7);
+    doc.text(i + " / " + pages, W - 12, H - 7, { align: "right" });
+  }
+}
+
+function exportarLeadsPDF() {
+  if (!window.jspdf) return showToast("Biblioteca PDF não carregada. Verifique sua conexão.", "error");
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+
+  const lista = getLeadsFiltrados();
+  const partes = [];
+  if (state.filtroLeadDe || state.filtroLeadAte) {
+    const de  = state.filtroLeadDe  ? new Date(state.filtroLeadDe  + "T12:00:00").toLocaleDateString("pt-BR") : "—";
+    const ate = state.filtroLeadAte ? new Date(state.filtroLeadAte + "T12:00:00").toLocaleDateString("pt-BR") : "—";
+    partes.push("Periodo: " + de + " a " + ate);
+  }
+  if (state.buscaLead) partes.push('Busca: "' + state.buscaLead + '"');
+
+  const y = _pdfCabecalho(
+    doc, "Relatorio de Leads",
+    partes.join("   |   ") || null,
+    "Total: " + lista.length + " lead" + (lista.length !== 1 ? "s" : "")
+  );
+
+  doc.autoTable({
+    startY: y,
+    head: [["Data", "Nome", "WhatsApp", "Interesse", "Imovel", "Origem"]],
+    body: lista.map(l => [
+      l.data || "—",
+      l.nome || "—",
+      fmtTelefone(l.telefone),
+      l.interesse || "—",
+      l.ref_imovel || "—",
+      l.origem || "site"
+    ]),
+    styles:             { fontSize: 8, cellPadding: { top: 3, right: 4, bottom: 3, left: 4 }, overflow: "linebreak" },
+    headStyles:         { fillColor: [26, 26, 26], textColor: [255, 255, 255], fontStyle: "bold" },
+    alternateRowStyles: { fillColor: [248, 249, 252] },
+    columnStyles: { 0: { cellWidth: 40 }, 2: { cellWidth: 32 }, 4: { cellWidth: 24 }, 5: { cellWidth: 18 } }
+  });
+
+  _pdfRodape(doc);
+  doc.save("magnus-leads-" + new Date().toISOString().slice(0, 10) + ".pdf");
+  showToast("PDF gerado com sucesso!", "success");
+}
+
+function exportarImoveisPDF() {
+  if (!window.jspdf) return showToast("Biblioteca PDF não carregada. Verifique sua conexão.", "error");
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+
+  const lista = getImoveisFiltrados();
+  const partes = [];
+  if (state.filtroStatus) partes.push("Status: " + state.filtroStatus);
+  if (state.filtroTipo)   partes.push("Tipo: " + state.filtroTipo);
+  if (state.busca)        partes.push('Busca: "' + state.busca + '"');
+
+  const y = _pdfCabecalho(
+    doc, "Relatorio de Imoveis",
+    partes.join("   |   ") || null,
+    "Total: " + lista.length + " " + (lista.length !== 1 ? "imoveis" : "imovel")
+  );
+
+  const statusLabel = { disponivel: "Disponivel", reservado: "Reservado", vendido: "Vendido" };
+
+  doc.autoTable({
+    startY: y,
+    head: [["Ref", "Titulo", "Tipo", "Finalidade", "Status", "Preco", "Bairro", "Cidade", "Destaque"]],
+    body: lista.map(im => [
+      im.ref    || "—",
+      im.titulo || "—",
+      im.tipo   || "—",
+      im.finalidade || "—",
+      statusLabel[im.status] || im.status || "—",
+      im.preco ? fmtPreco(im.preco) : "—",
+      im.bairro || "—",
+      im.cidade || "—",
+      im.destaque ? "Sim" : "Nao"
+    ]),
+    styles:             { fontSize: 8, cellPadding: { top: 3, right: 4, bottom: 3, left: 4 }, overflow: "linebreak" },
+    headStyles:         { fillColor: [26, 26, 26], textColor: [255, 255, 255], fontStyle: "bold" },
+    alternateRowStyles: { fillColor: [248, 249, 252] },
+    columnStyles: { 0: { cellWidth: 22 }, 1: { cellWidth: 60 }, 2: { cellWidth: 24 }, 3: { cellWidth: 22 }, 4: { cellWidth: 22 }, 5: { cellWidth: 32 }, 8: { cellWidth: 16 } }
+  });
+
+  _pdfRodape(doc);
+  doc.save("magnus-imoveis-" + new Date().toISOString().slice(0, 10) + ".pdf");
+  showToast("PDF gerado com sucesso!", "success");
+}
+
+function exportarAgendamentosPDF() {
+  if (!window.jspdf) return showToast("Biblioteca PDF não carregada. Verifique sua conexão.", "error");
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+
+  const lista = getAgendamentosFiltrados();
+  const filtroTexto = state.filtroStatusAgend ? "Status: " + state.filtroStatusAgend : null;
+
+  const y = _pdfCabecalho(
+    doc, "Relatorio de Agendamentos",
+    filtroTexto,
+    "Total: " + lista.length + " agendamento" + (lista.length !== 1 ? "s" : "")
+  );
+
+  const statusLabel = { pendente: "Pendente", confirmado: "Confirmado", realizado: "Realizado", cancelado: "Cancelado" };
+
+  doc.autoTable({
+    startY: y,
+    head: [["Solicitado em", "Cliente", "WhatsApp", "Data Visita", "Horario", "Tipo", "Imovel", "Status"]],
+    body: lista.map(a => {
+      const dataFmt = a.data ? new Date(a.data + "T12:00:00").toLocaleDateString("pt-BR") : "—";
+      return [
+        a.data_criacao || "—",
+        a.nome || "—",
+        fmtTelefone(a.telefone),
+        dataFmt,
+        a.horario ? a.horario.replace(":", "h") : "—",
+        a.tipo_visita || "—",
+        a.ref_imovel  || "—",
+        statusLabel[a.status] || a.status || "—"
+      ];
+    }),
+    styles:             { fontSize: 8, cellPadding: { top: 3, right: 4, bottom: 3, left: 4 }, overflow: "linebreak" },
+    headStyles:         { fillColor: [26, 26, 26], textColor: [255, 255, 255], fontStyle: "bold" },
+    alternateRowStyles: { fillColor: [248, 249, 252] },
+    columnStyles: { 0: { cellWidth: 38 }, 2: { cellWidth: 32 }, 3: { cellWidth: 24 }, 4: { cellWidth: 16 }, 6: { cellWidth: 22 }, 7: { cellWidth: 22 } }
+  });
+
+  _pdfRodape(doc);
+  doc.save("magnus-agendamentos-" + new Date().toISOString().slice(0, 10) + ".pdf");
+  showToast("PDF gerado com sucesso!", "success");
+}
+
+// ===== INICIALIZAÇÃO =====
+
+async function init() {
+  if (!Auth.isSetupDone()) { showScreen("setup"); return; }
+  if (!Auth.isAuthenticated()) { showScreen("login"); return; }
+  showScreen("admin");
+  showTab("imoveis");
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  init();
+
+  // ── Setup ──
+  document.getElementById("form-setup").addEventListener("submit", async e => {
+    e.preventDefault();
+    const senha     = document.getElementById("setup-senha").value;
+    const confirmar = document.getElementById("setup-confirmar").value;
+    const token     = document.getElementById("setup-token").value.trim();
+
+    if (senha !== confirmar)    return showToast("Senhas não conferem", "error");
+    if (senha.length < 6)       return showToast("Senha muito curta (mín. 6 caracteres)", "error");
+    if (!token)                 return showToast("Token do Apps Script obrigatório", "error");
+
+    const btn = e.target.querySelector("button[type=submit]");
+    btn.disabled = true; btn.textContent = "Salvando…";
+    await Auth.setup(senha, token);
+    showToast("Configuração salva! Faça login.", "success");
+    setTimeout(() => showScreen("login"), 1200);
+    btn.disabled = false; btn.textContent = "Salvar configuração";
+  });
+
+  // ── Login ──
+  document.getElementById("form-login").addEventListener("submit", async e => {
+    e.preventDefault();
+    const senhaEl = document.getElementById("login-senha");
+    const btn     = e.target.querySelector("button[type=submit]");
+    btn.disabled  = true; btn.textContent = "Entrando…";
+
+    const ok = await Auth.login(senhaEl.value);
+    if (ok) {
+      showScreen("admin");
+      showTab("imoveis");
+    } else {
+      showToast("Senha incorreta", "error");
+      senhaEl.value = "";
+      senhaEl.focus();
+    }
+    btn.disabled = false; btn.textContent = "Entrar";
+  });
+
+  document.getElementById("link-redefinir").addEventListener("click", e => {
+    e.preventDefault();
+    if (confirm("Redefinir configurações do painel?\n\nVocê precisará configurar senha e token novamente.")) {
+      Auth.resetSetup();
+      showScreen("setup");
+    }
+  });
+
+  // ── Logout ──
+  document.getElementById("btn-sair").addEventListener("click", () => {
+    if (confirm("Deseja sair do painel?")) Auth.logout();
+  });
+
+  // ── Tabs ──
+  document.querySelectorAll(".nav-btn").forEach(btn =>
+    btn.addEventListener("click", () => showTab(btn.dataset.tab)));
+
+  // ── Imóveis ──
+  document.getElementById("btn-novo-imovel").addEventListener("click", abrirFormNovo);
+  document.getElementById("btn-refresh-imoveis").addEventListener("click", carregarImoveis);
+  document.getElementById("btn-export-imoveis").addEventListener("click", exportarImoveisPDF);
+
+  document.getElementById("busca-imovel").addEventListener("input", e => {
+    state.busca = e.target.value;
+    renderImoveis();
+  });
+  document.getElementById("filtro-status").addEventListener("change", e => {
+    state.filtroStatus = e.target.value;
+    renderImoveis();
+  });
+  document.getElementById("filtro-tipo").addEventListener("change", e => {
+    state.filtroTipo = e.target.value;
+    renderImoveis();
+  });
+
+  // ── Formulário ──
+  initFotosUpload();
+  initFotosLink();
+  if (typeof flatpickr !== "undefined") {
+    fpDataVenda = flatpickr('[name="data_venda"]', {
+      locale: FP_LOCALE,
+      dateFormat: "Y-m-d",
+      altInput: true,
+      altFormat: "d/m/Y",
+      disableMobile: false,
+    });
+
+    fpLeadDe = flatpickr('#filtro-lead-de', {
+      locale: FP_LOCALE,
+      dateFormat: "Y-m-d",
+      altInput: true,
+      altFormat: "d/m/Y",
+      disableMobile: false,
+      allowInput: false,
+      onChange(selectedDates, dateStr) {
+        state.filtroLeadDe = dateStr;
+        renderLeads();
+      }
+    });
+
+    fpLeadAte = flatpickr('#filtro-lead-ate', {
+      locale: FP_LOCALE,
+      dateFormat: "Y-m-d",
+      altInput: true,
+      altFormat: "d/m/Y",
+      disableMobile: false,
+      allowInput: false,
+      onChange(selectedDates, dateStr) {
+        state.filtroLeadAte = dateStr;
+        renderLeads();
+      }
+    });
+  }
+  document.getElementById("form-imovel").addEventListener("submit", salvarImovel);
+  document.getElementById("btn-fechar-drawer").addEventListener("click", fecharDrawer);
+  document.getElementById("drawer-overlay").addEventListener("click", fecharDrawer);
+  document.getElementById("form-imovel").addEventListener("input",  atualizarPreview);
+  document.getElementById("form-imovel").addEventListener("change", atualizarPreview);
+
+  // ── Leads ──
+  document.getElementById("busca-lead").addEventListener("input", e => {
+    state.buscaLead = e.target.value;
+    renderLeads();
+  });
+  document.getElementById("btn-refresh-leads").addEventListener("click", carregarLeads);
+  document.getElementById("btn-export-leads").addEventListener("click", exportarLeadsPDF);
+
+  // ── Agendamentos ──
+  document.getElementById("filtro-status-agend").addEventListener("change", e => {
+    state.filtroStatusAgend = e.target.value;
+    renderAgendamentos();
+  });
+  document.getElementById("btn-refresh-agend").addEventListener("click", carregarAgendamentos);
+  document.getElementById("btn-export-agend").addEventListener("click", exportarAgendamentosPDF);
+});
