@@ -328,8 +328,17 @@ function duplicarImovel(ref) {
   setFotosFromPaths(paths);
 
   if (fpDataVenda) {
-    if (im.data_venda) fpDataVenda.setDate(im.data_venda, true);
-    else fpDataVenda.clear();
+    if (im.data_venda) {
+      fpDataVenda.setDate(im.data_venda, false);
+      if (fpDataVenda.altInput) {
+        const _p = fpDataVenda.parseDate(im.data_venda, "Y-m-d");
+        fpDataVenda.altInput.value = _p
+          ? fpDataVenda.formatDate(_p, fpDataVenda.config.altFormat)
+          : "";
+      }
+    } else {
+      fpDataVenda.clear();
+    }
   }
 
   atualizarPreview();
@@ -564,10 +573,21 @@ function abrirFormEditar(ref) {
     (im.fotos ? String(im.fotos).split("\n").map(s => s.trim()).filter(Boolean) : []);
   setFotosFromPaths(paths);
 
-  // triggerChange=true força o Flatpickr a redesenhar o altInput visível
+  console.log("[Magnus] data_venda no state ao abrir form:", im.data_venda);
+
   if (fpDataVenda) {
-    if (im.data_venda) fpDataVenda.setDate(im.data_venda, true);
-    else fpDataVenda.clear();
+    if (im.data_venda) {
+      fpDataVenda.setDate(im.data_venda, false);
+      // Flatpickr usa debounce interno — força update imediato do altInput
+      if (fpDataVenda.altInput) {
+        const _p = fpDataVenda.parseDate(im.data_venda, "Y-m-d");
+        fpDataVenda.altInput.value = _p
+          ? fpDataVenda.formatDate(_p, fpDataVenda.config.altFormat)
+          : "";
+      }
+    } else {
+      fpDataVenda.clear();
+    }
   }
 
   form.querySelector('[name="ref"]').disabled = true;
