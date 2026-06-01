@@ -611,7 +611,9 @@ async function salvarImovel(e) {
     area_construida: gNum("area_construida"),
     area_terreno:   gNum("area_terreno"),
     fotos:          gStr("fotos").split("\n").map(s => s.trim()).filter(Boolean),
-    data_venda:     gStr("data_venda") || null,
+    data_venda:     (fpDataVenda && fpDataVenda.selectedDates.length > 0)
+                      ? fpDataVenda.formatDate(fpDataVenda.selectedDates[0], "Y-m-d")
+                      : null,
     descricao:      gStr("descricao"),
     destaque:       form.querySelector('[name="destaque"]').checked
   };
