@@ -476,6 +476,8 @@ function removeFoto(idx) {
   renderFotosList();
 }
 
+let _skipBrokenCheck = false;
+
 function renderFotosList() {
   const list   = document.getElementById("fotos-list");
   const hidden = document.getElementById("fotos-hidden");
@@ -487,16 +489,31 @@ function renderFotosList() {
     list.innerHTML = fotosState.items.map((f, i) => {
       const thumb = f.isVideo
         ? `<video src="${f.preview}" class="foto-video-thumb" muted preload="metadata"></video><span class="foto-badge-video">🎬</span>`
-        : `<img src="${f.preview}" alt="${esc(f.name)}">`;
-      return `<div class="foto-item">
+        : `<img src="${f.preview}" alt="${esc(f.name)}" onerror="this.closest('.foto-item').dataset.broken='1'">`;
+      return `<div class="foto-item" data-idx="${i}">
         ${thumb}
         <span class="foto-name" title="${esc(f.name)}">${esc(f.name)}</span>
         <button type="button" class="foto-remove" onclick="removeFoto(${i})" title="Remover">✕</button>
       </div>`;
     }).join("");
     hidden.value = fotosState.items.map(f => f.path).join("\n");
+    if (!_skipBrokenCheck) setTimeout(_removerFotosBroken, 3000);
   }
   atualizarPreview();
+}
+
+function _removerFotosBroken() {
+  const broken = [...document.querySelectorAll(".foto-item[data-broken='1']")];
+  if (!broken.length) return;
+  const indices = broken
+    .map(el => parseInt(el.dataset.idx))
+    .filter(n => !isNaN(n))
+    .sort((a, b) => b - a);
+  _skipBrokenCheck = true;
+  indices.forEach(i => { if (fotosState.items[i]) fotosState.items.splice(i, 1); });
+  renderFotosList();
+  _skipBrokenCheck = false;
+  showToast(`${indices.length} imagem(ns) inválida(s) removida(s) automaticamente`, "info");
 }
 
 function setFotosFromPaths(paths) {
@@ -571,7 +588,9 @@ async function salvarImovel(e) {
   const gStr = n => (form.querySelector(`[name="${n}"]`)?.value || "").trim();
   const gNum = n => {
     const v = gStr(n);
-    return v === "" ? null : (Number(v) || 0);
+    if (v === "") return null;
+    const parsed = parseFloat(v.replace(/[^\d.,]/g, "").replace(",", "."));
+    return Math.round(isNaN(parsed) ? 0 : parsed);
   };
 
   const imovel = {

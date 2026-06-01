@@ -40,7 +40,17 @@ function _parseCSV(csv) {
     headers.forEach((h, i) => {
       const v = (vals[i] ?? "").trim();
       if (h === "preco") {
-        obj[h] = Number(v.replace(/[^\d.]/g, "")) || 0;
+        // Suporta formatos: "150000", "150.000", "150.000,00", "R$ 150,000.00"
+        const s = v.replace(/[R$\s]/g, "");
+        let n;
+        if (/^\d{1,3}(\.\d{3})+(,\d{1,2})?$/.test(s)) {
+          n = parseFloat(s.replace(/\./g, "").replace(",", "."));     // BR: 150.000,00
+        } else if (/^\d{1,3}(,\d{3})+(\.\d{1,2})?$/.test(s)) {
+          n = parseFloat(s.replace(/,/g, ""));                         // US: 150,000.00
+        } else {
+          n = parseFloat(s.replace(",", "."));                         // simples: 150000
+        }
+        obj[h] = Math.round(isNaN(n) ? 0 : n);
       } else if (numericos.includes(h)) {
         obj[h] = v === "" || v === "null" ? null : Number(v);
       } else if (h === "destaque") {

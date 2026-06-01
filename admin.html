@@ -503,6 +503,15 @@
     .btn-export:hover { background: var(--gold); color: var(--white); }
     .btn-sm.btn-duplicar:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-l); }
 
+    /* ── FOTO INVÁLIDA ── */
+    .foto-item { position: relative; }
+    .foto-item[data-broken] img { opacity: .25; }
+    .foto-item[data-broken]::before {
+      content: "⚠"; position: absolute; top: 4px; left: 4px;
+      font-size: .9rem; background: #dc2626; color: #fff;
+      border-radius: 4px; padding: 0 4px; z-index: 2; pointer-events: none;
+    }
+
     /* ── MODAL CLOUDINARY ── */
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 8000;
