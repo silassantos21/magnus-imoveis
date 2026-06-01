@@ -503,6 +503,46 @@
     .btn-export:hover { background: var(--gold); color: var(--white); }
     .btn-sm.btn-duplicar:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-l); }
 
+    /* ── MODAL CLOUDINARY ── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 8000;
+      display: flex; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-box {
+      background: var(--white); border-radius: var(--radius); padding: 28px 32px;
+      width: 100%; max-width: 440px; box-shadow: var(--shadow-md);
+    }
+    .modal-box h3 { font-size: 1rem; font-weight: 700; color: var(--navy-dark); margin-bottom: 4px; }
+    .modal-hint { font-size: .78rem; color: var(--gray-400); margin-bottom: 20px; line-height: 1.5; }
+    .modal-hint a { color: var(--gold); text-decoration: underline; }
+    .modal-box label { display: block; font-size: .8rem; font-weight: 600; color: var(--gray-600); margin-bottom: 14px; }
+    .modal-box label span { display: block; margin-bottom: 5px; }
+    .modal-box input[type=text] {
+      width: 100%; padding: 9px 13px; border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm); font-size: .875rem; outline: none;
+      transition: border-color var(--transition); font-family: inherit;
+    }
+    .modal-box input[type=text]:focus { border-color: var(--gold); }
+    .modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+    .btn-modal-save {
+      padding: 9px 20px; background: var(--navy); color: var(--white);
+      border-radius: var(--radius-sm); font-size: .875rem; font-weight: 700;
+      transition: background var(--transition);
+    }
+    .btn-modal-save:hover { background: var(--gold); }
+    .btn-modal-cancel {
+      padding: 9px 16px; border: 1.5px solid var(--gray-200); color: var(--gray-600);
+      border-radius: var(--radius-sm); font-size: .875rem; font-weight: 600;
+      transition: border-color .15s, color .15s;
+    }
+    .btn-modal-cancel:hover { border-color: var(--gray-400); color: var(--gray-800); }
+    .cloudinary-status {
+      font-size: .72rem; padding: 2px 8px; border-radius: 99px; font-weight: 600;
+      margin-left: 6px; vertical-align: middle;
+    }
+    .cloudinary-status.ok  { background: var(--green-l);  color: var(--green); }
+    .cloudinary-status.nok { background: var(--yellow-l); color: var(--yellow); }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
       .sidebar { width: 56px; min-width: 56px; }
@@ -574,6 +614,20 @@
         O token deve ser o mesmo valor definido em <code>ADMIN_TOKEN</code> no arquivo <code>apps-script.js</code>.
         Nunca compartilhe este token.
       </p>
+      <hr class="setup-divider">
+      <label>
+        <span>Cloudinary — Cloud Name</span>
+        <input type="text" id="setup-cloud-name" placeholder="Ex: dxyz12abc" autocomplete="off">
+      </label>
+      <label>
+        <span>Cloudinary — Upload Preset (unsigned)</span>
+        <input type="text" id="setup-cloud-preset" placeholder="Ex: magnus_imoveis" autocomplete="off">
+      </label>
+      <p class="form-hint-auth">
+        Necessário para upload de fotos. Crie uma conta gratuita em <strong>cloudinary.com</strong>,
+        anote o <em>Cloud Name</em> e crie um preset do tipo <em>unsigned</em>.
+        Pode deixar em branco e configurar depois.
+      </p>
       <button type="submit" class="btn-auth">Salvar configuração</button>
     </form>
   </div>
@@ -601,6 +655,9 @@
         </button>
         <button class="nav-btn" data-tab="leads">
           <span class="nav-icon">👥</span><span>Leads</span>
+        </button>
+        <button class="nav-btn" id="btn-config-cloudinary">
+          <span class="nav-icon">☁</span><span>Cloudinary <span id="cloudinary-badge" class="cloudinary-status nok">—</span></span>
         </button>
       </nav>
 
@@ -867,7 +924,7 @@
             <span class="fotos-empty">Nenhuma mídia adicionada</span>
           </div>
           <div class="fotos-actions">
-            <button type="button" class="btn-add-foto" id="btn-add-foto">+ Foto / Vídeo</button>
+            <button type="button" class="btn-add-foto" id="btn-add-foto">☁ Enviar Fotos / Vídeos</button>
             <button type="button" class="btn-add-link" id="btn-add-link">🔗 Link externo</button>
           </div>
           <div class="fotos-link-row" id="fotos-link-row">
@@ -875,9 +932,8 @@
             <button type="button" class="btn-confirmar-link" id="btn-confirmar-link">Adicionar</button>
             <button type="button" class="btn-cancelar-link" id="btn-cancelar-link">✕</button>
           </div>
-          <input type="file" id="input-foto-file" accept="image/*,video/*" multiple style="display:none">
           <input type="hidden" name="fotos" id="fotos-hidden">
-          <p class="form-hint" style="margin-top:8px">Fotos e vídeos locais: copie os arquivos para <code>images/</code> antes do deploy. Para vídeos grandes, prefira YouTube/Vimeo.</p>
+          <p class="form-hint" style="margin-top:8px">As fotos são enviadas para o Cloudinary e ficam disponíveis imediatamente. Para vídeos grandes, prefira YouTube/Vimeo via link externo.</p>
         </div>
 
         <!-- Descrição -->
@@ -899,9 +955,35 @@
 
 </div><!-- /screen-admin -->
 
+<!-- ====== MODAL: CLOUDINARY CONFIG ====== -->
+<div id="modal-cloudinary" class="modal-overlay" style="display:none">
+  <div class="modal-box">
+    <h3>Configuração Cloudinary</h3>
+    <p class="modal-hint">
+      Preencha com os dados da sua conta em
+      <a href="https://cloudinary.com" target="_blank" rel="noopener">cloudinary.com</a>.
+      O <strong>Cloud Name</strong> aparece no dashboard. O <strong>Upload Preset</strong>
+      deve ser criado em <em>Settings → Upload → Upload presets</em> com o modo <em>Unsigned</em>.
+    </p>
+    <label>
+      <span>Cloud Name</span>
+      <input type="text" id="modal-cloud-name" placeholder="Ex: dxyz12abc" autocomplete="off" spellcheck="false">
+    </label>
+    <label>
+      <span>Upload Preset (unsigned)</span>
+      <input type="text" id="modal-cloud-preset" placeholder="Ex: magnus_imoveis" autocomplete="off" spellcheck="false">
+    </label>
+    <div class="modal-actions">
+      <button type="button" id="btn-fechar-cloudinary" class="btn-modal-cancel">Cancelar</button>
+      <button type="button" id="btn-salvar-cloudinary" class="btn-modal-save">Salvar</button>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
 <script src="js/dados.js"></script>
 <script src="js/admin.js"></script>
 </body>

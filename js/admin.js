@@ -2,9 +2,11 @@
 // CONFIGURAR: mesma URL do Apps Script que está em js/leads.js
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyn31FIreCa2vrdXxFgJOeJrBs-am1b2JGP5TSrHZ9rnvFhxRulrY948XM-A5UAmMhr/exec";
 
-const SESSION_KEY  = "magnus_admin_session";
-const HASH_KEY     = "magnus_admin_hash";
-const TOKEN_KEY    = "magnus_admin_token";
+const SESSION_KEY        = "magnus_admin_session";
+const HASH_KEY           = "magnus_admin_hash";
+const TOKEN_KEY          = "magnus_admin_token";
+const CLOUDINARY_CLOUD_KEY  = "magnus_cloudinary_cloud";
+const CLOUDINARY_PRESET_KEY = "magnus_cloudinary_preset";
 const SESSION_DURATION = 8 * 60 * 60 * 1000; // 8h em ms
 let fpDataVenda, fpLeadDe, fpLeadAte; // instâncias Flatpickr
 
@@ -77,16 +79,32 @@ const Auth = {
 
   isSetupDone() { return !!localStorage.getItem(HASH_KEY); },
 
-  async setup(senha, token) {
+  async setup(senha, token, cloudName, cloudPreset) {
     const hash = await sha256(senha);
     localStorage.setItem(HASH_KEY, hash);
     localStorage.setItem(TOKEN_KEY, token);
+    if (cloudName)   localStorage.setItem(CLOUDINARY_CLOUD_KEY, cloudName);
+    if (cloudPreset) localStorage.setItem(CLOUDINARY_PRESET_KEY, cloudPreset);
   },
 
   resetSetup() {
     localStorage.removeItem(HASH_KEY);
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem(CLOUDINARY_CLOUD_KEY);
+    localStorage.removeItem(CLOUDINARY_PRESET_KEY);
+  },
+
+  getCloudinary() {
+    return {
+      cloud:  localStorage.getItem(CLOUDINARY_CLOUD_KEY)  || "",
+      preset: localStorage.getItem(CLOUDINARY_PRESET_KEY) || ""
+    };
+  },
+
+  saveCloudinary(cloud, preset) {
+    localStorage.setItem(CLOUDINARY_CLOUD_KEY,  cloud.trim());
+    localStorage.setItem(CLOUDINARY_PRESET_KEY, preset.trim());
   }
 };
 
@@ -330,31 +348,90 @@ async function confirmarDeletar(ref, titulo) {
   } catch { showToast("Erro de conexão", "error"); }
 }
 
-// ===== FOTOS — UPLOAD UI =====
+// ===== FOTOS — UPLOAD UI (Cloudinary) =====
 
 const fotosState = { items: [] };
 
+function abrirModalCloudinary() {
+  const { cloud, preset } = Auth.getCloudinary();
+  document.getElementById("modal-cloud-name").value   = cloud;
+  document.getElementById("modal-cloud-preset").value = preset;
+  document.getElementById("modal-cloudinary").style.display = "flex";
+}
+
+function fecharModalCloudinary() {
+  document.getElementById("modal-cloudinary").style.display = "none";
+}
+
+function atualizarBadgeCloudinary() {
+  const badge = document.getElementById("cloudinary-badge");
+  if (!badge) return;
+  const { cloud, preset } = Auth.getCloudinary();
+  if (cloud && preset) {
+    badge.textContent = "✓";
+    badge.className   = "cloudinary-status ok";
+  } else {
+    badge.textContent = "—";
+    badge.className   = "cloudinary-status nok";
+  }
+}
+
 function initFotosUpload() {
-  const inputFile = document.getElementById("input-foto-file");
-  const btnAdd    = document.getElementById("btn-add-foto");
-  if (!btnAdd || !inputFile) return;
-  btnAdd.addEventListener("click", () => inputFile.click());
-  inputFile.addEventListener("change", e => {
-    Array.from(e.target.files).forEach(file => {
-      if (file.type.startsWith("video/")) {
-        const preview = URL.createObjectURL(file);
-        fotosState.items.push({ name: file.name, preview, path: "images/" + file.name, isVideo: true });
-        renderFotosList();
-      } else {
-        const reader = new FileReader();
-        reader.onload = evt => {
-          fotosState.items.push({ name: file.name, preview: evt.target.result, path: "images/" + file.name, isVideo: false });
+  const btnAdd = document.getElementById("btn-add-foto");
+  if (!btnAdd) return;
+
+  btnAdd.addEventListener("click", () => {
+    const { cloud, preset } = Auth.getCloudinary();
+    if (!cloud || !preset) {
+      showToast("Configure o Cloudinary antes de fazer upload", "error");
+      abrirModalCloudinary();
+      return;
+    }
+
+    const widget = cloudinary.createUploadWidget(
+      {
+        cloudName:    cloud,
+        uploadPreset: preset,
+        sources:      ["local", "camera", "url"],
+        multiple:     true,
+        resourceType: "auto",
+        folder:       "magnus-imoveis",
+        maxFileSize:  15000000,
+        clientAllowedFormats: ["jpg", "jpeg", "png", "webp", "gif", "mp4", "mov", "webm"],
+        styles: {
+          palette: {
+            window:          "#FFFFFF",
+            windowBorder:    "#e2e6ed",
+            tabIcon:         "#C9A22B",
+            link:            "#C9A22B",
+            action:          "#1a1a1a",
+            inProgress:      "#C9A22B",
+            complete:        "#16a34a",
+            error:           "#dc2626",
+            sourceBg:        "#f4f6fa"
+          }
+        }
+      },
+      (error, result) => {
+        if (error) {
+          showToast("Erro no upload: " + (error.statusText || "tente novamente"), "error");
+          return;
+        }
+        if (result.event === "success") {
+          const info    = result.info;
+          const isVideo = info.resource_type === "video";
+          fotosState.items.push({
+            name:    info.original_filename + "." + info.format,
+            preview: info.secure_url,
+            path:    info.secure_url,
+            isVideo
+          });
           renderFotosList();
-        };
-        reader.readAsDataURL(file);
+        }
       }
-    });
-    inputFile.value = "";
+    );
+
+    widget.open();
   });
 }
 
@@ -964,6 +1041,7 @@ async function init() {
   if (!Auth.isAuthenticated()) { showScreen("login"); return; }
   showScreen("admin");
   showTab("imoveis");
+  atualizarBadgeCloudinary();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -972,20 +1050,38 @@ document.addEventListener("DOMContentLoaded", () => {
   // ── Setup ──
   document.getElementById("form-setup").addEventListener("submit", async e => {
     e.preventDefault();
-    const senha     = document.getElementById("setup-senha").value;
-    const confirmar = document.getElementById("setup-confirmar").value;
-    const token     = document.getElementById("setup-token").value.trim();
+    const senha      = document.getElementById("setup-senha").value;
+    const confirmar  = document.getElementById("setup-confirmar").value;
+    const token      = document.getElementById("setup-token").value.trim();
+    const cloudName  = document.getElementById("setup-cloud-name").value.trim();
+    const cloudPreset= document.getElementById("setup-cloud-preset").value.trim();
 
-    if (senha !== confirmar)    return showToast("Senhas não conferem", "error");
-    if (senha.length < 6)       return showToast("Senha muito curta (mín. 6 caracteres)", "error");
-    if (!token)                 return showToast("Token do Apps Script obrigatório", "error");
+    if (senha !== confirmar) return showToast("Senhas não conferem", "error");
+    if (senha.length < 6)    return showToast("Senha muito curta (mín. 6 caracteres)", "error");
+    if (!token)              return showToast("Token do Apps Script obrigatório", "error");
 
     const btn = e.target.querySelector("button[type=submit]");
     btn.disabled = true; btn.textContent = "Salvando…";
-    await Auth.setup(senha, token);
+    await Auth.setup(senha, token, cloudName, cloudPreset);
     showToast("Configuração salva! Faça login.", "success");
     setTimeout(() => showScreen("login"), 1200);
     btn.disabled = false; btn.textContent = "Salvar configuração";
+  });
+
+  // ── Modal Cloudinary ──
+  document.getElementById("btn-config-cloudinary").addEventListener("click", abrirModalCloudinary);
+  document.getElementById("btn-fechar-cloudinary").addEventListener("click", fecharModalCloudinary);
+  document.getElementById("modal-cloudinary").addEventListener("click", e => {
+    if (e.target === e.currentTarget) fecharModalCloudinary();
+  });
+  document.getElementById("btn-salvar-cloudinary").addEventListener("click", () => {
+    const cloud  = document.getElementById("modal-cloud-name").value.trim();
+    const preset = document.getElementById("modal-cloud-preset").value.trim();
+    if (!cloud || !preset) return showToast("Preencha os dois campos", "error");
+    Auth.saveCloudinary(cloud, preset);
+    atualizarBadgeCloudinary();
+    fecharModalCloudinary();
+    showToast("Cloudinary configurado com sucesso!", "success");
   });
 
   // ── Login ──
