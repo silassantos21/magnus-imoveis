@@ -14,7 +14,7 @@
   <meta property="og:site_name" content="Magnus Imóveis">
   <meta id="og-title" property="og:title" content="Imóvel — Magnus Imóveis">
   <meta id="og-description" property="og:description" content="Veja os detalhes deste imóvel em Belo Horizonte. CRECI 32.402.">
-  <meta id="og-image" property="og:image" content="https://magnus-imoveis.vercel.app/images/og-cover.jpg">
+  <meta id="og-image" property="og:image" content="https://magnus-imoveis.vercel.app/images/casa.jpg">
   <meta id="og-url" property="og:url" content="https://magnus-imoveis.vercel.app/imovel.html">
   <meta property="og:locale" content="pt_BR">
 
@@ -22,7 +22,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta id="tw-title" name="twitter:title" content="Imóvel — Magnus Imóveis">
   <meta id="tw-description" name="twitter:description" content="Veja os detalhes deste imóvel em Belo Horizonte.">
-  <meta id="tw-image" name="twitter:image" content="https://magnus-imoveis.vercel.app/images/og-cover.jpg">
+  <meta id="tw-image" name="twitter:image" content="https://magnus-imoveis.vercel.app/images/casa.jpg">
 
   <!-- Google Analytics 4 — substitua G-V355TXQ9Q3 pelo seu Measurement ID -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-V355TXQ9Q3"></script>
@@ -33,8 +33,16 @@
     gtag('config', 'G-V355TXQ9Q3');
   </script>
 
+  <!-- Preconnects -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://www.googletagmanager.com">
+
+  <!-- Google Fonts — assíncrono (não bloqueia render) -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"></noscript>
+
   <link rel="stylesheet" href="css/styles.css">
   <link rel="shortcut icon" type="image/png" href="images/logo-icone.png?v=3">
   <link rel="icon" type="image/png" href="images/logo-icone.png?v=3">

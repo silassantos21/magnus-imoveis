@@ -14,7 +14,9 @@
   <meta property="og:site_name" content="Magnus Imóveis">
   <meta property="og:title" content="Magnus Imóveis — Compra, Venda e Aluguel em Belo Horizonte">
   <meta property="og:description" content="Encontre apartamentos, casas e terrenos em Belo Horizonte e região com o suporte de quem conhece o mercado. CRECI 32.402.">
-  <meta property="og:image" content="https://magnus-imoveis.vercel.app/images/og-cover.jpg">
+  <meta property="og:image" content="https://magnus-imoveis.vercel.app/images/casa.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://magnus-imoveis.vercel.app/">
   <meta property="og:locale" content="pt_BR">
 
@@ -22,7 +24,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Magnus Imóveis — Compra, Venda e Aluguel em BH">
   <meta name="twitter:description" content="Encontre apartamentos, casas e terrenos em BH e região. CRECI 32.402.">
-  <meta name="twitter:image" content="https://magnus-imoveis.vercel.app/images/og-cover.jpg">
+  <meta name="twitter:image" content="https://magnus-imoveis.vercel.app/images/casa.jpg">
 
   <!-- Schema.org RealEstateAgent -->
   <script type="application/ld+json">
@@ -32,6 +34,7 @@
     "name": "Magnus Imóveis",
     "description": "Especialistas em compra, venda e locação de imóveis em Belo Horizonte e região. CRECI 32.402.",
     "url": "https://magnus-imoveis.vercel.app/",
+    "image": "https://magnus-imoveis.vercel.app/images/logo.png",
     "telephone": "+55-31-3321-6775",
     "email": "magnusimoveisbh@hotmail.com",
     "address": {
@@ -42,6 +45,7 @@
       "postalCode": "30662-290",
       "addressCountry": "BR"
     },
+    "openingHours": "Mo-Fr 08:00-18:00, Sa 08:00-13:00",
     "areaServed": "Belo Horizonte e região metropolitana",
     "hasCredential": "CRECI 32.402"
   }
@@ -56,8 +60,16 @@
     gtag('config', 'G-V355TXQ9Q3');
   </script>
 
+  <!-- Preconnects -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://www.googletagmanager.com">
+
+  <!-- Google Fonts — assíncrono (não bloqueia render) -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"></noscript>
+
   <link rel="stylesheet" href="css/styles.css">
   <link rel="shortcut icon" type="image/png" href="images/logo-icone.png?v=3">
   <link rel="icon" type="image/png" href="images/logo-icone.png?v=3">
