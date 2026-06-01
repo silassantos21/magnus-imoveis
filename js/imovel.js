@@ -213,7 +213,7 @@ const BASE_URL = "https://magnus-imoveis.vercel.app";
 function atualizarSEO(im) {
   const ogTitle = `${im.titulo} — Magnus Imóveis`;
   const ogDesc = `${im.tipo} ${im.finalidade === "Aluguel" ? "para alugar" : "à venda"} em ${im.bairro}, ${im.cidade}.${im.quartos > 0 ? " " + im.quartos + " quartos." : ""}${im.area_util ? " " + im.area_util + "m²." : ""} ${fmt(im.preco)}.`;
-  const primeiraFoto = im.fotos && im.fotos[0] && !_isVideo(im.fotos[0]) ? im.fotos[0] : `${BASE_URL}/images/casa.jpg`;
+  const primeiraFoto = im.fotos && im.fotos[0] && !_isVideo(im.fotos[0]) ? im.fotos[0] : `${BASE_URL}/images/og-cover.jpg`;
   const ogUrl = `${BASE_URL}/imovel.html?ref=${im.ref}`;
 
   const set = (id, attr, val) => { const el = document.getElementById(id); if (el) el.setAttribute(attr, val); };
