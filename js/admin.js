@@ -635,8 +635,19 @@ async function salvarImovel(e) {
     if (res.status === 200) {
       showToast(state.editandoRef ? "Imóvel atualizado!" : "Imóvel criado!", "success");
       fecharDrawer();
+
+      // Atualiza estado local imediatamente — não espera o cache do CSV do Google (até 5 min)
+      if (state.editandoRef) {
+        const idx = state.imoveis.findIndex(i => i.ref === state.editandoRef);
+        if (idx !== -1) state.imoveis[idx] = Object.assign({}, state.imoveis[idx], imovel);
+        else            state.imoveis.push(imovel);
+      } else {
+        state.imoveis.push(imovel);
+      }
+      renderImoveis();
+
+      // Invalida cache para que o próximo carregamento manual puxe dados frescos
       window.dadosImoveis.invalidarCache();
-      await carregarImoveis();
     } else {
       showToast("Erro: " + res.mensagem, "error");
     }
