@@ -327,7 +327,10 @@ function duplicarImovel(ref) {
     : (im.fotos ? String(im.fotos).split("\n").map(s => s.trim()).filter(Boolean) : []);
   setFotosFromPaths(paths);
 
-  if (fpDataVenda && im.data_venda) fpDataVenda.setDate(im.data_venda, false);
+  if (fpDataVenda) {
+    if (im.data_venda) fpDataVenda.setDate(im.data_venda, true);
+    else fpDataVenda.clear();
+  }
 
   atualizarPreview();
   abrirDrawer();
@@ -561,7 +564,11 @@ function abrirFormEditar(ref) {
     (im.fotos ? String(im.fotos).split("\n").map(s => s.trim()).filter(Boolean) : []);
   setFotosFromPaths(paths);
 
-  if (fpDataVenda) fpDataVenda.setDate(im.data_venda || null, false);
+  // triggerChange=true força o Flatpickr a redesenhar o altInput visível
+  if (fpDataVenda) {
+    if (im.data_venda) fpDataVenda.setDate(im.data_venda, true);
+    else fpDataVenda.clear();
+  }
 
   form.querySelector('[name="ref"]').disabled = true;
   atualizarPreview();
