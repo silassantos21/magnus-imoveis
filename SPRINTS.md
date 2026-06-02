@@ -3,7 +3,7 @@
 **Projeto:** Landing page Magnus Imóveis  
 **Cliente:** Magnus Imóveis (via Zeta Tech)  
 **Stack:** HTML · CSS · JS vanilla · Google Sheets · Google Apps Script · Vercel  
-**Última atualização:** 2026-06-01 (Sprint 4 — melhorias pós-conclusão aplicadas)
+**Última atualização:** 2026-06-02 (Sprint 5 — concluído)
 
 ---
 
@@ -235,7 +235,7 @@ Após qualquer alteração no `apps-script.js`, republicar o Apps Script:
 
 ---
 
-## Sprint 5 — SEO, Analytics e Deploy 🔲 (EM ANDAMENTO)
+## Sprint 5 — SEO, Analytics e Deploy ✅ Concluído
 
 ### Objetivo
 Site no ar no Vercel, rastreável no Google Analytics, indexável no Google Search.
@@ -259,25 +259,22 @@ Site no ar no Vercel, rastreável no Google Analytics, indexável no Google Sear
 - [x] Evento `lead_form_submit` → submit bem-sucedido em `leads.js`
 - [x] Evento `simulation_start` → abertura do modal em `calculadora.js`
 
-**⚠️ Ação pendente:** Substituir `G-V355TXQ9Q3` pelo Measurement ID real do GA4 em:
-- `index.html` (2 ocorrências)
-- `imovel.html` (2 ocorrências)
-- `js/analytics.js` (constante `GA_ID` — referência documental)
+✅ Measurement ID real do GA4 substituído em `index.html` (2x), `imovel.html` (2x) e `js/analytics.js`.
 
 ### 5.3 — Deploy no Vercel
 - [x] `vercel.json` criado com headers de cache (CSS/JS/imagens: 1 ano; HTML: sem cache)
-- [ ] Repositório no GitHub criado e conectado ao Vercel
-- [ ] Deploy automático a cada `git push` na branch `main`
-- [ ] Domínio `magnus-imoveis.vercel.app` configurado
-- [ ] HTTPS automático ativo
+- [x] Repositório no GitHub criado e conectado ao Vercel
+- [x] Deploy automático a cada `git push` na branch `main`
+- [x] Domínio `magnus-imoveis.vercel.app` configurado
+- [x] HTTPS automático ativo
 
 ### 5.4 — Performance
 - [x] Lazy loading já aplicado em cards (`app.js`), galeria (`imovel.js`) e iframe do mapa
 - [x] Primeira imagem da galeria com `loading="eager"` para LCP
-- [ ] Lighthouse score ≥ 90 em mobile (verificar após deploy)
-- [ ] Tempo de carregamento < 2s em 4G (verificar após deploy)
+- [x] Lighthouse score ≥ 90 em mobile ✅ verificado
+- [x] Tempo de carregamento < 2s em 4G ✅ verificado
 
-### Critério de conclusão
+### Critério de conclusão ✅
 Site no ar, Lighthouse ≥ 90, evento de clique no WA aparecendo no painel do GA4.
 
 ---
@@ -291,7 +288,7 @@ Site no ar, Lighthouse ≥ 90, evento de clique no WA aparecendo no painel do GA
 | 3 | Calculadora de financiamento | Modal SAC/PRICE, cálculo em tempo real, CTA WA | ✅ Concluído | 2º |
 | 2 | Google Sheets + leads + agendamento | Sheets como DB, formulário de lead, agendamento → Google Calendar | ✅ Concluído | 3º |
 | 4 | Painel administrativo | `admin.html`, CRUD imóveis, gestão de agendamentos, exportação PDF | ✅ Concluído | 4º |
-| 5 | SEO + Analytics + Deploy | GA4, Open Graph, Schema.org, Vercel, Lighthouse ≥ 90 | 🔲 Pendente | 5º |
+| 5 | SEO + Analytics + Deploy | GA4, Open Graph, Schema.org, Vercel, Lighthouse ≥ 90 | ✅ Concluído | 5º |
 
 ---
 
