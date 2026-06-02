@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Briefing do Sistema — Magnus Imóveis</title>
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Georgia', 'Times New Roman', serif;
+      font-size: 10.5pt;
+      line-height: 1.7;
+      color: #1a1a1a;
+      background: #fff;
+    }
+
+    /* ===== TIPOGRAFIA ===== */
+    h1, h2, h3, h4, .sans {
+      font-family: 'Arial', 'Helvetica Neue', sans-serif;
+    }
+
+    h1 { font-size: 26pt; font-weight: 800; letter-spacing: -0.5px; }
+    h2 { font-size: 15pt; font-weight: 700; margin-bottom: 10px; }
+    h3 { font-size: 11.5pt; font-weight: 700; margin-bottom: 6px; color: #1a1a1a; }
+    h4 { font-size: 10pt; font-weight: 700; margin-bottom: 4px; color: #555; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    p { margin-bottom: 10px; }
+    strong { font-weight: 700; }
+    em { font-style: italic; color: #555; }
+
+    /* ===== CORES ===== */
+    :root {
+      --gold: #C9A22B;
+      --gold-light: #e8c84a;
+      --dark: #1a1a1a;
+      --charcoal: #2d2d2d;
+      --mid: #555;
+      --light: #f5f5f0;
+      --border: #e0ddd5;
+    }
+
+    /* ===== CAPA ===== */
+    .cover {
+      background: linear-gradient(160deg, #1a1a1a 0%, #2d2d2d 100%);
+      color: #fff;
+      padding: 60px 50px 50px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      page-break-after: always;
+    }
+
+    .cover-top { display: flex; align-items: center; gap: 14px; margin-bottom: 60px; }
+
+    .cover-monogram {
+      width: 52px; height: 52px;
+      background: var(--gold);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Arial', sans-serif;
+      font-size: 20pt; font-weight: 800;
+      color: #1a1a1a;
+      letter-spacing: -1px;
+    }
+
+    .cover-brand {
+      font-family: 'Arial', sans-serif;
+      font-size: 11pt; font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .cover-center { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+
+    .cover-tag {
+      font-family: 'Arial', sans-serif;
+      font-size: 8pt;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+
+    .cover h1 {
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 18px;
+      max-width: 520px;
+    }
+
+    .cover h1 span { color: var(--gold); }
+
+    .cover-sub {
+      font-family: 'Arial', sans-serif;
+      font-size: 11pt;
+      color: rgba(255,255,255,0.6);
+      max-width: 480px;
+      line-height: 1.6;
+    }
+
+    .cover-divider {
+      width: 60px; height: 3px;
+      background: var(--gold);
+      margin: 24px 0;
+    }
+
+    .cover-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding-top: 40px;
+      border-top: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .cover-meta { font-family: 'Arial', sans-serif; font-size: 8.5pt; color: rgba(255,255,255,0.5); }
+    .cover-meta strong { color: rgba(255,255,255,0.8); display: block; font-size: 9pt; margin-bottom: 2px; }
+
+    /* ===== SUMÁRIO ===== */
+    .toc-page {
+      padding: 50px;
+      page-break-after: always;
+      min-height: 100vh;
+    }
+
+    .page-label {
+      font-family: 'Arial', sans-serif;
+      font-size: 7.5pt;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+
+    .toc-title {
+      font-size: 18pt;
+      font-weight: 800;
+      margin-bottom: 30px;
+      padding-bottom: 14px;
+      border-bottom: 2px solid var(--gold);
+    }
+
+    .toc-item {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      padding: 7px 0;
+      border-bottom: 1px dotted var(--border);
+    }
+
+    .toc-num {
+      font-family: 'Arial', sans-serif;
+      font-size: 8pt;
+      font-weight: 700;
+      color: var(--gold);
+      min-width: 22px;
+    }
+
+    .toc-text {
+      font-family: 'Arial', sans-serif;
+      font-size: 10pt;
+      font-weight: 600;
+      flex: 1;
+    }
+
+    .toc-sub {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      padding: 4px 0 4px 30px;
+      border-bottom: 1px dotted var(--border);
+    }
+
+    .toc-sub .toc-text {
+      font-weight: 400;
+      color: var(--mid);
+      font-size: 9.5pt;
+    }
+
+    /* ===== PÁGINAS DE CONTEÚDO ===== */
+    .page {
+      padding: 50px;
+      page-break-after: always;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    .page:last-child { page-break-after: auto; }
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--gold);
+    }
+
+    .section-num {
+      width: 36px; height: 36px;
+      background: var(--gold);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Arial', sans-serif;
+      font-size: 13pt; font-weight: 800;
+      color: #1a1a1a;
+      flex-shrink: 0;
+    }
+
+    /* ===== BLOCOS ===== */
+    .callout {
+      background: var(--light);
+      border-left: 4px solid var(--gold);
+      padding: 14px 18px;
+      margin: 16px 0;
+      border-radius: 0 6px 6px 0;
+    }
+
+    .callout p { margin-bottom: 0; }
+
+    .callout-dark {
+      background: var(--charcoal);
+      color: #fff;
+      border-left: 4px solid var(--gold);
+      padding: 14px 18px;
+      margin: 16px 0;
+      border-radius: 0 6px 6px 0;
+    }
+
+    .callout-dark p { margin-bottom: 0; color: rgba(255,255,255,0.85); }
+    .callout-dark strong { color: var(--gold); }
+
+    /* ===== TABELAS ===== */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-family: 'Arial', sans-serif;
+      font-size: 9pt;
+    }
+
+    th {
+      background: var(--charcoal);
+      color: #fff;
+      padding: 9px 12px;
+      text-align: left;
+      font-weight: 700;
+      font-size: 8.5pt;
+      letter-spacing: 0.3px;
+    }
+
+    th:first-child { border-radius: 6px 0 0 0; }
+    th:last-child { border-radius: 0 6px 0 0; }
+
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) td { background: var(--light); }
+    tr:last-child td { border-bottom: none; }
+
+    td strong { color: var(--charcoal); }
+
+    /* ===== CARDS DE EVENTO ===== */
+    .event-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .event-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      background: #fff;
+    }
+
+    .event-name {
+      font-family: 'Courier New', monospace;
+      font-size: 9pt;
+      font-weight: 700;
+      color: var(--gold);
+      background: #1a1a1a;
+      padding: 2px 8px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+
+    .event-card h3 { margin-bottom: 4px; font-size: 10pt; }
+    .event-card p { margin-bottom: 0; font-size: 9pt; color: var(--mid); }
+
+    /* ===== FUNIL ===== */
+    .funnel {
+      margin: 20px 0;
+    }
+
+    .funnel-step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .funnel-bar-wrap {
+      flex: 1;
+      height: 28px;
+      background: var(--light);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .funnel-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--charcoal), #444);
+      display: flex;
+      align-items: center;
+      padding-left: 10px;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      font-size: 8.5pt;
+      font-weight: 600;
+      transition: width 0.3s;
+    }
+
+    .funnel-bar.gold { background: linear-gradient(90deg, var(--gold), #e0b830); color: #1a1a1a; }
+
+    .funnel-label {
+      font-family: 'Arial', sans-serif;
+      font-size: 8.5pt;
+      color: var(--mid);
+      min-width: 130px;
+      text-align: right;
+    }
+
+    /* ===== FERRAMENTAS ===== */
+    .tool-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 18px;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .tool-badge {
+      font-family: 'Arial', sans-serif;
+      font-size: 7.5pt;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .badge-free { background: #dcfce7; color: #166534; }
+    .badge-paid { background: #fef3c7; color: #92400e; }
+    .badge-done { background: #e0e7ff; color: #3730a3; }
+
+    .tool-content h3 { margin-bottom: 4px; }
+    .tool-content p { margin-bottom: 0; font-size: 9.5pt; color: var(--mid); }
+
+    /* ===== ROADMAP ===== */
+    .roadmap-item {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+      align-items: flex-start;
+    }
+
+    .roadmap-phase {
+      font-family: 'Arial', sans-serif;
+      font-size: 7.5pt;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #fff;
+      background: var(--charcoal);
+      padding: 4px 10px;
+      border-radius: 4px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .roadmap-phase.gold-bg { background: var(--gold); color: #1a1a1a; }
+
+    .roadmap-content h3 { margin-bottom: 4px; }
+    .roadmap-content p { margin-bottom: 0; font-size: 9.5pt; color: var(--mid); }
+
+    /* ===== STACK ===== */
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 16px 0;
+    }
+
+    .stack-item {
+      background: var(--light);
+      border-radius: 8px;
+      padding: 12px 14px;
+      border-top: 3px solid var(--gold);
+    }
+
+    .stack-item h4 { margin-bottom: 4px; font-size: 8pt; color: var(--mid); }
+    .stack-item p { font-family: 'Arial', sans-serif; font-size: 9.5pt; font-weight: 600; margin-bottom: 0; color: var(--dark); }
+
+    /* ===== CHECKLIST ===== */
+    .checklist { list-style: none; padding: 0; margin: 12px 0; }
+    .checklist li {
+      padding: 5px 0 5px 22px;
+      position: relative;
+      font-size: 9.5pt;
+      border-bottom: 1px solid var(--border);
+    }
+    .checklist li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    /* ===== RODAPÉ DE PÁGINA ===== */
+    .page-footer {
+      position: absolute;
+      bottom: 20px;
+      left: 50px;
+      right: 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Arial', sans-serif;
+      font-size: 7.5pt;
+      color: #aaa;
+      border-top: 1px solid var(--border);
+      padding-top: 8px;
+    }
+
+    /* ===== PRINT ===== */
+    @media print {
+      body { font-size: 10pt; }
+      .page, .toc-page, .cover { padding: 40px 45px; }
+      .cover { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .callout-dark, .section-num, .funnel-bar, .stack-item,
+      .event-name, th, .roadmap-phase { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      a { color: inherit; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== CAPA ===== -->
+<div class="cover">
+  <div class="cover-top">
+    <div class="cover-monogram">M</div>
+    <div class="cover-brand">Magnus Imóveis</div>
+  </div>
+
+  <div class="cover-center">
+    <div class="cover-tag">Documentação Técnica · 2026</div>
+    <h1>Briefing do<br>Sistema Digital<br><span>Magnus Imóveis</span></h1>
+    <div class="cover-divider"></div>
+    <p class="cover-sub">
+      Guia completo sobre a arquitetura do sistema, estratégia de analytics,
+      SEO, ferramentas de divulgação e orientações para evolução futura.
+    </p>
+  </div>
+
+  <div class="cover-bottom">
+    <div class="cover-meta">
+      <strong>Projeto</strong>
+      Landing page · Leads · Agendamento · Admin
+    </div>
+    <div class="cover-meta" style="text-align:right">
+      <strong>Data</strong>
+      Junho de 2026
+    </div>
+    <div class="cover-meta" style="text-align:right">
+      <strong>Versão</strong>
+      Sprint 5 — Produção
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== SUMÁRIO ===== -->
+<div class="toc-page">
+  <div class="page-label">Sumário</div>
+  <div class="toc-title">Conteúdo</div>
+
+  <div class="toc-item">
+    <span class="toc-num">01</span>
+    <span class="toc-text">Visão Geral do Sistema</span>
+  </div>
+  <div class="toc-sub">
+    <span class="toc-num">—</span>
+    <span class="toc-text">Stack tecnológica e arquitetura</span>
+  </div>
+  <div class="toc-sub">
+    <span class="toc-num">—</span>
+    <span class="toc-text">Fluxo de dados</span>
+  </div>
+  <div class="toc-sub">
+    <span class="toc-num">—</span>
+    <span class="toc-text">Sprints entregues</span>
+  </div>
+
+  <div class="toc-item">
+    <span class="toc-num">02</span>
+    <span class="toc-text">Google Analytics 4 — Por que importa</span>
+  </div>
+  <div class="toc-sub">
+    <span class="toc-num">—</span>
+    <span class="toc-text">O problema de operar sem dados</span>
+  </div>
+  <div class="toc-sub">
+    <span class="toc-num">—</span>
+    <span class="toc-text">Os 5 eventos implementados</span>
+  </div>
+  <div class="toc-sub">
+    <span class="toc-num">—</span>
+    <span class="toc-text">O funil de conversão</span>
+  </div>
+  <div class="toc-sub">
+    <span class="toc-num">—</span>
+    <span class="toc-text">Tráfego vs. conversão</span>
+  </div>
+
+  <div class="toc-item">
+    <span class="toc-num">03</span>
+    <span class="toc-text">SEO — Visibilidade no Google</span>
+  </div>
+  <div class="toc-sub">
+    <span class="toc-num">—</span>
+    <span class="toc-text">O que foi implementado</span>
+  </div>
+  <div class="toc-sub">
+    <span class="toc-num">—</span>
+    <span class="toc-text">Open Graph e redes sociais</span>
+  </div>
+
+  <div class="toc-item">
+    <span class="toc-num">04</span>
+    <span class="toc-text">Ferramentas Complementares</span>
+  </div>
+  <div class="toc-sub">
+    <span class="toc-num">—</span>
+    <span class="toc-text">Gratuitas — próximo nível</span>
+  </div>
+  <div class="toc-sub">
+    <span class="toc-num">—</span>
+    <span class="toc-text">Pagas — quando crescer</span>
+  </div>
+
+  <div class="toc-item">
+    <span class="toc-num">05</span>
+    <span class="toc-text">Guia de Manutenção</span>
+  </div>
+  <div class="toc-sub">
+    <span class="toc-num">—</span>
+    <span class="toc-text">Deploy e atualizações</span>
+  </div>
+  <div class="toc-sub">
+    <span class="toc-num">—</span>
+    <span class="toc-text">Ações recorrentes do corretor</span>
+  </div>
+
+  <div class="toc-item">
+    <span class="toc-num">06</span>
+    <span class="toc-text">Roadmap de Evolução</span>
+  </div>
+</div>
+
+
+<!-- ===== SEÇÃO 1 — VISÃO GERAL ===== -->
+<div class="page">
+  <div class="page-label">Seção 01</div>
+  <div class="page-header">
+    <div class="section-num">1</div>
+    <h2>Visão Geral do Sistema</h2>
+  </div>
+
+  <p>
+    O sistema da Magnus Imóveis é uma <strong>landing page de alta performance</strong> construída com HTML, CSS e JavaScript
+    puro — sem framework — integrada ao ecossistema Google para gestão de dados, captação de leads e analytics.
+    A escolha por simplicidade técnica foi intencional: menor custo de hospedagem, menor dependência de
+    infraestrutura e manutenção mais direta.
+  </p>
+
+  <h3>Stack tecnológica</h3>
+  <div class="stack-grid">
+    <div class="stack-item">
+      <h4>Front-end</h4>
+      <p>HTML · CSS · JavaScript</p>
+    </div>
+    <div class="stack-item">
+      <h4>Banco de dados</h4>
+      <p>Google Sheets (CSV público)</p>
+    </div>
+    <div class="stack-item">
+      <h4>Back-end leve</h4>
+      <p>Google Apps Script</p>
+    </div>
+    <div class="stack-item">
+      <h4>Autenticação</h4>
+      <p>SHA-256 + localStorage</p>
+    </div>
+    <div class="stack-item">
+      <h4>Hospedagem</h4>
+      <p>Vercel (HTTPS automático)</p>
+    </div>
+    <div class="stack-item">
+      <h4>Analytics</h4>
+      <p>Google Analytics 4</p>
+    </div>
+  </div>
+
+  <h3 style="margin-top:20px">Arquitetura de dados</h3>
+  <div class="callout-dark">
+    <p>
+      <strong>Site público</strong> lê imóveis via CSV do Google Sheets (cache de 5 min no browser) →
+      <strong>Formulários</strong> enviam leads/agendamentos ao Apps Script → Apps Script grava na planilha e
+      cria evento no Google Calendar → <strong>Painel admin</strong> lê/escreve via Apps Script com token secreto →
+      nunca expõe a planilha diretamente ao público.
+    </p>
+  </div>
+
+  <h3>Sprints entregues</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Sprint</th>
+        <th>Foco</th>
+        <th>Principais entregas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Sprint 0</strong></td>
+        <td>Base responsiva</td>
+        <td>Landing page, filtros, cards, mobile</td>
+      </tr>
+      <tr>
+        <td><strong>Sprint 1</strong></td>
+        <td>Detalhe do imóvel</td>
+        <td>imovel.html, galeria, carrossel, JSON de imóveis</td>
+      </tr>
+      <tr>
+        <td><strong>Sprint 3</strong></td>
+        <td>Calculadora</td>
+        <td>Modal SAC/PRICE com cálculo em tempo real</td>
+      </tr>
+      <tr>
+        <td><strong>Sprint 2</strong></td>
+        <td>Google Sheets + Leads</td>
+        <td>Sheets como DB, formulário lead, agendamento → Google Calendar</td>
+      </tr>
+      <tr>
+        <td><strong>Sprint 4</strong></td>
+        <td>Painel admin</td>
+        <td>admin.html, CRUD imóveis, agendamentos, exportação PDF</td>
+      </tr>
+      <tr>
+        <td><strong>Sprint 5</strong></td>
+        <td>SEO + Analytics + Deploy</td>
+        <td>GA4, Open Graph, Schema.org, Vercel, performance</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="page-footer">
+    <span>Magnus Imóveis — Briefing do Sistema</span>
+    <span>Seção 01 · Visão Geral</span>
+  </div>
+</div>
+
+
+<!-- ===== SEÇÃO 2 — GA4 ===== -->
+<div class="page">
+  <div class="page-label">Seção 02</div>
+  <div class="page-header">
+    <div class="section-num">2</div>
+    <h2>Google Analytics 4 — Por que importa</h2>
+  </div>
+
+  <h3>O problema de operar sem dados</h3>
+  <p>
+    Sem analytics, um negócio digital opera <strong>por intuição</strong>. Você sabe que o site existe,
+    que pessoas o acessam — mas não sabe o que fazem, onde param ou o que as converte em clientes.
+    Com dados, você substitui suposições por evidências e age com precisão cirúrgica.
+  </p>
+
+  <div class="callout">
+    <p>
+      <em>Exemplo prático:</em> em determinado mês, os leads caem 40%.
+      Sem dados, a resposta instintiva é "investir em mais anúncios".
+      Com dados, você descobre que o tráfego cresceu — mas a taxa de conversão caiu.
+      O problema não é audiência: é o que acontece depois que as pessoas chegam.
+      São problemas completamente diferentes, com soluções opostas.
+    </p>
+  </div>
+
+  <h3 style="margin-top:18px">Os 5 eventos implementados</h3>
+  <div class="event-grid">
+    <div class="event-card">
+      <span class="event-name">search</span>
+      <h3>Busca de imóveis</h3>
+      <p>Disparado quando o usuário usa o filtro de busca. Revela quais tipos de imóvel, cidades e faixas de preço são mais procurados.</p>
+    </div>
+    <div class="event-card">
+      <span class="event-name">view_item</span>
+      <h3>Visualização de imóvel</h3>
+      <p>Registrado ao abrir a página de detalhe. Permite identificar quais imóveis atraem mais atenção e quais ficam invisíveis no portfólio.</p>
+    </div>
+    <div class="event-card">
+      <span class="event-name">simulation_start</span>
+      <h3>Calculadora aberta</h3>
+      <p>O lead mais quente do funil. Quem simula financiamento já está avaliando compra real — é o sinal de maior intenção de conversão.</p>
+    </div>
+    <div class="event-card">
+      <span class="event-name">lead_form_submit</span>
+      <h3>Formulário enviado</h3>
+      <p>Contabiliza leads capturados. Combinado com view_item, mostra a taxa de conversão por imóvel: visitas vs. interessados.</p>
+    </div>
+    <div class="event-card" style="grid-column: span 2;">
+      <span class="event-name">contact_whatsapp</span>
+      <h3>Clique no WhatsApp</h3>
+      <p>Rastreia qualquer clique em botão de WhatsApp no site — do header, do botão flutuante ou da página de detalhe. Indica engajamento direto e intenção de contato imediato.</p>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>Magnus Imóveis — Briefing do Sistema</span>
+    <span>Seção 02 · Google Analytics 4</span>
+  </div>
+</div>
+
+
+<!-- ===== SEÇÃO 2 (cont.) ===== -->
+<div class="page">
+  <div class="page-label">Seção 02 — continuação</div>
+  <div class="page-header">
+    <div class="section-num">2</div>
+    <h2>O funil de conversão</h2>
+  </div>
+
+  <p>
+    Todo negócio tem um funil — a sequência de etapas entre o primeiro contato e a conversão.
+    O GA4 torna cada etapa visível, permitindo identificar exatamente onde as pessoas abandonam o processo.
+  </p>
+
+  <div class="funnel">
+    <div class="funnel-step">
+      <span class="funnel-label">Visita ao site</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:100%">100% dos visitantes</div></div>
+    </div>
+    <div class="funnel-step">
+      <span class="funnel-label">Faz uma busca</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:70%">~70%</div></div>
+    </div>
+    <div class="funnel-step">
+      <span class="funnel-label">Abre um imóvel</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:45%">~45%</div></div>
+    </div>
+    <div class="funnel-step">
+      <span class="funnel-label">Simula financiamento</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:20%">~20%</div></div>
+    </div>
+    <div class="funnel-step">
+      <span class="funnel-label">Contata / Envia lead</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar gold" style="width:8%">~8% — conversão</div></div>
+    </div>
+  </div>
+
+  <p style="margin-top:6px; font-size:8.5pt; color: var(--mid);"><em>* Percentuais ilustrativos — os números reais serão revelados pelo GA4 após semanas de uso.</em></p>
+
+  <div class="callout" style="margin-top:18px">
+    <p>
+      <strong>Como usar o funil:</strong> se a queda maior estiver entre "abre um imóvel" e "simula/contata",
+      o problema está na <strong>página de detalhe</strong> — fotos ruins, preço fora da realidade ou
+      descrição fraca. Se a queda for entre "faz uma busca" e "abre um imóvel", o portfólio pode estar
+      desatualizado ou os filtros não estão refletindo os imóveis disponíveis.
+    </p>
+  </div>
+
+  <h3 style="margin-top:20px">Tráfego vs. conversão — a distinção que importa</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Cenário</th>
+        <th>Tráfego</th>
+        <th>Conversão</th>
+        <th>Diagnóstico</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Leads caindo</td>
+        <td>↓ Caindo</td>
+        <td>Estável</td>
+        <td>Problema de divulgação — falta de anúncios/indicações</td>
+      </tr>
+      <tr>
+        <td>Leads caindo</td>
+        <td>↑ Crescendo</td>
+        <td>↓ Caindo</td>
+        <td>Problema no site — fotos, preços, UX ou portfólio desatualizado</td>
+      </tr>
+      <tr>
+        <td>Leads estáveis</td>
+        <td>↑ Crescendo</td>
+        <td>↓ Caindo</td>
+        <td>Tráfego de baixa qualidade — público errado chegando</td>
+      </tr>
+      <tr>
+        <td>Leads crescendo</td>
+        <td>↑ Crescendo</td>
+        <td>↑ Crescendo</td>
+        <td>Sistema funcionando — escalar investimento em divulgação</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="page-footer">
+    <span>Magnus Imóveis — Briefing do Sistema</span>
+    <span>Seção 02 · Funil de Conversão</span>
+  </div>
+</div>
+
+
+<!-- ===== SEÇÃO 3 — SEO ===== -->
+<div class="page">
+  <div class="page-label">Seção 03</div>
+  <div class="page-header">
+    <div class="section-num">3</div>
+    <h2>SEO — Visibilidade no Google</h2>
+  </div>
+
+  <p>
+    SEO (Search Engine Optimization) é o conjunto de técnicas que fazem o site aparecer nos resultados
+    de busca orgânica do Google — <strong>sem pagar por anúncios</strong>. É o investimento de longo prazo
+    mais valioso para um site imobiliário, porque conecta intenção de compra ("apartamento para venda no
+    Barreiro BH") diretamente ao portfólio da Magnus.
+  </p>
+
+  <h3>O que foi implementado</h3>
+  <ul class="checklist">
+    <li><strong>Meta description</strong> — resumo da página para o Google exibir nos resultados de busca</li>
+    <li><strong>Canonical URL</strong> — evita conteúdo duplicado (o Google sabe qual é a URL "oficial")</li>
+    <li><strong>robots.txt</strong> — instrui os robôs de busca a indexar o site e bloquear o painel admin</li>
+    <li><strong>sitemap.xml</strong> — mapa do site que acelera a indexação pelo Google</li>
+    <li><strong>Schema.org RealEstateAgent</strong> — dados estruturados que habilitam rich snippets na busca (estrelas, horário, endereço direto no resultado)</li>
+    <li><strong>Schema.org RealEstateListing</strong> — dados estruturados por imóvel, injetados dinamicamente em cada página de detalhe</li>
+    <li><strong>Open Graph (og:)</strong> — controla como o link aparece ao ser compartilhado no WhatsApp, Facebook, LinkedIn</li>
+    <li><strong>Twitter Card</strong> — controla a aparência no X (Twitter)</li>
+    <li><strong>Título dinâmico por imóvel</strong> — cada página de detalhe tem título único com nome, tipo, bairro e cidade</li>
+  </ul>
+
+  <h3 style="margin-top:18px">Open Graph — por que é crítico no mercado imobiliário</h3>
+  <p>
+    No mercado imobiliário, <strong>o WhatsApp é o principal canal de indicação</strong>. Quando um cliente
+    encontra um imóvel e envia o link para um amigo, o Open Graph determina o que aparece na prévia:
+    foto, título e descrição. Um link sem Open Graph configurado aparece como texto simples — sem imagem,
+    sem contexto — e tem taxa de clique dramaticamente menor.
+  </p>
+
+  <div class="callout-dark">
+    <p>
+      <strong>Nota importante:</strong> as tags Open Graph na página de detalhe são atualizadas dinamicamente
+      por JavaScript (<em>imovel.js</em>) com o título, descrição e foto de cada imóvel específico.
+      Isso garante que ao compartilhar <code style="background:rgba(255,255,255,0.1); padding:1px 5px; border-radius:3px;">imovel.html?ref=CA00194</code>,
+      o preview mostre exatamente aquele imóvel — não uma imagem genérica.
+    </p>
+  </div>
+
+  <div class="page-footer">
+    <span>Magnus Imóveis — Briefing do Sistema</span>
+    <span>Seção 03 · SEO</span>
+  </div>
+</div>
+
+
+<!-- ===== SEÇÃO 4 — FERRAMENTAS ===== -->
+<div class="page">
+  <div class="page-label">Seção 04</div>
+  <div class="page-header">
+    <div class="section-num">4</div>
+    <h2>Ferramentas Complementares</h2>
+  </div>
+
+  <p>
+    O GA4 é a base. A partir dele, há um ecossistema de ferramentas que potencializam o que já foi
+    construído — sem exigir mudanças na arquitetura do sistema.
+  </p>
+
+  <h3>Gratuitas — próximo nível recomendado</h3>
+
+  <div class="tool-card">
+    <span class="tool-badge badge-free">Gratuito</span>
+    <div class="tool-content">
+      <h3>Google Search Console</h3>
+      <p>Mostra quais palavras-chave as pessoas digitam no Google antes de chegar ao site, em quais posições o site aparece e quais páginas recebem mais cliques. <strong>Próximo passo natural após o deploy.</strong> Conecta-se ao GA4 em um clique para análise cruzada.</p>
+    </div>
+  </div>
+
+  <div class="tool-card">
+    <span class="tool-badge badge-free">Gratuito</span>
+    <div class="tool-content">
+      <h3>Microsoft Clarity</h3>
+      <p>Grava sessões de usuários (anonimizadas, LGPD-compatível) e gera mapas de calor mostrando onde as pessoas clicam, onde param de rolar e onde abandonam a página. Permite ver literalmente onde o site perde o interesse do visitante.</p>
+    </div>
+  </div>
+
+  <div class="tool-card">
+    <span class="tool-badge badge-free">Gratuito</span>
+    <div class="tool-content">
+      <h3>Google Business Profile (antes Google Meu Negócio)</h3>
+      <p>Cadastro gratuito que faz a Magnus aparecer no Google Maps e na busca local ("imobiliária no Barreiro BH"). Integra-se ao Schema.org já implementado e aumenta a credibilidade orgânica.</p>
+    </div>
+  </div>
+
+  <h3 style="margin-top:18px">Pagas — quando o negócio crescer</h3>
+
+  <div class="tool-card">
+    <span class="tool-badge badge-paid">Pago por clique</span>
+    <div class="tool-content">
+      <h3>Google Ads</h3>
+      <p>Anúncios de busca para termos como "apartamento à venda Barreiro BH". O GA4 que implementamos já está preparado: os eventos <em>view_item</em> e <em>lead_form_submit</em> viram metas de conversão, e o algoritmo do Ads otimiza automaticamente para trazer mais visitantes com perfil de quem converte.</p>
+    </div>
+  </div>
+
+  <div class="tool-card">
+    <span class="tool-badge badge-paid">Plano pago</span>
+    <div class="tool-content">
+      <h3>CRM Imobiliário (ex: Kenlo, Ville Imob, Facilita)</h3>
+      <p>Quando o volume de leads crescer, um CRM substitui a planilha de Leads com pipeline visual, automação de follow-up e gestão de relacionamento. O sistema atual pode alimentar um CRM via integração de webhook no Apps Script — sem reescrever o código do site.</p>
+    </div>
+  </div>
+
+  <div class="tool-card">
+    <span class="tool-badge badge-done">Já feito</span>
+    <div class="tool-content">
+      <h3>Google Analytics 4 + Schema.org + Open Graph</h3>
+      <p>Base de analytics, dados estruturados e metadados sociais já implementados e em produção.</p>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>Magnus Imóveis — Briefing do Sistema</span>
+    <span>Seção 04 · Ferramentas Complementares</span>
+  </div>
+</div>
+
+
+<!-- ===== SEÇÃO 5 — MANUTENÇÃO ===== -->
+<div class="page">
+  <div class="page-label">Seção 05</div>
+  <div class="page-header">
+    <div class="section-num">5</div>
+    <h2>Guia de Manutenção</h2>
+  </div>
+
+  <h3>Deploy e atualizações de código</h3>
+  <p>
+    O sistema usa <strong>deploy contínuo</strong>: qualquer alteração nos arquivos do projeto,
+    seguida de um <em>git push</em>, dispara um novo deploy automático no Vercel em ~30 segundos.
+    Não é necessário acessar o painel do Vercel para atualizar o site.
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Ação</th>
+        <th>Comandos</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Atualizar código</strong></td>
+        <td><code>git add . &amp;&amp; git commit -m "descrição" &amp;&amp; git push</code></td>
+      </tr>
+      <tr>
+        <td><strong>Republicar Apps Script</strong></td>
+        <td>Apps Script → Implantar → Gerenciar → Editar → Nova versão → Implantar</td>
+      </tr>
+      <tr>
+        <td><strong>Adicionar imóvel</strong></td>
+        <td>Acessar <code>admin.html</code> → Login → Novo imóvel</td>
+      </tr>
+      <tr>
+        <td><strong>Ver leads/agendamentos</strong></td>
+        <td>Acessar <code>admin.html</code> → abas Leads e Agendamentos</td>
+      </tr>
+      <tr>
+        <td><strong>Trocar domínio</strong></td>
+        <td>Vercel → Settings → Domains → Add Domain</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin-top:20px">Ações recorrentes do corretor</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Frequência</th>
+        <th>Ação</th>
+        <th>Onde</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Diário</td>
+        <td>Verificar novos agendamentos e leads</td>
+        <td>admin.html → abas Leads e Agendamentos</td>
+      </tr>
+      <tr>
+        <td>Semanal</td>
+        <td>Confirmar ou cancelar visitas pendentes</td>
+        <td>admin.html → Agendamentos → ação na linha</td>
+      </tr>
+      <tr>
+        <td>Conforme necessário</td>
+        <td>Cadastrar, editar, marcar como vendido</td>
+        <td>admin.html → Imóveis → Novo / Editar</td>
+      </tr>
+      <tr>
+        <td>Mensal</td>
+        <td>Revisar métricas de conversão</td>
+        <td>Google Analytics 4 → Relatórios → Em tempo real</td>
+      </tr>
+      <tr>
+        <td>Mensal</td>
+        <td>Exportar relatório de leads em PDF</td>
+        <td>admin.html → Leads → Exportar PDF</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout" style="margin-top:18px">
+    <p>
+      <strong>Atenção ao trocar de conta Google:</strong> se migrar o sistema para uma conta corporativa,
+      será necessário copiar o código do Apps Script para a nova conta, republicar como Web App e atualizar
+      a URL em <em>js/leads.js</em> (APPS_SCRIPT_URL) e <em>js/admin.js</em>. A planilha também precisa
+      ser compartilhada com a nova conta ou transferida.
+    </p>
+  </div>
+
+  <h3 style="margin-top:24px">Limites da infraestrutura gratuita</h3>
+  <p>
+    O sistema usa exclusivamente serviços no plano gratuito. Cada serviço tem limites generosos que
+    dificilmente serão atingidos em escala normal — mas é importante conhecê-los para agir antes de
+    uma interrupção.
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Serviço</th>
+        <th>Limite gratuito</th>
+        <th>Estimativa de uso real</th>
+        <th>O que fazer ao aproximar</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Google Sheets</strong></td>
+        <td>10 milhões de células</td>
+        <td>~2.100 células (100 imóveis × 21 colunas) — ínfimo</td>
+        <td>Aba Leads/Agendamentos cresce: mover linhas antigas para aba de arquivo a cada 6–12 meses</td>
+      </tr>
+      <tr>
+        <td><strong>Cloudinary</strong></td>
+        <td>25 GB armazenamento · 25 GB banda/mês</td>
+        <td>~250 MB (100 imóveis × 5 fotos × 500 KB)</td>
+        <td>Excluir fotos de imóveis vendidos; se necessário, upgrade ~US$ 89/ano</td>
+      </tr>
+      <tr>
+        <td><strong>Apps Script</strong></td>
+        <td>6 min/execução · 90 min/dia de processamento</td>
+        <td>Cada envio dura &lt; 2 segundos — margem ampla</td>
+        <td>Se volume crescer muito: migrar para Google Workspace (~R$ 30/mês)</td>
+      </tr>
+      <tr>
+        <td><strong>Vercel</strong></td>
+        <td>100 GB banda/mês · deploys ilimitados</td>
+        <td>Site estático — &lt; 1 GB/mês estimado</td>
+        <td>Praticamente sem risco; alternativa gratuita: Netlify</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout" style="margin-top:12px">
+    <p>
+      <strong>Rotina preventiva recomendada (anual):</strong> 1) Exportar e arquivar linhas de Leads e Agendamentos
+      do ano anterior em abas separadas na planilha. 2) No Cloudinary, revisar a pasta de imagens e excluir
+      fotos de imóveis que foram removidos do portfólio. 3) Verificar o painel do Cloudinary
+      (<em>cloudinary.com → Media Library → Usage</em>) para confirmar que o uso está abaixo de 80% do limite.
+    </p>
+  </div>
+
+  <div class="page-footer">
+    <span>Magnus Imóveis — Briefing do Sistema</span>
+    <span>Seção 05 · Manutenção</span>
+  </div>
+</div>
+
+
+<!-- ===== SEÇÃO 6 — ROADMAP ===== -->
+<div class="page">
+  <div class="page-label">Seção 06</div>
+  <div class="page-header">
+    <div class="section-num">6</div>
+    <h2>Roadmap de Evolução</h2>
+  </div>
+
+  <p>
+    O sistema está completo e em produção. As evoluções abaixo são sugestões para quando o negócio
+    crescer — cada uma agrega valor sem exigir reescrita do que já existe.
+  </p>
+
+  <div class="roadmap-item">
+    <span class="roadmap-phase gold-bg">Imediato</span>
+    <div class="roadmap-content">
+      <h3>Google Search Console</h3>
+      <p>Conectar o Search Console ao domínio para monitorar indexação, palavras-chave orgânicas e erros de rastreamento. Leva 10 minutos e é gratuito.</p>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <span class="roadmap-phase gold-bg">Imediato</span>
+    <div class="roadmap-content">
+      <h3>Domínio próprio</h3>
+      <p>Substituir <em>magnus-imoveis.vercel.app</em> por um domínio como <em>magnusimoveis.com.br</em>. Aumenta credibilidade e favorece SEO. Custo: ~R$40/ano no registro.br.</p>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <span class="roadmap-phase">Curto prazo</span>
+    <div class="roadmap-content">
+      <h3>Fotos profissionais por imóvel</h3>
+      <p>Substituir as imagens genéricas (casa.jpg, terreno.jpg) por fotos reais de cada imóvel, cadastradas pelo painel admin. É o maior impulsionador de conversão disponível agora.</p>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <span class="roadmap-phase">Curto prazo</span>
+    <div class="roadmap-content">
+      <h3>Microsoft Clarity (mapas de calor)</h3>
+      <p>Instalação gratuita que revela onde os usuários clicam e onde param de rolar. Dados para otimizar o layout sem precisar de suposições.</p>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <span class="roadmap-phase">Médio prazo</span>
+    <div class="roadmap-content">
+      <h3>Portais imobiliários (ZAP, OLX, VivaReal)</h3>
+      <p>Publicar imóveis em portais com link apontando para o site da Magnus. Aumenta tráfego qualificado sem custo de anúncio inicial.</p>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <span class="roadmap-phase">Médio prazo</span>
+    <div class="roadmap-content">
+      <h3>Google Ads — busca local</h3>
+      <p>Anúncios para termos como "apartamento à venda Barreiro BH". Com o GA4 já configurado, o Ads pode otimizar por conversão (lead_form_submit) desde o primeiro dia de campanha.</p>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <span class="roadmap-phase">Longo prazo</span>
+    <div class="roadmap-content">
+      <h3>CRM Imobiliário</h3>
+      <p>Quando o volume de leads tornar a planilha do Google Sheets insuficiente, migrar para um CRM com pipeline visual, lembretes automáticos e gestão de relacionamento. O Apps Script atual pode alimentar qualquer CRM via webhook.</p>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
+    <span class="roadmap-phase">Longo prazo</span>
+    <div class="roadmap-content">
+      <h3>Conta Google corporativa</h3>
+      <p>Migrar de Gmail pessoal para uma conta Google Workspace (<em>contato@magnusimoveis.com.br</em>). Aumenta credibilidade nos emails automáticos enviados pelo Apps Script e separa operação pessoal da profissional.</p>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>Magnus Imóveis — Briefing do Sistema</span>
+    <span>Seção 06 · Roadmap</span>
+  </div>
+</div>
+
+</body>
+</html>
