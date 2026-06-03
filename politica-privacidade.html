@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Política de Privacidade — Magnus Imóveis</title>
+  <meta name="description" content="Política de Privacidade e Proteção de Dados da Magnus Imóveis, conforme a Lei Geral de Proteção de Dados (LGPD — Lei 13.709/2018).">
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="https://magnus-imoveis.vercel.app/politica-privacidade.html">
+
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-V355TXQ9Q3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-V355TXQ9Q3');
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"></noscript>
+
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="shortcut icon" type="image/png" href="images/logo-icone.png?v=3">
+  <link rel="icon" type="image/png" href="images/logo-icone.png?v=3">
+
+  <style>
+    /* ===== HERO INTERNO ===== */
+    .page-hero {
+      background: linear-gradient(160deg, #111111 0%, #2d2d2d 100%);
+      padding: 3.5rem 1.5rem 3rem;
+      text-align: center;
+    }
+    .page-hero .breadcrumb {
+      font-size: .8rem;
+      color: rgba(255,255,255,.45);
+      margin-bottom: .75rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: .5rem;
+    }
+    .page-hero .breadcrumb a { color: rgba(255,255,255,.45); transition: color .22s; }
+    .page-hero .breadcrumb a:hover { color: var(--gold); }
+    .page-hero .breadcrumb span { color: rgba(255,255,255,.25); }
+    .page-hero h1 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: .6rem;
+    }
+    .page-hero h1 span { color: var(--gold); }
+    .page-hero p {
+      color: rgba(255,255,255,.6);
+      font-size: .95rem;
+      max-width: 560px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ===== CONTEÚDO PRINCIPAL ===== */
+    .privacy-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 4rem;
+    }
+
+    /* ===== SUMÁRIO ===== */
+    .toc {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-left: 4px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 3rem;
+    }
+    .toc h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--gray-800);
+      margin-bottom: 1rem;
+    }
+    .toc ol {
+      padding-left: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: .35rem;
+    }
+    .toc ol li a {
+      font-size: .88rem;
+      color: var(--gray-600);
+      transition: color .22s;
+    }
+    .toc ol li a:hover { color: var(--gold); }
+
+    /* ===== SEÇÕES ===== */
+    .privacy-section {
+      margin-bottom: 2.75rem;
+    }
+    .privacy-section:last-of-type { margin-bottom: 0; }
+
+    .section-anchor {
+      display: block;
+      height: 80px;
+      margin-top: -80px;
+      pointer-events: none;
+      visibility: hidden;
+    }
+
+    .privacy-section h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--navy-dark);
+      border-bottom: 2px solid var(--gray-200);
+      padding-bottom: .6rem;
+      margin-bottom: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+    .privacy-section h2 .sec-num {
+      background: var(--gold);
+      color: #fff;
+      font-size: .75rem;
+      font-weight: 700;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .privacy-section p,
+    .privacy-section li {
+      font-size: .95rem;
+      color: var(--gray-600);
+      line-height: 1.75;
+    }
+    .privacy-section p { margin-bottom: .85rem; }
+    .privacy-section p:last-child { margin-bottom: 0; }
+
+    .privacy-section ul,
+    .privacy-section ol {
+      padding-left: 1.4rem;
+      margin-bottom: .85rem;
+      display: flex;
+      flex-direction: column;
+      gap: .4rem;
+    }
+    .privacy-section ul { list-style: disc; }
+    .privacy-section ol { list-style: decimal; }
+
+    .privacy-section strong { color: var(--gray-800); font-weight: 600; }
+    .privacy-section a { color: var(--gold); text-decoration: underline; }
+    .privacy-section a:hover { color: #a07d18; }
+
+    /* ===== CALLOUT BOXES ===== */
+    .info-box {
+      background: #fffbea;
+      border: 1px solid #f0d060;
+      border-left: 4px solid var(--gold);
+      border-radius: var(--radius-sm);
+      padding: 1rem 1.25rem;
+      margin: 1rem 0;
+    }
+    .info-box p { margin-bottom: 0; font-size: .9rem; }
+
+    .rights-box {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      margin-top: 1rem;
+    }
+    .rights-box h3 {
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--gray-800);
+      margin-bottom: .8rem;
+    }
+    .rights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: .75rem;
+    }
+    .right-item {
+      display: flex;
+      gap: .6rem;
+      align-items: flex-start;
+    }
+    .right-icon {
+      width: 28px;
+      height: 28px;
+      background: var(--gold);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: .1rem;
+    }
+    .right-icon svg { width: 14px; height: 14px; color: #fff; }
+    .right-item p {
+      font-size: .85rem;
+      color: var(--gray-600);
+      margin: 0;
+      line-height: 1.5;
+    }
+    .right-item strong { display: block; font-size: .88rem; color: var(--gray-800); margin-bottom: .15rem; }
+
+    /* ===== TABELA DE BASES LEGAIS ===== */
+    .legal-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .88rem;
+      margin: 1rem 0;
+    }
+    .legal-table th {
+      background: var(--navy-dark);
+      color: #fff;
+      font-weight: 600;
+      padding: .65rem 1rem;
+      text-align: left;
+    }
+    .legal-table th:first-child { border-radius: var(--radius-sm) 0 0 0; }
+    .legal-table th:last-child { border-radius: 0 var(--radius-sm) 0 0; }
+    .legal-table td {
+      padding: .65rem 1rem;
+      border-bottom: 1px solid var(--gray-200);
+      color: var(--gray-600);
+      vertical-align: top;
+    }
+    .legal-table tr:last-child td { border-bottom: none; }
+    .legal-table tr:nth-child(even) td { background: var(--gray-50); }
+    .legal-table td strong { color: var(--gray-800); }
+
+    /* ===== TABELA DE TERCEIROS ===== */
+    .third-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .88rem;
+      margin: 1rem 0;
+    }
+    .third-table th {
+      background: var(--navy-dark);
+      color: #fff;
+      font-weight: 600;
+      padding: .65rem 1rem;
+      text-align: left;
+    }
+    .third-table th:first-child { border-radius: var(--radius-sm) 0 0 0; }
+    .third-table th:last-child { border-radius: 0 var(--radius-sm) 0 0; }
+    .third-table td {
+      padding: .65rem 1rem;
+      border-bottom: 1px solid var(--gray-200);
+      color: var(--gray-600);
+      vertical-align: top;
+    }
+    .third-table tr:last-child td { border-bottom: none; }
+    .third-table tr:nth-child(even) td { background: var(--gray-50); }
+    .third-table td strong { color: var(--gray-800); }
+
+    /* ===== CAIXA DE CONTATO DPO ===== */
+    .dpo-box {
+      background: var(--navy-dark);
+      border-radius: var(--radius);
+      padding: 1.75rem 2rem;
+      margin-top: 1.25rem;
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .dpo-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--gold);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .dpo-icon svg { width: 24px; height: 24px; color: #fff; }
+    .dpo-info h3 { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: .4rem; }
+    .dpo-info p { font-size: .88rem; color: rgba(255,255,255,.65); line-height: 1.6; margin-bottom: .3rem; }
+    .dpo-info a { color: var(--gold); text-decoration: none; }
+    .dpo-info a:hover { text-decoration: underline; }
+
+    /* ===== RODAPÉ DA POLÍTICA ===== */
+    .policy-footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--gray-200);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: .75rem;
+    }
+    .policy-footer p { font-size: .82rem; color: var(--gray-400); margin: 0; }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--gold);
+      border: 2px solid var(--gold);
+      padding: .45rem 1rem;
+      border-radius: 99px;
+      transition: background .22s, color .22s;
+    }
+    .back-btn:hover { background: var(--gold); color: #fff; }
+    .back-btn svg { width: 14px; height: 14px; }
+
+    /* ===== RESPONSIVO ===== */
+    @media (max-width: 640px) {
+      .privacy-wrap { padding: 2rem 1rem 3rem; }
+      .rights-grid { grid-template-columns: 1fr; }
+      .dpo-box { gap: 1rem; }
+      .legal-table, .third-table { font-size: .8rem; }
+      .legal-table td, .third-table td,
+      .legal-table th, .third-table th { padding: .5rem .75rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="inner">
+      <div class="topbar-contacts">
+        <a href="tel:3133216775">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.5 1.18 2 2 0 012.48 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.16 6.16l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          (31) 3321-6775
+        </a>
+        <a href="https://wa.me/5531999845813" target="_blank">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.118 1.532 5.845L.057 23.737a.5.5 0 00.614.61l5.995-1.567A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a10 10 0 01-5.17-1.438l-.371-.22-3.844 1.004 1.026-3.742-.241-.386A10 10 0 1112 22z"/></svg>
+          (31) 99984-5813
+        </a>
+        <a href="mailto:magnusimoveisbh@hotmail.com">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          magnusimoveisbh@hotmail.com
+        </a>
+      </div>
+      <span class="creci">CRECI 32.402</span>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <a href="/" class="logo">
+        <img src="images/logo.png" alt="Magnus Imóveis" style="display:none"
+          onload="this.style.display='block'; this.nextElementSibling.style.display='none'"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <div class="logo-fallback">MAGNUS<br><span>IMÓVEIS</span></div>
+      </a>
+
+      <nav>
+        <a href="/#imoveis">Imóveis</a>
+        <a href="/#servicos">Serviços</a>
+        <a href="/#sobre">Sobre</a>
+        <a href="/#contato">Contato</a>
+      </nav>
+
+      <a href="https://wa.me/5531999845813" target="_blank" class="header-cta">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.118 1.532 5.845L.057 23.737a.5.5 0 00.614.61l5.995-1.567A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a10 10 0 01-5.17-1.438l-.371-.22-3.844 1.004 1.026-3.742-.241-.386A10 10 0 1112 22z"/></svg>
+        Falar no WhatsApp
+      </a>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="page-hero">
+    <div class="breadcrumb">
+      <a href="/">Início</a>
+      <span>›</span>
+      <span>Política de Privacidade</span>
+    </div>
+    <h1>Política de <span>Privacidade</span></h1>
+    <p>Como coletamos, usamos e protegemos seus dados pessoais, em conformidade com a Lei Geral de Proteção de Dados (LGPD — Lei 13.709/2018).</p>
+  </section>
+
+  <!-- CONTEÚDO -->
+  <div class="privacy-wrap">
+
+    <!-- SUMÁRIO -->
+    <nav class="toc" aria-label="Sumário">
+      <h2>Sumário</h2>
+      <ol>
+        <li><a href="#controlador">1. Quem somos — Controlador dos Dados</a></li>
+        <li><a href="#dados-coletados">2. Quais dados coletamos</a></li>
+        <li><a href="#finalidade">3. Para que usamos seus dados</a></li>
+        <li><a href="#bases-legais">4. Bases legais do tratamento</a></li>
+        <li><a href="#cookies">5. Cookies e rastreamento</a></li>
+        <li><a href="#terceiros">6. Compartilhamento com terceiros</a></li>
+        <li><a href="#retencao">7. Por quanto tempo guardamos seus dados</a></li>
+        <li><a href="#seguranca">8. Como protegemos seus dados</a></li>
+        <li><a href="#direitos">9. Seus direitos como titular</a></li>
+        <li><a href="#menores">10. Dados de menores de idade</a></li>
+        <li><a href="#links">11. Links para sites externos</a></li>
+        <li><a href="#alteracoes">12. Alterações nesta política</a></li>
+        <li><a href="#contato">13. Contato e Encarregado (DPO)</a></li>
+      </ol>
+    </nav>
+
+    <!-- 1. CONTROLADOR -->
+    <section class="privacy-section">
+      <span class="section-anchor" id="controlador"></span>
+      <h2><span class="sec-num">1</span> Quem somos — Controlador dos Dados</h2>
+      <p>
+        <strong>Magnus Imóveis</strong> é a controladora dos dados pessoais tratados por meio deste site, responsável pelas decisões sobre o tratamento das suas informações, nos termos do art. 5º, inciso VI, da Lei 13.709/2018 (LGPD).
+      </p>
+      <p>
+        <strong>Razão social:</strong> Magnus Imóveis — Corretagem de Imóveis<br>
+        <strong>CRECI:</strong> 32.402<br>
+        <strong>Endereço:</strong> Av. Senador Levindo Coelho, 54 — Loja — Tirol, Belo Horizonte / MG — CEP 30662-290<br>
+        <strong>E-mail:</strong> <a href="mailto:magnusimoveisbh@hotmail.com">magnusimoveisbh@hotmail.com</a><br>
+        <strong>Telefone:</strong> (31) 3321-6775
+      </p>
+    </section>
+
+    <!-- 2. DADOS COLETADOS -->
+    <section class="privacy-section">
+      <span class="section-anchor" id="dados-coletados"></span>
+      <h2><span class="sec-num">2</span> Quais dados coletamos</h2>
+      <p>Coletamos apenas os dados necessários para prestar nossos serviços. As informações são obtidas pelas seguintes vias:</p>
+
+      <p><strong>a) Formulário "Tenho Interesse" (geração de lead)</strong></p>
+      <ul>
+        <li>Nome completo</li>
+        <li>Telefone / WhatsApp</li>
+        <li>E-mail</li>
+        <li>Referência do imóvel de interesse</li>
+      </ul>
+
+      <p><strong>b) Formulário de Agendamento de Visita</strong></p>
+      <ul>
+        <li>Nome completo</li>
+        <li>Telefone / WhatsApp</li>
+        <li>E-mail</li>
+        <li>Data e horário pretendidos</li>
+        <li>Imóvel de interesse</li>
+      </ul>
+
+      <p><strong>c) Dados de navegação (coletados automaticamente)</strong></p>
+      <ul>
+        <li>Endereço IP (anonimizado)</li>
+        <li>Tipo de dispositivo, navegador e sistema operacional</li>
+        <li>Páginas visitadas, tempo de permanência e cliques</li>
+        <li>Cidade/estado (geolocalização aproximada via IP)</li>
+        <li>Origem do acesso (busca orgânica, redes sociais, links diretos)</li>
+      </ul>
+
+      <div class="info-box">
+        <p><strong>Não coletamos</strong> documentos de identificação (CPF, RG), dados financeiros, senhas ou qualquer dado sensível por meio deste site.</p>
+      </div>
+    </section>
+
+    <!-- 3. FINALIDADE -->
+    <section class="privacy-section">
+      <span class="section-anchor" id="finalidade"></span>
+      <h2><span class="sec-num">3</span> Para que usamos seus dados</h2>
+      <p>Os dados coletados são utilizados exclusivamente para as finalidades abaixo:</p>
+      <ol>
+        <li><strong>Atender sua solicitação de interesse:</strong> entrar em contato via telefone, WhatsApp ou e-mail para apresentar o imóvel desejado ou alternativas disponíveis.</li>
+        <li><strong>Confirmar e organizar visitas:</strong> agendar o horário de visita ao imóvel, registrar o compromisso e enviar lembretes.</li>
+        <li><strong>Melhorar a experiência do site:</strong> analisar padrões de navegação para aprimorar o desempenho, a usabilidade e o conteúdo apresentado.</li>
+        <li><strong>Cumprir obrigações legais:</strong> manter registros de transações e interações quando exigido por lei ou regulação aplicável ao setor imobiliário.</li>
+      </ol>
+      <p>Seus dados <strong>não serão usados para marketing não solicitado, perfis comportamentais comercializados ou decisões totalmente automatizadas</strong> que produzam efeitos jurídicos sobre você.</p>
+    </section>
+
+    <!-- 4. BASES LEGAIS -->
+    <section class="privacy-section">
+      <span class="section-anchor" id="bases-legais"></span>
+      <h2><span class="sec-num">4</span> Bases legais do tratamento</h2>
+      <p>Todo tratamento de dados realizado pela Magnus Imóveis está fundamentado em pelo menos uma das bases legais previstas no art. 7º da LGPD:</p>
+
+      <table class="legal-table" aria-label="Bases legais do tratamento de dados">
+        <thead>
+          <tr>
+            <th>Atividade de tratamento</th>
+            <th>Base legal (LGPD art. 7º)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Formulário "Tenho Interesse"</strong> — contato após envio do formulário</td>
+            <td>Inciso I — <strong>Consentimento</strong> do titular (marcação do checkbox de aceite)</td>
+          </tr>
+          <tr>
+            <td><strong>Agendamento de visita</strong> — confirmação e registro</td>
+            <td>Inciso V — <strong>Execução de contrato</strong> ou procedimentos preliminares a pedido do titular</td>
+          </tr>
+          <tr>
+            <td><strong>Análise de navegação</strong> (Google Analytics, Microsoft Clarity)</td>
+            <td>Inciso IX — <strong>Legítimo interesse</strong> do controlador — melhoria do serviço e segurança digital</td>
+          </tr>
+          <tr>
+            <td><strong>Manutenção de registros</strong> (leads, agendamentos)</td>
+            <td>Inciso II — <strong>Cumprimento de obrigação legal</strong> e regulatória aplicável a corretores de imóveis</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>O consentimento obtido nos formulários pode ser <strong>revogado a qualquer momento</strong>, sem prejuízo do tratamento já realizado (art. 8º, § 5º, LGPD), bastando entrar em contato pelo e-mail indicado na <a href="#contato">Seção 13</a>.</p>
+    </section>
+
+    <!-- 5. COOKIES -->
+    <section class="privacy-section">
+      <span class="section-anchor" id="cookies"></span>
+      <h2><span class="sec-num">5</span> Cookies e rastreamento</h2>
+      <p>Utilizamos cookies e tecnologias similares para garantir o funcionamento adequado do site e coletar dados de navegação. Os principais são:</p>
+
+      <table class="legal-table" aria-label="Cookies utilizados no site">
+        <thead>
+          <tr>
+            <th>Cookie / Tecnologia</th>
+            <th>Fornecedor</th>
+            <th>Finalidade</th>
+            <th>Duração</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>_ga, _ga_*</strong></td>
+            <td>Google Analytics 4</td>
+            <td>Identificação de sessões únicas, métricas de acesso e comportamento de navegação</td>
+            <td>2 anos</td>
+          </tr>
+          <tr>
+            <td><strong>_clsk, _clck, CLID</strong></td>
+            <td>Microsoft Clarity</td>
+            <td>Gravação de sessão (heatmaps e mapas de cliques) para análise de usabilidade</td>
+            <td>1 ano</td>
+          </tr>
+          <tr>
+            <td><strong>sessionStorage</strong></td>
+            <td>Magnus Imóveis (interno)</td>
+            <td>Cache temporário de dados de imóveis para melhorar o desempenho de carregamento</td>
+            <td>Sessão (apagado ao fechar o navegador)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p><strong>Como desativar cookies:</strong> você pode configurar seu navegador para bloquear ou excluir cookies. Veja as instruções para <a href="https://support.google.com/chrome/answer/95647" target="_blank" rel="noopener">Chrome</a>, <a href="https://support.mozilla.org/pt-BR/kb/cookies-informacoes-sites-armazenam-no-computador" target="_blank" rel="noopener">Firefox</a> e <a href="https://support.apple.com/pt-br/guide/safari/sfri11471/mac" target="_blank" rel="noopener">Safari</a>. A desativação pode impactar funcionalidades do site.</p>
+
+      <p>Você também pode optar por não participar da coleta do Google Analytics instalando o <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">complemento de desativação do Google Analytics</a>.</p>
+    </section>
+
+    <!-- 6. TERCEIROS -->
+    <section class="privacy-section">
+      <span class="section-anchor" id="terceiros"></span>
+      <h2><span class="sec-num">6</span> Compartilhamento com terceiros</h2>
+      <p>A Magnus Imóveis não vende, aluga ou comercializa dados pessoais. O compartilhamento ocorre apenas com os parceiros tecnológicos listados abaixo, que atuam como <strong>operadores de dados</strong> (art. 5º, VII, LGPD) em nome da Magnus Imóveis:</p>
+
+      <table class="third-table" aria-label="Terceiros que processam dados em nome da Magnus Imóveis">
+        <thead>
+          <tr>
+            <th>Empresa</th>
+            <th>Serviço</th>
+            <th>Dados compartilhados</th>
+            <th>Política de privacidade</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Google LLC</strong></td>
+            <td>Google Sheets, Apps Script, Google Analytics 4, Google Calendar</td>
+            <td>Leads (nome, telefone, e-mail), agendamentos, dados de navegação (anonimizados)</td>
+            <td><a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Ver política</a></td>
+          </tr>
+          <tr>
+            <td><strong>Microsoft Corporation</strong></td>
+            <td>Microsoft Clarity</td>
+            <td>Dados de navegação e interação (sessão anonimizada)</td>
+            <td><a href="https://privacy.microsoft.com/pt-br/privacystatement" target="_blank" rel="noopener">Ver política</a></td>
+          </tr>
+          <tr>
+            <td><strong>Cloudinary Ltd.</strong></td>
+            <td>Armazenamento e entrega de imagens dos imóveis</td>
+            <td>Imagens enviadas pelo corretor (sem dados de clientes)</td>
+            <td><a href="https://cloudinary.com/privacy" target="_blank" rel="noopener">Ver política</a></td>
+          </tr>
+          <tr>
+            <td><strong>Vercel Inc.</strong></td>
+            <td>Hospedagem do site</td>
+            <td>IP de acesso e cabeçalhos HTTP (logs de servidor)</td>
+            <td><a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener">Ver política</a></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>Podemos ainda compartilhar dados quando <strong>obrigados por lei</strong>, determinação judicial ou autoridade competente, bem como para proteger direitos e segurança da Magnus Imóveis ou de terceiros.</p>
+    </section>
+
+    <!-- 7. RETENÇÃO -->
+    <section class="privacy-section">
+      <span class="section-anchor" id="retencao"></span>
+      <h2><span class="sec-num">7</span> Por quanto tempo guardamos seus dados</h2>
+      <p>Mantemos seus dados pelo prazo necessário para cumprir a finalidade pela qual foram coletados, ou enquanto houver obrigação legal que exija a manutenção:</p>
+      <ul>
+        <li><strong>Leads (Formulário "Tenho Interesse"):</strong> até 2 (dois) anos após o último contato ou até que você solicite a exclusão.</li>
+        <li><strong>Agendamentos de visita:</strong> até 2 (dois) anos após a data do agendamento, para fins de controle e eventual necessidade probatória.</li>
+        <li><strong>Dados de navegação (Analytics / Clarity):</strong> conforme as políticas dos respectivos fornecedores (geralmente 13 a 26 meses nas ferramentas de analytics).</li>
+        <li><strong>Logs do servidor (Vercel):</strong> até 30 (trinta) dias, conforme padrão do serviço de hospedagem.</li>
+      </ul>
+      <p>Após o término do prazo, os dados são excluídos ou anonimizados de forma definitiva.</p>
+    </section>
+
+    <!-- 8. SEGURANÇA -->
+    <section class="privacy-section">
+      <span class="section-anchor" id="seguranca"></span>
+      <h2><span class="sec-num">8</span> Como protegemos seus dados</h2>
+      <p>Adotamos medidas técnicas e organizacionais adequadas para proteger seus dados pessoais contra acesso não autorizado, perda, destruição, alteração ou divulgação indevida, conforme exigido pelo art. 46 da LGPD:</p>
+      <ul>
+        <li><strong>Transmissão criptografada:</strong> todo o tráfego entre seu navegador e o site é protegido por HTTPS/TLS.</li>
+        <li><strong>Acesso restrito ao painel administrativo:</strong> o painel de gestão de imóveis é protegido por senha e acessível apenas ao corretor autorizado.</li>
+        <li><strong>Armazenamento em plataformas certificadas:</strong> os dados de leads e agendamentos ficam na infraestrutura do Google (ISO/IEC 27001, SOC 2), com controle de acesso por conta Google protegida.</li>
+        <li><strong>Minimização de dados:</strong> coletamos apenas o mínimo necessário para a finalidade declarada.</li>
+        <li><strong>Sem armazenamento local de senhas:</strong> nenhuma senha de usuário final é armazenada por este site.</li>
+      </ul>
+      <p>Em caso de incidente de segurança que possa gerar risco relevante aos titulares, a Magnus Imóveis notificará a Autoridade Nacional de Proteção de Dados (ANPD) e os titulares afetados, dentro dos prazos estabelecidos pelo art. 48 da LGPD.</p>
+    </section>
+
+    <!-- 9. DIREITOS DO TITULAR -->
+    <section class="privacy-section">
+      <span class="section-anchor" id="direitos"></span>
+      <h2><span class="sec-num">9</span> Seus direitos como titular</h2>
+      <p>A LGPD garante a você, como titular dos dados, os seguintes direitos previstos no art. 18:</p>
+
+      <div class="rights-box">
+        <div class="rights-grid">
+          <div class="right-item">
+            <div class="right-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
+            </div>
+            <p><strong>Confirmação e acesso</strong> Saber se tratamos seus dados e obter cópia deles.</p>
+          </div>
+          <div class="right-item">
+            <div class="right-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </div>
+            <p><strong>Correção</strong> Corrigir dados incompletos, inexatos ou desatualizados.</p>
+          </div>
+          <div class="right-item">
+            <div class="right-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6m4-6v6"/><path d="M9 6V4h6v2"/></svg>
+            </div>
+            <p><strong>Eliminação</strong> Solicitar a exclusão dos dados tratados com base em seu consentimento.</p>
+          </div>
+          <div class="right-item">
+            <div class="right-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            </div>
+            <p><strong>Anonimização / Bloqueio</strong> Tornar dados anônimos ou bloquear tratamento desnecessário ou excessivo.</p>
+          </div>
+          <div class="right-item">
+            <div class="right-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </div>
+            <p><strong>Portabilidade</strong> Receber seus dados em formato estruturado para portá-los a outro fornecedor.</p>
+          </div>
+          <div class="right-item">
+            <div class="right-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <p><strong>Informação sobre compartilhamento</strong> Saber com quais terceiros seus dados foram compartilhados.</p>
+          </div>
+          <div class="right-item">
+            <div class="right-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </div>
+            <p><strong>Revogação do consentimento</strong> Retirar seu consentimento a qualquer momento, sem prejuízo do tratamento já realizado.</p>
+          </div>
+          <div class="right-item">
+            <div class="right-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c1.51 0 2.93.37 4.18 1.02"/></svg>
+            </div>
+            <p><strong>Oposição</strong> Opor-se ao tratamento realizado sem seu consentimento, caso não esteja em conformidade com a lei.</p>
+          </div>
+        </div>
+      </div>
+
+      <p style="margin-top:1.1rem">Para exercer qualquer um desses direitos, entre em contato pelo e-mail <a href="mailto:magnusimoveisbh@hotmail.com">magnusimoveisbh@hotmail.com</a>, indicando seu nome, o direito que deseja exercer e, se possível, os dados que se referem ao seu pedido. Responderemos em até <strong>15 (quinze) dias</strong> corridos, conforme previsto na LGPD.</p>
+
+      <p>Caso considere que sua solicitação não foi adequadamente atendida, você tem o direito de peticionar à <strong>Autoridade Nacional de Proteção de Dados (ANPD)</strong>, conforme art. 18, § 1º, da LGPD. Mais informações em <a href="https://www.gov.br/anpd/pt-br" target="_blank" rel="noopener">www.gov.br/anpd</a>.</p>
+    </section>
+
+    <!-- 10. MENORES -->
+    <section class="privacy-section">
+      <span class="section-anchor" id="menores"></span>
+      <h2><span class="sec-num">10</span> Dados de menores de idade</h2>
+      <p>Este site não é direcionado a menores de 18 (dezoito) anos e não coleta intencionalmente dados pessoais de crianças ou adolescentes. Caso tenhamos coletado, inadvertidamente, dados de um menor, solicitamos que o responsável legal entre em contato para que os dados sejam excluídos imediatamente.</p>
+    </section>
+
+    <!-- 11. LINKS EXTERNOS -->
+    <section class="privacy-section">
+      <span class="section-anchor" id="links"></span>
+      <h2><span class="sec-num">11</span> Links para sites externos</h2>
+      <p>Nosso site pode conter links para portais imobiliários externos (como OLX Imóveis e ZAP Imóveis) e redes sociais. Ao acessar esses sites, você estará sujeito às políticas de privacidade de cada um deles. A Magnus Imóveis não é responsável pelas práticas de privacidade ou pelo conteúdo de sites de terceiros.</p>
+    </section>
+
+    <!-- 12. ALTERAÇÕES -->
+    <section class="privacy-section">
+      <span class="section-anchor" id="alteracoes"></span>
+      <h2><span class="sec-num">12</span> Alterações nesta política</h2>
+      <p>Esta Política de Privacidade pode ser atualizada periodicamente para refletir mudanças em nossas práticas, na legislação ou nas ferramentas tecnológicas utilizadas. A data de atualização estará sempre indicada ao final desta página.</p>
+      <p>Alterações significativas serão comunicadas de forma destacada no site. O uso continuado do site após a publicação das alterações implica a aceitação da nova versão da política.</p>
+    </section>
+
+    <!-- 13. CONTATO / DPO -->
+    <section class="privacy-section">
+      <span class="section-anchor" id="contato"></span>
+      <h2><span class="sec-num">13</span> Contato e Encarregado (DPO)</h2>
+      <p>
+        Conforme art. 41 da LGPD, a Magnus Imóveis designou um Encarregado pelo Tratamento de Dados Pessoais (Data Protection Officer — DPO), responsável por receber comunicações dos titulares e da ANPD.
+      </p>
+      <div class="dpo-box">
+        <div class="dpo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="dpo-info">
+          <h3>Encarregado de Proteção de Dados — Magnus Imóveis</h3>
+          <p>
+            <strong style="color:#fff">E-mail para solicitações de titulares:</strong><br>
+            <a href="mailto:magnusimoveisbh@hotmail.com">magnusimoveisbh@hotmail.com</a>
+          </p>
+          <p>
+            <strong style="color:#fff">Telefone:</strong><br>
+            <a href="tel:3133216775">(31) 3321-6775</a>
+          </p>
+          <p>
+            <strong style="color:#fff">Endereço físico:</strong><br>
+            Av. Senador Levindo Coelho, 54 — Loja — Tirol<br>
+            Belo Horizonte / MG — CEP 30662-290
+          </p>
+          <p style="margin-top:.6rem;font-size:.8rem;color:rgba(255,255,255,.45)">
+            Prazo de resposta: até 15 dias corridos após o recebimento da solicitação.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- RODAPÉ DA POLÍTICA -->
+    <div class="policy-footer">
+      <div>
+        <p>Versão desta política: <strong>1.0</strong></p>
+        <p>Última atualização: <strong>2 de junho de 2026</strong></p>
+        <p>Esta política está em conformidade com a <strong>Lei nº 13.709/2018 (LGPD)</strong>.</p>
+      </div>
+      <a href="/" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5m7-7l-7 7 7 7"/></svg>
+        Voltar ao site
+      </a>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="images/logo.png" alt="Magnus Imóveis" class="footer-logo" style="display:none"
+          onload="this.style.display='block'; this.nextElementSibling.style.display='none'"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <div class="footer-logo-text">MAGNUS <span>IMÓVEIS</span></div>
+        <p>Especialistas em compra, venda e locação de imóveis em Belo Horizonte e região. CRECI 32.402.</p>
+        <div class="social-links">
+          <a href="#" class="social-link" target="_blank" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="#" class="social-link" target="_blank" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+          </a>
+          <a href="https://wa.me/5531999845813" class="social-link" target="_blank" aria-label="WhatsApp">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.118 1.532 5.845L.057 23.737a.5.5 0 00.614.61l5.995-1.567A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a10 10 0 01-5.17-1.438l-.371-.22-3.844 1.004 1.026-3.742-.241-.386A10 10 0 1112 22z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Institucional</h4>
+        <ul>
+          <li><a href="/#sobre">Quem Somos</a></li>
+          <li><a href="/#contato">Localização</a></li>
+          <li><a href="/politica-privacidade.html">Política de Privacidade</a></li>
+          <li><a href="/termos-de-uso.html">Termos de Uso</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Imóveis</h4>
+        <ul>
+          <li><a href="/#imoveis">Comprar</a></li>
+          <li><a href="/#imoveis">Alugar</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Contato</h4>
+        <div class="footer-contact-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>Av. Senador Levindo Coelho, 54 - Loja - Tirol<br>CEP: 30662-290 — Belo Horizonte, MG</span>
+        </div>
+        <div class="footer-contact-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.5 1.18 2 2 0 012.48 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.16 6.16l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          <a href="tel:3133216775">(31) 3321-6775</a>
+        </div>
+        <div class="footer-contact-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <a href="mailto:magnusimoveisbh@hotmail.com">magnusimoveisbh@hotmail.com</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2024 Magnus Imóveis. Todos os direitos reservados.</span>
+      <span>Desenvolvido com ♥ · CRECI 32.402</span>
+    </div>
+  </footer>
+
+  <!-- WHATSAPP FLUTUANTE -->
+  <div class="wa-float">
+    <span class="wa-tooltip">Falar com corretor</span>
+    <a href="https://wa.me/5531999845813?text=Olá!%20Vim%20pelo%20site%20e%20gostaria%20de%20informações%20sobre%20imóveis."
+       target="_blank" class="wa-float-btn" aria-label="Falar no WhatsApp">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.118 1.532 5.845L.057 23.737a.5.5 0 00.614.61l5.995-1.567A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a10 10 0 01-5.17-1.438l-.371-.22-3.844 1.004 1.026-3.742-.241-.386A10 10 0 1112 22z"/></svg>
+    </a>
+  </div>
+
+</body>
+</html>

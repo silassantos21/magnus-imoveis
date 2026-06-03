@@ -580,6 +580,27 @@
     <span class="toc-num">06</span>
     <span class="toc-text">Roadmap de Evolução</span>
   </div>
+
+  <div class="toc-item">
+    <span class="toc-num">07</span>
+    <span class="toc-text">Conformidade Legal — LGPD</span>
+  </div>
+  <div class="toc-sub">
+    <span class="toc-num">—</span>
+    <span class="toc-text">Por que a LGPD se aplica ao site</span>
+  </div>
+  <div class="toc-sub">
+    <span class="toc-num">—</span>
+    <span class="toc-text">Política de Privacidade — o que cobre</span>
+  </div>
+  <div class="toc-sub">
+    <span class="toc-num">—</span>
+    <span class="toc-text">Termos de Uso — o que cobre</span>
+  </div>
+  <div class="toc-sub">
+    <span class="toc-num">—</span>
+    <span class="toc-text">Obrigações contínuas do controlador</span>
+  </div>
 </div>
 
 
@@ -934,6 +955,15 @@
     </div>
   </div>
 
+  <div class="callout" style="margin-top:14px">
+    <p>
+      <strong>Ativação rápida — estas três ferramentas somam menos de 30 min no total:</strong><br><br>
+      <strong>Google Business Profile (~15 min):</strong> acesse <em>business.google.com</em> → criar perfil → confirmar via telefone ou postcard. O escritório passa a aparecer no Google Maps e na busca local ("imobiliária Barreiro BH").<br><br>
+      <strong>Microsoft Clarity (~5 min):</strong> acesse <em>clarity.microsoft.com</em> → novo projeto → copiar o trecho de código JavaScript → inserir em <code style="background:#e0ddd5; padding:1px 5px; border-radius:3px; font-size:8.5pt">index.html</code> antes de <code style="background:#e0ddd5; padding:1px 5px; border-radius:3px; font-size:8.5pt">&lt;/head&gt;</code> → publicar no Vercel. Gravações de sessão e mapas de calor ficam disponíveis em horas.<br><br>
+      <strong>OLX e ZAP Imóveis:</strong> cadastrar imóveis nos portais com link direto para a página do imóvel no site Magnus (<em>imovel.html?ref=CÓDIGO</em>). Gera tráfego qualificado sem custo de anúncio e concentra o relacionamento no site próprio.
+    </p>
+  </div>
+
   <h3 style="margin-top:18px">Pagas — quando o negócio crescer</h3>
 
   <div class="tool-card">
@@ -1166,6 +1196,14 @@
   </div>
 
   <div class="roadmap-item">
+    <span class="roadmap-phase">Curto prazo</span>
+    <div class="roadmap-content">
+      <h3>IA generativa — descrições de imóveis automáticas</h3>
+      <p>Adicionar um botão "Gerar descrição com IA" no formulário do painel admin. Ao clicar, os dados já preenchidos (tipo, bairro, área, quartos, suítes, vagas) são enviados para a API do Claude (Anthropic) e o texto da descrição é gerado automaticamente em segundos — profissional, persuasivo e otimizado para o Google. <strong>Implementação estimada: 3–4 horas.</strong> Custo por geração: centavos de real (Claude Haiku). Sem servidor adicional — a chamada sai direto do navegador do corretor com uma chave de API configurada no painel.</p>
+    </div>
+  </div>
+
+  <div class="roadmap-item">
     <span class="roadmap-phase">Médio prazo</span>
     <div class="roadmap-content">
       <h3>Portais imobiliários (ZAP, OLX, VivaReal)</h3>
@@ -1200,6 +1238,170 @@
   <div class="page-footer">
     <span>Magnus Imóveis — Briefing do Sistema</span>
     <span>Seção 06 · Roadmap</span>
+  </div>
+</div>
+
+
+<!-- ===== SEÇÃO 7 — LGPD ===== -->
+<div class="page">
+  <div class="page-label">Seção 07</div>
+  <div class="page-header">
+    <div class="section-num">7</div>
+    <h2>Conformidade Legal — LGPD</h2>
+  </div>
+
+  <h3>Por que a LGPD se aplica ao site</h3>
+  <p>
+    A <strong>Lei Geral de Proteção de Dados (Lei 13.709/2018)</strong> se aplica a qualquer site brasileiro
+    que colete dados pessoais de usuários — independente do tamanho do negócio. O site da Magnus Imóveis
+    coleta nome, telefone, e-mail e dados de navegação por meio dos formulários de lead e agendamento
+    e das ferramentas de analytics (GA4 e Clarity). Isso caracteriza tratamento de dados pessoais
+    e obriga o cumprimento da LGPD.
+  </p>
+  <p>
+    O descumprimento pode gerar advertências, publicidade do infrator, bloqueio dos dados e
+    <strong>multas de até 2% do faturamento</strong> (limitada a R$ 50 milhões por infração),
+    aplicadas pela Autoridade Nacional de Proteção de Dados (ANPD).
+  </p>
+
+  <div class="callout-dark">
+    <p>
+      <strong>Implementado:</strong> duas páginas legais foram criadas e publicadas no site —
+      <em>politica-privacidade.html</em> e <em>termos-de-uso.html</em> — acessíveis pelo footer
+      de todas as páginas públicas. Ambas estão linkadas entre si e contêm os dados de contato
+      do Encarregado (DPO), conforme exigido pelo art. 41 da LGPD.
+    </p>
+  </div>
+
+  <h3 style="margin-top:20px">Política de Privacidade — o que cobre</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Seção</th>
+        <th>Conteúdo</th>
+        <th>Artigo LGPD</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Controlador dos dados</strong></td>
+        <td>Identificação da Magnus Imóveis como responsável pelo tratamento</td>
+        <td>Art. 5º, VI</td>
+      </tr>
+      <tr>
+        <td><strong>Dados coletados</strong></td>
+        <td>Formulários (nome, tel, e-mail) + navegação (IP anon., dispositivo, páginas)</td>
+        <td>Art. 9º</td>
+      </tr>
+      <tr>
+        <td><strong>Bases legais</strong></td>
+        <td>Consentimento, execução de contrato, legítimo interesse, obrigação legal</td>
+        <td>Art. 7º</td>
+      </tr>
+      <tr>
+        <td><strong>Cookies</strong></td>
+        <td>GA4, Microsoft Clarity, sessionStorage — com instruções de recusa</td>
+        <td>Art. 6º</td>
+      </tr>
+      <tr>
+        <td><strong>Terceiros (operadores)</strong></td>
+        <td>Google, Microsoft, Cloudinary, Vercel — com link para políticas de cada um</td>
+        <td>Art. 5º, VII; Art. 50</td>
+      </tr>
+      <tr>
+        <td><strong>Retenção</strong></td>
+        <td>Leads e agendamentos: 2 anos. Logs de servidor: 30 dias</td>
+        <td>Art. 15</td>
+      </tr>
+      <tr>
+        <td><strong>Direitos do titular</strong></td>
+        <td>8 direitos do art. 18: acesso, correção, exclusão, portabilidade, oposição etc.</td>
+        <td>Art. 18</td>
+      </tr>
+      <tr>
+        <td><strong>Segurança</strong></td>
+        <td>HTTPS/TLS, acesso restrito ao admin, plataformas ISO 27001</td>
+        <td>Art. 46</td>
+      </tr>
+      <tr>
+        <td><strong>Encarregado (DPO)</strong></td>
+        <td>Contato direto via e-mail magnusimoveisbh@hotmail.com — prazo de 15 dias</td>
+        <td>Art. 41</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin-top:20px">Termos de Uso — o que cobre</h3>
+  <p>
+    Os Termos de Uso regulam a <strong>relação jurídica entre o usuário e o site</strong>,
+    protegendo a Magnus Imóveis contra má-fé, uso indevido e expectativas equivocadas sobre
+    os serviços oferecidos:
+  </p>
+  <ul class="checklist">
+    <li><strong>Caráter informativo dos imóveis</strong> — preços e disponibilidade não são vinculantes</li>
+    <li><strong>Uso proibido</strong> — scraping, bots, formulários falsos, tentativas de invasão</li>
+    <li><strong>Agendamento como solicitação</strong> — visita só é confirmada pelo corretor</li>
+    <li><strong>Calculadora de financiamento</strong> — estimativa sem caráter de oferta bancária</li>
+    <li><strong>Propriedade intelectual</strong> — fotos, logo e layout protegidos por lei</li>
+    <li><strong>Limitação de responsabilidade</strong> — Magnus Imóveis não responde por decisões tomadas sem confirmação do corretor</li>
+    <li><strong>Foro de Belo Horizonte / MG</strong> — define a jurisdição para eventuais disputas</li>
+    <li><strong>Legislação aplicável</strong> — Código Civil, CDC, Marco Civil da Internet, LGPD e lei de corretagem</li>
+  </ul>
+
+  <h3 style="margin-top:20px">Obrigações contínuas do controlador</h3>
+  <p>
+    A conformidade com a LGPD não é pontual — é uma responsabilidade contínua. As principais
+    obrigações que a Magnus Imóveis deve manter após a publicação:
+  </p>
+  <table>
+    <thead>
+      <tr>
+        <th>Obrigação</th>
+        <th>Frequência</th>
+        <th>Como cumprir</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Atender solicitações de titulares</strong></td>
+        <td>Quando recebida</td>
+        <td>Responder em até 15 dias via e-mail; registrar a solicitação e a resposta</td>
+      </tr>
+      <tr>
+        <td><strong>Exclusão de dados mediante solicitação</strong></td>
+        <td>Quando recebida</td>
+        <td>Apagar o lead/agendamento da planilha; confirmar exclusão por e-mail ao titular</td>
+      </tr>
+      <tr>
+        <td><strong>Notificar incidentes de segurança</strong></td>
+        <td>Se ocorrer</td>
+        <td>Comunicar a ANPD e os titulares afetados em prazo razoável (art. 48 LGPD)</td>
+      </tr>
+      <tr>
+        <td><strong>Revisar e atualizar as políticas</strong></td>
+        <td>Anual ou quando houver mudança</td>
+        <td>Se mudar stack (nova ferramenta, novo terceiro), atualizar a Política de Privacidade e incrementar o número de versão</td>
+      </tr>
+      <tr>
+        <td><strong>Arquivar dados antigos</strong></td>
+        <td>Anual</td>
+        <td>Mover leads e agendamentos com mais de 2 anos para aba de arquivo ou excluir</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout" style="margin-top:14px">
+    <p>
+      <strong>Atenção ao adicionar novas ferramentas:</strong> qualquer nova ferramenta que colete
+      dados de usuários (ex: chatbot, formulário adicional, novo pixel de anúncios) deve ser
+      adicionada à tabela de terceiros da Política de Privacidade antes de ser ativada no site.
+      O mesmo vale para mudanças no prazo de retenção de dados ou nas bases legais utilizadas.
+    </p>
+  </div>
+
+  <div class="page-footer">
+    <span>Magnus Imóveis — Briefing do Sistema</span>
+    <span>Seção 07 · Conformidade Legal — LGPD</span>
   </div>
 </div>
 

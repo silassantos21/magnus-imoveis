@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Termos de Uso — Magnus Imóveis</title>
+  <meta name="description" content="Termos de Uso do site Magnus Imóveis. Saiba como usar nossos serviços, seus direitos e responsabilidades.">
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="https://magnus-imoveis.vercel.app/termos-de-uso.html">
+
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-V355TXQ9Q3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-V355TXQ9Q3');
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"></noscript>
+
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="shortcut icon" type="image/png" href="images/logo-icone.png?v=3">
+  <link rel="icon" type="image/png" href="images/logo-icone.png?v=3">
+
+  <style>
+    .page-hero {
+      background: linear-gradient(160deg, #111111 0%, #2d2d2d 100%);
+      padding: 3.5rem 1.5rem 3rem;
+      text-align: center;
+    }
+    .page-hero .breadcrumb {
+      font-size: .8rem;
+      color: rgba(255,255,255,.45);
+      margin-bottom: .75rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: .5rem;
+    }
+    .page-hero .breadcrumb a { color: rgba(255,255,255,.45); transition: color .22s; }
+    .page-hero .breadcrumb a:hover { color: var(--gold); }
+    .page-hero .breadcrumb span { color: rgba(255,255,255,.25); }
+    .page-hero h1 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: .6rem;
+    }
+    .page-hero h1 span { color: var(--gold); }
+    .page-hero p {
+      color: rgba(255,255,255,.6);
+      font-size: .95rem;
+      max-width: 560px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .terms-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 4rem;
+    }
+
+    .toc {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-left: 4px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 3rem;
+    }
+    .toc h2 { font-size: 1rem; font-weight: 700; color: var(--gray-800); margin-bottom: 1rem; }
+    .toc ol {
+      padding-left: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: .35rem;
+    }
+    .toc ol li a { font-size: .88rem; color: var(--gray-600); transition: color .22s; }
+    .toc ol li a:hover { color: var(--gold); }
+
+    .terms-section { margin-bottom: 2.75rem; }
+    .terms-section:last-of-type { margin-bottom: 0; }
+
+    .section-anchor {
+      display: block;
+      height: 80px;
+      margin-top: -80px;
+      pointer-events: none;
+      visibility: hidden;
+    }
+
+    .terms-section h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--navy-dark);
+      border-bottom: 2px solid var(--gray-200);
+      padding-bottom: .6rem;
+      margin-bottom: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+    .terms-section h2 .sec-num {
+      background: var(--gold);
+      color: #fff;
+      font-size: .75rem;
+      font-weight: 700;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .terms-section p,
+    .terms-section li { font-size: .95rem; color: var(--gray-600); line-height: 1.75; }
+    .terms-section p { margin-bottom: .85rem; }
+    .terms-section p:last-child { margin-bottom: 0; }
+    .terms-section ul, .terms-section ol {
+      padding-left: 1.4rem;
+      margin-bottom: .85rem;
+      display: flex;
+      flex-direction: column;
+      gap: .4rem;
+    }
+    .terms-section ul { list-style: disc; }
+    .terms-section ol { list-style: decimal; }
+    .terms-section strong { color: var(--gray-800); font-weight: 600; }
+    .terms-section a { color: var(--gold); text-decoration: underline; }
+    .terms-section a:hover { color: #a07d18; }
+
+    .warn-box {
+      background: #fff8f0;
+      border: 1px solid #f5c87a;
+      border-left: 4px solid var(--gold);
+      border-radius: var(--radius-sm);
+      padding: 1rem 1.25rem;
+      margin: 1rem 0;
+    }
+    .warn-box p { margin-bottom: 0; font-size: .9rem; }
+
+    .info-box {
+      background: #fffbea;
+      border: 1px solid #f0d060;
+      border-left: 4px solid var(--gold);
+      border-radius: var(--radius-sm);
+      padding: 1rem 1.25rem;
+      margin: 1rem 0;
+    }
+    .info-box p { margin-bottom: 0; font-size: .9rem; }
+
+    .policy-footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--gray-200);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: .75rem;
+    }
+    .policy-footer p { font-size: .82rem; color: var(--gray-400); margin: 0; }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--gold);
+      border: 2px solid var(--gold);
+      padding: .45rem 1rem;
+      border-radius: 99px;
+      transition: background .22s, color .22s;
+    }
+    .back-btn:hover { background: var(--gold); color: #fff; }
+    .back-btn svg { width: 14px; height: 14px; }
+
+    @media (max-width: 640px) {
+      .terms-wrap { padding: 2rem 1rem 3rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="inner">
+      <div class="topbar-contacts">
+        <a href="tel:3133216775">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.5 1.18 2 2 0 012.48 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.16 6.16l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          (31) 3321-6775
+        </a>
+        <a href="https://wa.me/5531999845813" target="_blank">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.118 1.532 5.845L.057 23.737a.5.5 0 00.614.61l5.995-1.567A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a10 10 0 01-5.17-1.438l-.371-.22-3.844 1.004 1.026-3.742-.241-.386A10 10 0 1112 22z"/></svg>
+          (31) 99984-5813
+        </a>
+        <a href="mailto:magnusimoveisbh@hotmail.com">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          magnusimoveisbh@hotmail.com
+        </a>
+      </div>
+      <span class="creci">CRECI 32.402</span>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <a href="/" class="logo">
+        <img src="images/logo.png" alt="Magnus Imóveis" style="display:none"
+          onload="this.style.display='block'; this.nextElementSibling.style.display='none'"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <div class="logo-fallback">MAGNUS<br><span>IMÓVEIS</span></div>
+      </a>
+
+      <nav>
+        <a href="/#imoveis">Imóveis</a>
+        <a href="/#servicos">Serviços</a>
+        <a href="/#sobre">Sobre</a>
+        <a href="/#contato">Contato</a>
+      </nav>
+
+      <a href="https://wa.me/5531999845813" target="_blank" class="header-cta">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.118 1.532 5.845L.057 23.737a.5.5 0 00.614.61l5.995-1.567A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a10 10 0 01-5.17-1.438l-.371-.22-3.844 1.004 1.026-3.742-.241-.386A10 10 0 1112 22z"/></svg>
+        Falar no WhatsApp
+      </a>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="page-hero">
+    <div class="breadcrumb">
+      <a href="/">Início</a>
+      <span>›</span>
+      <span>Termos de Uso</span>
+    </div>
+    <h1>Termos <span>de Uso</span></h1>
+    <p>As regras e condições para utilização do site Magnus Imóveis e dos serviços disponibilizados por meio dele.</p>
+  </section>
+
+  <!-- CONTEÚDO -->
+  <div class="terms-wrap">
+
+    <!-- SUMÁRIO -->
+    <nav class="toc" aria-label="Sumário">
+      <h2>Sumário</h2>
+      <ol>
+        <li><a href="#aceitacao">1. Aceitação dos Termos</a></li>
+        <li><a href="#servicos">2. Descrição dos Serviços</a></li>
+        <li><a href="#uso-permitido">3. Uso Permitido</a></li>
+        <li><a href="#uso-proibido">4. Uso Proibido</a></li>
+        <li><a href="#imoveis">5. Informações sobre Imóveis</a></li>
+        <li><a href="#formularios">6. Formulários de Contato e Agendamento</a></li>
+        <li><a href="#propriedade">7. Propriedade Intelectual</a></li>
+        <li><a href="#responsabilidade">8. Limitação de Responsabilidade</a></li>
+        <li><a href="#disponibilidade">9. Disponibilidade do Site</a></li>
+        <li><a href="#links">10. Links para Sites de Terceiros</a></li>
+        <li><a href="#alteracoes">11. Alterações nestes Termos</a></li>
+        <li><a href="#legislacao">12. Legislação e Foro</a></li>
+        <li><a href="#contato">13. Contato</a></li>
+      </ol>
+    </nav>
+
+    <!-- 1. ACEITAÇÃO -->
+    <section class="terms-section">
+      <span class="section-anchor" id="aceitacao"></span>
+      <h2><span class="sec-num">1</span> Aceitação dos Termos</h2>
+      <p>Ao acessar ou utilizar o site <strong>magnus-imoveis.vercel.app</strong> (doravante "Site"), você declara que leu, compreendeu e concorda com estes Termos de Uso, bem como com a nossa <a href="politica-privacidade.html">Política de Privacidade</a>.</p>
+      <p>Se você não concorda com qualquer disposição destes Termos, não utilize o Site. O uso continuado após a publicação de alterações implica aceitação das novas condições.</p>
+      <p>Estes Termos regulam a relação entre você (usuário) e a <strong>Magnus Imóveis — Corretagem de Imóveis</strong>, CRECI 32.402, com sede em Belo Horizonte / MG.</p>
+    </section>
+
+    <!-- 2. SERVIÇOS -->
+    <section class="terms-section">
+      <span class="section-anchor" id="servicos"></span>
+      <h2><span class="sec-num">2</span> Descrição dos Serviços</h2>
+      <p>O Site Magnus Imóveis oferece os seguintes serviços ao público:</p>
+      <ul>
+        <li><strong>Portfólio de imóveis:</strong> exibição de imóveis disponíveis para venda e locação, com fotos, características e valores orientativos.</li>
+        <li><strong>Busca e filtragem:</strong> ferramentas para localizar imóveis por tipo, cidade, bairro e faixa de preço.</li>
+        <li><strong>Formulário de interesse:</strong> canal para que o usuário manifeste interesse em um imóvel e seja contactado pelo corretor.</li>
+        <li><strong>Agendamento de visita:</strong> solicitação de visita ao imóvel, sujeita à confirmação pelo corretor.</li>
+        <li><strong>Calculadora de financiamento:</strong> simulação estimada de financiamento pelos sistemas SAC e PRICE, sem caráter vinculante.</li>
+      </ul>
+      <p>O Site não realiza transações imobiliárias diretamente. Qualquer negociação, proposta ou contrato é formalizado exclusivamente fora do ambiente digital, entre o cliente e o corretor habilitado.</p>
+    </section>
+
+    <!-- 3. USO PERMITIDO -->
+    <section class="terms-section">
+      <span class="section-anchor" id="uso-permitido"></span>
+      <h2><span class="sec-num">3</span> Uso Permitido</h2>
+      <p>O Site é disponibilizado para uso pessoal, não comercial, com as seguintes finalidades:</p>
+      <ul>
+        <li>Pesquisar imóveis disponíveis para compra ou locação.</li>
+        <li>Entrar em contato com a equipe Magnus Imóveis para obter informações ou agendar visitas.</li>
+        <li>Simular condições de financiamento para fins de planejamento pessoal.</li>
+        <li>Compartilhar páginas de imóveis com terceiros de forma pessoal e não comercial.</li>
+      </ul>
+    </section>
+
+    <!-- 4. USO PROIBIDO -->
+    <section class="terms-section">
+      <span class="section-anchor" id="uso-proibido"></span>
+      <h2><span class="sec-num">4</span> Uso Proibido</h2>
+      <p>É vedado ao usuário, sob pena de responsabilização civil e criminal:</p>
+      <ul>
+        <li>Reproduzir, copiar, redistribuir ou comercializar o conteúdo do Site (textos, fotos, logotipos, layouts) sem autorização prévia e expressa da Magnus Imóveis.</li>
+        <li>Utilizar sistemas automatizados (bots, scrapers, crawlers) para extrair dados de imóveis ou informações do Site.</li>
+        <li>Enviar informações falsas, enganosas ou maliciosas por meio dos formulários do Site.</li>
+        <li>Tentar acessar áreas restritas do Site sem autorização.</li>
+        <li>Interferir no funcionamento do Site, incluindo ataques de negação de serviço ou inserção de código malicioso.</li>
+        <li>Usar o Site para qualquer finalidade ilegal ou que viole direitos de terceiros.</li>
+      </ul>
+    </section>
+
+    <!-- 5. INFORMAÇÕES SOBRE IMÓVEIS -->
+    <section class="terms-section">
+      <span class="section-anchor" id="imoveis"></span>
+      <h2><span class="sec-num">5</span> Informações sobre Imóveis</h2>
+      <p>As informações exibidas no Site sobre os imóveis — incluindo preços, metragens, disponibilidade, fotos e descrições — têm caráter meramente <strong>informativo e orientativo</strong>.</p>
+
+      <div class="warn-box">
+        <p><strong>Importante:</strong> preços e condições podem ser alterados a qualquer momento, sem aviso prévio. A exibição de um imóvel no Site não representa oferta vinculante nem garantia de disponibilidade. Confirme sempre as informações diretamente com o corretor antes de tomar qualquer decisão.</p>
+      </div>
+
+      <p>A Magnus Imóveis empreende esforços razoáveis para manter as informações atualizadas, mas não garante a completude, exatidão ou atualidade dos dados exibidos em tempo real, dada a dinâmica do mercado imobiliário.</p>
+      <p>Imóveis marcados como "Vendido" ou "Locado" são removidos do portfólio ativo, mas podem permanecer visíveis temporariamente durante a atualização do sistema.</p>
+    </section>
+
+    <!-- 6. FORMULÁRIOS -->
+    <section class="terms-section">
+      <span class="section-anchor" id="formularios"></span>
+      <h2><span class="sec-num">6</span> Formulários de Contato e Agendamento</h2>
+      <p>Ao preencher e enviar qualquer formulário disponível no Site, o usuário:</p>
+      <ul>
+        <li>Declara que as informações fornecidas são verdadeiras, precisas e atuais.</li>
+        <li>Consente em ser contatado pela Magnus Imóveis por telefone, WhatsApp ou e-mail, para fins relacionados à solicitação enviada.</li>
+        <li>Compreende que o envio do formulário de agendamento constitui uma <strong>solicitação de visita</strong>, e não uma confirmação. A visita só é efetivada após confirmação expressa do corretor.</li>
+      </ul>
+
+      <div class="info-box">
+        <p>O tratamento dos dados fornecidos nos formulários é regido pela nossa <a href="politica-privacidade.html">Política de Privacidade</a>, em conformidade com a LGPD (Lei 13.709/2018).</p>
+      </div>
+
+      <p>A Magnus Imóveis se reserva o direito de não atender solicitações com informações incompletas, inconsistentes ou que indiquem má-fé.</p>
+    </section>
+
+    <!-- 7. PROPRIEDADE INTELECTUAL -->
+    <section class="terms-section">
+      <span class="section-anchor" id="propriedade"></span>
+      <h2><span class="sec-num">7</span> Propriedade Intelectual</h2>
+      <p>Todo o conteúdo do Site — incluindo, mas não se limitando a textos, logotipos, marcas, layout, imagens, ícones, código-fonte e elementos gráficos — é de propriedade da Magnus Imóveis ou de seus licenciantes, protegido pela legislação brasileira de direitos autorais (Lei 9.610/1998) e marcas (Lei 9.279/1996).</p>
+      <p>As fotos dos imóveis são de propriedade da Magnus Imóveis ou foram obtidas com a devida autorização dos proprietários dos imóveis anunciados.</p>
+      <p>É permitido ao usuário compartilhar links para páginas do Site e imprimir conteúdos para uso pessoal, desde que mantidas as informações de autoria e sem finalidade comercial.</p>
+    </section>
+
+    <!-- 8. LIMITAÇÃO DE RESPONSABILIDADE -->
+    <section class="terms-section">
+      <span class="section-anchor" id="responsabilidade"></span>
+      <h2><span class="sec-num">8</span> Limitação de Responsabilidade</h2>
+      <p>A Magnus Imóveis não se responsabiliza por:</p>
+      <ul>
+        <li>Decisões tomadas pelo usuário com base nas informações exibidas no Site, sem confirmação prévia com o corretor.</li>
+        <li>Imprecisões nas simulações da calculadora de financiamento, que são estimativas e não substituem a análise de uma instituição financeira.</li>
+        <li>Indisponibilidade temporária do Site por motivos técnicos, manutenção ou fatores externos (falhas de internet, servidores de terceiros etc.).</li>
+        <li>Danos causados por vírus, malware ou conteúdos maliciosos provenientes de sites de terceiros acessados por links do Site.</li>
+        <li>Condutas de terceiros que eventualmente acessem dados transmitidos pelo usuário em razão de falhas de segurança não imputáveis à Magnus Imóveis.</li>
+      </ul>
+      <p>Na extensão máxima permitida pela lei aplicável, a Magnus Imóveis não será responsável por danos indiretos, incidentais, especiais ou consequentes decorrentes do uso ou da impossibilidade de uso do Site.</p>
+    </section>
+
+    <!-- 9. DISPONIBILIDADE -->
+    <section class="terms-section">
+      <span class="section-anchor" id="disponibilidade"></span>
+      <h2><span class="sec-num">9</span> Disponibilidade do Site</h2>
+      <p>A Magnus Imóveis envidarão esforços razoáveis para manter o Site disponível de forma contínua, mas não garante disponibilidade ininterrupta. O Site pode ser temporariamente suspenso para:</p>
+      <ul>
+        <li>Manutenção programada ou emergencial.</li>
+        <li>Atualizações de sistema ou conteúdo.</li>
+        <li>Fatores fora do controle da Magnus Imóveis (falhas de infraestrutura de terceiros, casos fortuitos ou de força maior).</li>
+      </ul>
+      <p>Interrupções temporárias não geram direito a qualquer indenização ao usuário.</p>
+    </section>
+
+    <!-- 10. LINKS -->
+    <section class="terms-section">
+      <span class="section-anchor" id="links"></span>
+      <h2><span class="sec-num">10</span> Links para Sites de Terceiros</h2>
+      <p>O Site pode conter links para portais imobiliários (OLX Imóveis, ZAP Imóveis), redes sociais e outros sites externos. Esses links são fornecidos por conveniência e não representam endosso ao conteúdo, produtos ou serviços dos sites vinculados.</p>
+      <p>A Magnus Imóveis não tem controle sobre o conteúdo ou as práticas de privacidade de sites de terceiros e não se responsabiliza por eles. Recomendamos a leitura dos termos e políticas de cada site antes de utilizá-los.</p>
+    </section>
+
+    <!-- 11. ALTERAÇÕES -->
+    <section class="terms-section">
+      <span class="section-anchor" id="alteracoes"></span>
+      <h2><span class="sec-num">11</span> Alterações nestes Termos</h2>
+      <p>A Magnus Imóveis reserva-se o direito de alterar estes Termos de Uso a qualquer momento, mediante publicação da versão atualizada no Site. A data de última atualização será sempre indicada ao final desta página.</p>
+      <p>Alterações substanciais serão comunicadas de forma destacada no Site. O uso continuado do Site após a publicação de alterações implica a aceitação dos novos Termos.</p>
+    </section>
+
+    <!-- 12. LEGISLAÇÃO -->
+    <section class="terms-section">
+      <span class="section-anchor" id="legislacao"></span>
+      <h2><span class="sec-num">12</span> Legislação e Foro</h2>
+      <p>Estes Termos de Uso são regidos pelas leis da República Federativa do Brasil, em especial:</p>
+      <ul>
+        <li>Lei nº 10.406/2002 — Código Civil Brasileiro</li>
+        <li>Lei nº 8.078/1990 — Código de Defesa do Consumidor</li>
+        <li>Lei nº 12.965/2014 — Marco Civil da Internet</li>
+        <li>Lei nº 13.709/2018 — Lei Geral de Proteção de Dados (LGPD)</li>
+        <li>Lei nº 6.530/1978 e Decreto nº 81.871/1978 — regulação da atividade de corretagem de imóveis</li>
+      </ul>
+      <p>Para dirimir quaisquer controvérsias decorrentes destes Termos, fica eleito o foro da Comarca de <strong>Belo Horizonte / MG</strong>, com renúncia expressa a qualquer outro, por mais privilegiado que seja.</p>
+    </section>
+
+    <!-- 13. CONTATO -->
+    <section class="terms-section">
+      <span class="section-anchor" id="contato"></span>
+      <h2><span class="sec-num">13</span> Contato</h2>
+      <p>Dúvidas, sugestões ou reclamações sobre estes Termos de Uso podem ser enviadas pelo(s) canal(is) abaixo:</p>
+      <ul>
+        <li><strong>E-mail:</strong> <a href="mailto:magnusimoveisbh@hotmail.com">magnusimoveisbh@hotmail.com</a></li>
+        <li><strong>Telefone:</strong> <a href="tel:3133216775">(31) 3321-6775</a></li>
+        <li><strong>WhatsApp:</strong> <a href="https://wa.me/5531999845813" target="_blank" rel="noopener">(31) 99984-5813</a></li>
+        <li><strong>Endereço:</strong> Av. Senador Levindo Coelho, 54 — Loja — Tirol, Belo Horizonte / MG — CEP 30662-290</li>
+      </ul>
+    </section>
+
+    <!-- RODAPÉ DOS TERMOS -->
+    <div class="policy-footer">
+      <div>
+        <p>Versão destes termos: <strong>1.0</strong></p>
+        <p>Última atualização: <strong>2 de junho de 2026</strong></p>
+        <p>Leia também nossa <a href="politica-privacidade.html" style="color:var(--gold)">Política de Privacidade</a>.</p>
+      </div>
+      <a href="/" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5m7-7l-7 7 7 7"/></svg>
+        Voltar ao site
+      </a>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="images/logo.png" alt="Magnus Imóveis" class="footer-logo" style="display:none"
+          onload="this.style.display='block'; this.nextElementSibling.style.display='none'"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <div class="footer-logo-text">MAGNUS <span>IMÓVEIS</span></div>
+        <p>Especialistas em compra, venda e locação de imóveis em Belo Horizonte e região. CRECI 32.402.</p>
+        <div class="social-links">
+          <a href="#" class="social-link" target="_blank" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="#" class="social-link" target="_blank" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+          </a>
+          <a href="https://wa.me/5531999845813" class="social-link" target="_blank" aria-label="WhatsApp">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.118 1.532 5.845L.057 23.737a.5.5 0 00.614.61l5.995-1.567A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a10 10 0 01-5.17-1.438l-.371-.22-3.844 1.004 1.026-3.742-.241-.386A10 10 0 1112 22z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Institucional</h4>
+        <ul>
+          <li><a href="/#sobre">Quem Somos</a></li>
+          <li><a href="/#contato">Localização</a></li>
+          <li><a href="politica-privacidade.html">Política de Privacidade</a></li>
+          <li><a href="termos-de-uso.html">Termos de Uso</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Imóveis</h4>
+        <ul>
+          <li><a href="/#imoveis">Comprar</a></li>
+          <li><a href="/#imoveis">Alugar</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Contato</h4>
+        <div class="footer-contact-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>Av. Senador Levindo Coelho, 54 - Loja - Tirol<br>CEP: 30662-290 — Belo Horizonte, MG</span>
+        </div>
+        <div class="footer-contact-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.5 1.18 2 2 0 012.48 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.16 6.16l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          <a href="tel:3133216775">(31) 3321-6775</a>
+        </div>
+        <div class="footer-contact-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <a href="mailto:magnusimoveisbh@hotmail.com">magnusimoveisbh@hotmail.com</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2024 Magnus Imóveis. Todos os direitos reservados.</span>
+      <span>Desenvolvido com ♥ · CRECI 32.402</span>
+    </div>
+  </footer>
+
+  <!-- WHATSAPP FLUTUANTE -->
+  <div class="wa-float">
+    <span class="wa-tooltip">Falar com corretor</span>
+    <a href="https://wa.me/5531999845813?text=Olá!%20Vim%20pelo%20site%20e%20gostaria%20de%20informações%20sobre%20imóveis."
+       target="_blank" class="wa-float-btn" aria-label="Falar no WhatsApp">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.118 1.532 5.845L.057 23.737a.5.5 0 00.614.61l5.995-1.567A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a10 10 0 01-5.17-1.438l-.371-.22-3.844 1.004 1.026-3.742-.241-.386A10 10 0 1112 22z"/></svg>
+    </a>
+  </div>
+
+</body>
+</html>
