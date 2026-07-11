@@ -1,38 +1,18 @@
 /**
- * Magnus Imóveis — Google Apps Script
- * Sprint 2: Leads + Agendamentos
- * Sprint 4: Admin CRUD (imóveis, leads, agendamentos)
+ * Magnus Imóveis — Google Apps Script (versão simplificada)
  *
- * INSTRUÇÕES DE INSTALAÇÃO:
- * 1. Abra a planilha Google Sheets do projeto
- * 2. Extensões → Apps Script
- * 3. Apague o conteúdo padrão e cole TODO este arquivo
- * 4. Salve o projeto (Ctrl+S)
- * 5. Implantar → Nova implantação (ou "Gerenciar implantações" → editar a existente)
- *    - Tipo: App da Web
- *    - Executar como: Eu mesmo (seu Google)
- *    - Quem tem acesso: Qualquer pessoa, mesmo anônimo
- * 6. Autorize as permissões solicitadas
- * 7. Copie a URL gerada e cole em js/leads.js → APPS_SCRIPT_URL
- *    e em js/admin.js → APPS_SCRIPT_URL (mesma URL)
+ * Responsabilidade: APENAS enviar emails ao corretor e criar eventos no Google Calendar.
+ * Os dados agora são armazenados no Supabase — este script não toca mais o Google Sheets.
  *
- * ESTRUTURA DA PLANILHA (abas necessárias):
- * - Imóveis      → cadastro dos imóveis (colunas: ver abaixo)
- * - Leads        → formulários "Tenho Interesse"
- * - Agendamentos → solicitações de visita
- *
- * COLUNAS DA ABA "Imóveis" (linha 1 = cabeçalho):
- * id | ref | tipo | finalidade | status | titulo | bairro | cidade | estado |
- * preco | quartos | suites | banheiros | vagas | area_util | area_construida |
- * area_terreno | fotos | descricao | destaque | data_venda
+ * INSTRUÇÕES DE ATUALIZAÇÃO:
+ * 1. Abra o projeto em script.google.com (acesse pelo Google Drive)
+ * 2. Apague o conteúdo atual e cole TODO este arquivo
+ * 3. Salve (Ctrl+S)
+ * 4. Implantar → Gerenciar implantações → ✏️ Editar → Nova versão → Implantar
+ * 5. A URL de implantação NÃO muda — não é necessário atualizar leads.js
  */
 
 const EMAIL_CORRETOR = "silasribeiro11@gmail.com";
-
-// CONFIGURAR: Defina um token secreto (mín. 16 caracteres).
-// Este mesmo token deve ser digitado no setup do admin.html.
-// Após alterar, republique o script como nova implantação.
-const ADMIN_TOKEN = "Magnus@4dm1n#2026";
 
 // ===== ROTEADOR PRINCIPAL =====
 
@@ -40,20 +20,8 @@ function doPost(e) {
   try {
     const dados = JSON.parse(e.postData.contents);
 
-    // Rotas públicas (Sprint 2)
-    if (dados.tipo === "lead")        return _gravarLead(dados);
-    if (dados.tipo === "agendamento") return _gravarAgendamento(dados);
-
-    // Rotas admin — token obrigatório
-    if (!_verificarToken(dados)) return _resposta(401, "Token inválido");
-
-    if (dados.tipo === "admin_criar")                return _adminCriar(dados);
-    if (dados.tipo === "admin_editar")               return _adminEditar(dados);
-    if (dados.tipo === "admin_status")               return _adminStatus(dados);
-    if (dados.tipo === "admin_deletar")              return _adminDeletar(dados);
-    if (dados.tipo === "admin_listar_leads")         return _adminListarLeads(dados);
-    if (dados.tipo === "admin_listar_agendamentos")  return _adminListarAgendamentos(dados);
-    if (dados.tipo === "admin_status_agendamento")   return _adminStatusAgendamento(dados);
+    if (dados.tipo === "notificar_lead")        return _notificarLead(dados);
+    if (dados.tipo === "notificar_agendamento") return _notificarAgendamento(dados);
 
     return _resposta(400, "Tipo inválido");
   } catch (err) {
@@ -64,41 +32,14 @@ function doPost(e) {
 
 function doGet() {
   return ContentService
-    .createTextOutput("Magnus Imóveis — API ativa")
+    .createTextOutput("Magnus Imóveis — Notificador ativo")
     .setMimeType(ContentService.MimeType.TEXT);
 }
 
-// ===== AUTENTICAÇÃO =====
+// ===== NOTIFICAÇÃO DE LEAD (email) =====
 
-function _verificarToken(dados) {
-  return dados.token === ADMIN_TOKEN;
-}
-
-// ===== MAPA DE COLUNAS (lê cabeçalho da planilha dinamicamente) =====
-
-function _getColMap(sheet) {
-  const last = sheet.getLastColumn();
-  if (last === 0) return {};
-  const headers = sheet.getRange(1, 1, 1, last).getValues()[0];
-  const map = {};
-  headers.forEach(function(h, i) { if (h) map[String(h).trim()] = i + 1; });
-  return map;
-}
-
-// ===== SPRINT 2 — LEAD =====
-
-function _gravarLead(d) {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Leads");
+function _notificarLead(d) {
   const ts = new Date();
-
-  sheet.appendRow([
-    ts,
-    d.nome || "",
-    d.telefone || "",
-    d.interesse || "",
-    d.ref_imovel || "",
-    d.origem || "site"
-  ]);
 
   const htmlLead = `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f1f5f9;font-family:Arial,sans-serif">
 <table width="100%" cellpadding="0" cellspacing="0" style="padding:32px 16px"><tr><td align="center">
@@ -149,31 +90,17 @@ function _gravarLead(d) {
     htmlBody: htmlLead
   });
 
-  return _resposta(200, "Lead registrado");
+  return _resposta(200, "Email enviado");
 }
 
-// ===== SPRINT 2 — AGENDAMENTO =====
+// ===== NOTIFICAÇÃO DE AGENDAMENTO (email + Calendar) =====
 
-function _gravarAgendamento(d) {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Agendamentos");
+function _notificarAgendamento(d) {
   const ts = new Date();
-
-  sheet.appendRow([
-    ts,
-    d.nome || "",
-    d.telefone || "",
-    d.data || "",
-    d.horario || "",
-    d.tipo_visita || "Presencial",
-    d.ref_imovel || "",
-    d.titulo_imovel || "",
-    d.observacoes || "",
-    "pendente"
-  ]);
+  const dataFmt = d.data ? new Date(d.data + "T12:00:00").toLocaleDateString("pt-BR") : "—";
 
   _criarEventoCalendar(d);
 
-  const dataFmt = d.data ? new Date(d.data + "T12:00:00").toLocaleDateString("pt-BR") : "—";
   const htmlAgend = `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f1f5f9;font-family:Arial,sans-serif">
 <table width="100%" cellpadding="0" cellspacing="0" style="padding:32px 16px"><tr><td align="center">
 <table width="540" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,.08)">
@@ -232,7 +159,7 @@ function _gravarAgendamento(d) {
     htmlBody: htmlAgend
   });
 
-  return _resposta(200, "Agendamento registrado");
+  return _resposta(200, "Email e Calendar enviados");
 }
 
 function _criarEventoCalendar(d) {
@@ -257,232 +184,10 @@ function _criarEventoCalendar(d) {
   }
 }
 
-// ===== SPRINT 4 — CRUD IMÓVEIS =====
-
-function _adminCriar(dados) {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Imóveis");
-
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow(["id","ref","tipo","finalidade","status","titulo","bairro","cidade","estado",
-      "preco","quartos","suites","banheiros","vagas","area_util","area_construida",
-      "area_terreno","fotos","descricao","destaque","data_venda"]);
-  }
-
-  const cols = _getColMap(sheet);
-
-  // Garante coluna data_venda (pode faltar em planilhas criadas antes deste campo)
-  if (!cols["data_venda"]) {
-    var _dvCol = sheet.getLastColumn() + 1;
-    sheet.getRange(1, _dvCol).setValue("data_venda");
-    cols["data_venda"] = _dvCol;
-  }
-
-  const lastRow = sheet.getLastRow();
-
-  var novoId = 1;
-  if (lastRow > 1 && cols["id"]) {
-    var ids = sheet.getRange(2, cols["id"], lastRow - 1, 1).getValues().flat();
-    var maxId = Math.max.apply(null, [0].concat(ids.map(function(v){ return Number(v) || 0; })));
-    novoId = maxId + 1;
-  }
-
-  const d = dados.imovel || {};
-  const totalCols = sheet.getLastColumn();
-  const linha = new Array(totalCols).fill("");
-
-  function set(campo, val) {
-    if (cols[campo]) linha[cols[campo] - 1] = (val === undefined || val === null) ? "" : val;
-  }
-
-  set("id", novoId);
-  set("ref", d.ref || "");
-  set("tipo", d.tipo || "");
-  set("finalidade", d.finalidade || "");
-  set("status", d.status || "disponivel");
-  set("titulo", d.titulo || "");
-  set("bairro", d.bairro || "");
-  set("cidade", d.cidade || "");
-  set("estado", d.estado || "MG");
-  set("preco", Number(d.preco) || 0);
-  set("quartos",      _num(d.quartos));
-  set("suites",       _num(d.suites));
-  set("banheiros",    _num(d.banheiros));
-  set("vagas",        _num(d.vagas));
-  set("area_util",    _num(d.area_util));
-  set("area_construida", _num(d.area_construida));
-  set("area_terreno", _num(d.area_terreno));
-  set("fotos", Array.isArray(d.fotos) ? d.fotos.join("|") : (d.fotos || ""));
-  set("descricao", d.descricao || "");
-  set("destaque", d.destaque ? "true" : "false");
-  set("data_venda", d.data_venda || "");
-
-  sheet.appendRow(linha);
-  // Força data_venda como texto para evitar auto-conversão do Sheets para tipo Date
-  if (cols["data_venda"]) {
-    sheet.getRange(sheet.getLastRow(), cols["data_venda"]).setNumberFormat("@");
-  }
-  return _resposta(200, "Imóvel criado com ID " + novoId);
-}
-
-function _adminEditar(dados) {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Imóveis");
-  const cols = _getColMap(sheet);
-
-  // Garante coluna data_venda (pode faltar em planilhas criadas antes deste campo)
-  if (!cols["data_venda"]) {
-    var _dvCol = sheet.getLastColumn() + 1;
-    sheet.getRange(1, _dvCol).setValue("data_venda");
-    cols["data_venda"] = _dvCol;
-  }
-
-  const ref = String(dados.ref || "").trim();
-  const lastRow = sheet.getLastRow();
-
-  if (!ref || lastRow < 2 || !cols["ref"]) return _resposta(404, "Imóvel não encontrado");
-
-  const refs = sheet.getRange(2, cols["ref"], lastRow - 1, 1).getValues().flat()
-    .map(function(r){ return String(r).trim(); });
-  const idx = refs.indexOf(ref);
-  if (idx === -1) return _resposta(404, "Imóvel não encontrado: " + ref);
-
-  const rowNum = idx + 2;
-  const d = dados.imovel || {};
-  const camposNum = ["preco","quartos","suites","banheiros","vagas","area_util","area_construida","area_terreno"];
-  const campos = ["tipo","finalidade","status","titulo","bairro","cidade","estado",
-    "preco","quartos","suites","banheiros","vagas","area_util","area_construida",
-    "area_terreno","fotos","descricao","destaque","data_venda"];
-
-  campos.forEach(function(campo) {
-    if (!cols[campo] || !(campo in d)) return;
-    var val = d[campo];
-    if (campo === "fotos") val = Array.isArray(val) ? val.join("|") : (val || "");
-    else if (campo === "destaque") val = val ? "true" : "false";
-    else if (camposNum.indexOf(campo) !== -1) val = _num(val);
-    var range = sheet.getRange(rowNum, cols[campo]);
-    // Força texto para evitar que Sheets auto-converta datas para tipo Date
-    if (campo === "data_venda") range.setNumberFormat("@");
-    range.setValue(val === null ? "" : val);
-  });
-
-  return _resposta(200, "Atualizado: " + ref);
-}
-
-function _adminStatus(dados) {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Imóveis");
-  const cols = _getColMap(sheet);
-  const ref = String(dados.ref || "").trim();
-  const lastRow = sheet.getLastRow();
-
-  if (!ref || lastRow < 2 || !cols["ref"]) return _resposta(404, "Imóvel não encontrado");
-
-  const refs = sheet.getRange(2, cols["ref"], lastRow - 1, 1).getValues().flat()
-    .map(function(r){ return String(r).trim(); });
-  const idx = refs.indexOf(ref);
-  if (idx === -1) return _resposta(404, "Imóvel não encontrado: " + ref);
-
-  const rowNum = idx + 2;
-  if (dados.status != null && cols["status"])   sheet.getRange(rowNum, cols["status"]).setValue(dados.status);
-  if (dados.destaque != null && cols["destaque"]) sheet.getRange(rowNum, cols["destaque"]).setValue(dados.destaque ? "true" : "false");
-
-  return _resposta(200, "Status atualizado: " + ref);
-}
-
-function _adminDeletar(dados) {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Imóveis");
-  const cols = _getColMap(sheet);
-  const ref = String(dados.ref || "").trim();
-  const lastRow = sheet.getLastRow();
-
-  if (!ref || lastRow < 2 || !cols["ref"]) return _resposta(404, "Imóvel não encontrado");
-
-  const refs = sheet.getRange(2, cols["ref"], lastRow - 1, 1).getValues().flat()
-    .map(function(r){ return String(r).trim(); });
-  const idx = refs.indexOf(ref);
-  if (idx === -1) return _resposta(404, "Imóvel não encontrado: " + ref);
-
-  sheet.deleteRow(idx + 2);
-  return _resposta(200, "Excluído: " + ref);
-}
-
-// ===== SPRINT 4 — LISTAR LEADS =====
-
-function _adminListarLeads(dados) {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Leads");
-  const lastRow = sheet.getLastRow();
-  if (lastRow < 2) return _respostaJSON({ leads: [] });
-
-  const rows = sheet.getRange(2, 1, lastRow - 1, sheet.getLastColumn()).getValues();
-  const leads = rows
-    .map(function(r) {
-      return {
-        data:      r[0] instanceof Date ? r[0].toLocaleString("pt-BR") : String(r[0] || ""),
-        nome:      String(r[1] || ""),
-        telefone:  String(r[2] || ""),
-        interesse: String(r[3] || ""),
-        ref_imovel: String(r[4] || ""),
-        origem:    String(r[5] || "site")
-      };
-    })
-    .filter(function(l){ return (l.nome || l.telefone) && l.nome !== "nome" && l.telefone !== "telefone"; })
-    .reverse();
-
-  return _respostaJSON({ leads: leads });
-}
-
-// ===== SPRINT 4 — LISTAR AGENDAMENTOS =====
-
-function _adminListarAgendamentos(dados) {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Agendamentos");
-  const lastRow = sheet.getLastRow();
-  if (lastRow < 2) return _respostaJSON({ agendamentos: [] });
-
-  const rows = sheet.getRange(2, 1, lastRow - 1, sheet.getLastColumn()).getValues();
-  const agendamentos = rows
-    .map(function(r, i) {
-      return {
-        row:         i + 2,
-        data_criacao: r[0] instanceof Date ? r[0].toLocaleString("pt-BR") : String(r[0] || ""),
-        nome:        String(r[1] || ""),
-        telefone:    String(r[2] || ""),
-        data:    r[3] instanceof Date ? Utilities.formatDate(r[3], "America/Sao_Paulo", "yyyy-MM-dd") : String(r[3] || ""),
-        horario: r[4] instanceof Date ? Utilities.formatDate(r[4], "America/Sao_Paulo", "HH:mm") : String(r[4] || ""),
-        tipo_visita: String(r[5] || "Presencial"),
-        ref_imovel:  String(r[6] || ""),
-        titulo_imovel: String(r[7] || ""),
-        observacoes: String(r[8] || ""),
-        status:      String(r[9] || "pendente")
-      };
-    })
-    .filter(function(a){ return a.nome || a.telefone; })
-    .reverse();
-
-  return _respostaJSON({ agendamentos: agendamentos });
-}
-
-function _adminStatusAgendamento(dados) {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Agendamentos");
-  const rowNum = Number(dados.row);
-  if (!rowNum || rowNum < 2) return _resposta(400, "Linha inválida");
-  sheet.getRange(rowNum, 10).setValue(dados.status || "pendente");
-  return _resposta(200, "Agendamento atualizado");
-}
-
 // ===== UTILITÁRIOS =====
-
-function _num(v) {
-  if (v === "" || v === null || v === undefined) return "";
-  const n = Number(v);
-  return isNaN(n) ? "" : n;
-}
 
 function _resposta(status, mensagem) {
   return ContentService
     .createTextOutput(JSON.stringify({ status: status, mensagem: mensagem }))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-
-function _respostaJSON(dados) {
-  return ContentService
-    .createTextOutput(JSON.stringify(Object.assign({ status: 200 }, dados)))
     .setMimeType(ContentService.MimeType.JSON);
 }

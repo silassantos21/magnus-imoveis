@@ -1,7 +1,11 @@
 // ===== CONFIGURAÇÃO =====
-// Após criar e publicar o Apps Script como Web App, cole a URL abaixo
-// (Executar como: eu mesmo | Quem tem acesso: qualquer pessoa, mesmo anônimo)
+// Apps Script: usado APENAS para enviar email ao corretor e criar evento no Calendar.
+// Após simplificar o apps-script.js e republicar, cole a nova URL aqui.
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyn31FIreCa2vrdXxFgJOeJrBs-am1b2JGP5TSrHZ9rnvFhxRulrY948XM-A5UAmMhr/exec";
+
+// Supabase — cole os mesmos valores de dados.js:
+const _SB_URL  = "https://pwdwpcqpiodbotqmrfxq.supabase.co";  // só o domínio — sem /rest/v1/
+const _SB_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3ZHdwY3FwaW9kYm90cW1yZnhxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM3NjY2NDYsImV4cCI6MjA5OTM0MjY0Nn0.amY3RTm5b9TSfOqpi1kAf_vcPecfRWbGmkW-7SdpMo4";         // "anon public" key
 
 const WA_NUM = "5531999845813";
 const DEBOUNCE_MS = 10000; // 10s anti-spam
@@ -53,15 +57,29 @@ function _setEstado(formId, estado, html) {
   }
 }
 
-async function _post(payload) {
-  if (!APPS_SCRIPT_URL) throw new Error("URL não configurada");
-  // mode: no-cors evita erro de CORS — Apps Script recebe mas não retorna resposta legível
-  await fetch(APPS_SCRIPT_URL, {
+// Insere lead ou agendamento no Supabase (retorna resposta legível)
+async function _sbInsert(tabela, dados) {
+  const r = await fetch(_SB_URL + "/rest/v1/" + tabela, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "apikey": _SB_ANON,
+      "Authorization": "Bearer " + _SB_ANON
+    },
+    body: JSON.stringify(dados)
+  });
+  if (!r.ok) throw new Error("Supabase " + r.status);
+}
+
+// Notifica o corretor via Apps Script (email + Calendar) — fire and forget
+function _notificarAppsScript(tipo, payload) {
+  if (!APPS_SCRIPT_URL) return;
+  fetch(APPS_SCRIPT_URL, {
     method: "POST",
     mode: "no-cors",
     headers: { "Content-Type": "text/plain" },
-    body: JSON.stringify(payload)
-  });
+    body: JSON.stringify(Object.assign({ tipo }, payload))
+  }).catch(() => {});
 }
 
 // ===== MODAL: TENHO INTERESSE =====
@@ -160,15 +178,18 @@ function _criarModalLead() {
     setTimeout(() => { _leadDebounce = false; }, DEBOUNCE_MS);
 
     try {
-      if (APPS_SCRIPT_URL) {
-        await _post(payload);
-        if (typeof trackLeadFormSubmit === "function") trackLeadFormSubmit(payload.ref_imovel);
-        _setEstado("form-lead", "sucesso", `
-          <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-          <div><h4>Interesse enviado!</h4><p>Recebemos sua solicitação. Em breve um corretor entrará em contato pelo WhatsApp.</p></div>`);
-      } else {
-        _fallbackLeadWA(payload, tel);
-      }
+      await _sbInsert("leads", {
+        nome:      payload.nome,
+        telefone:  payload.telefone,
+        interesse: payload.interesse,
+        ref_imovel: payload.ref_imovel,
+        origem:    "site"
+      });
+      _notificarAppsScript("notificar_lead", payload);
+      if (typeof trackLeadFormSubmit === "function") trackLeadFormSubmit(payload.ref_imovel);
+      _setEstado("form-lead", "sucesso", `
+        <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <div><h4>Interesse enviado!</h4><p>Recebemos sua solicitação. Em breve um corretor entrará em contato pelo WhatsApp.</p></div>`);
     } catch {
       _fallbackLeadWA(payload, tel);
     }
@@ -340,14 +361,22 @@ function _criarModalAgendamento() {
     setTimeout(() => { _agendDebounce = false; }, DEBOUNCE_MS);
 
     try {
-      if (APPS_SCRIPT_URL) {
-        await _post(payload);
-        _setEstado("form-agendar", "sucesso", `
-          <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-          <div><h4>Visita agendada!</h4><p>Solicitação para <strong>${dataFmt} às ${horario.replace(":", "h")}</strong> registrada. Confirmaremos pelo WhatsApp <strong>${tel}</strong>.</p></div>`);
-      } else {
-        _fallbackAgendWA(payload, dataFmt, tel);
-      }
+      await _sbInsert("agendamentos", {
+        nome:          payload.nome,
+        telefone:      payload.telefone,
+        data_visita:   payload.data,
+        horario:       payload.horario,
+        tipo_visita:   payload.tipo_visita,
+        ref_imovel:    payload.ref_imovel,
+        titulo_imovel: payload.titulo_imovel,
+        tipo_imovel:   payload.tipo_imovel,
+        observacoes:   payload.observacoes,
+        status:        "pendente"
+      });
+      _notificarAppsScript("notificar_agendamento", payload);
+      _setEstado("form-agendar", "sucesso", `
+        <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <div><h4>Visita agendada!</h4><p>Solicitação para <strong>${dataFmt} às ${horario.replace(":", "h")}</strong> registrada. Confirmaremos pelo WhatsApp <strong>${tel}</strong>.</p></div>`);
     } catch {
       _fallbackAgendWA(payload, dataFmt, tel);
     }

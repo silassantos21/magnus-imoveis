@@ -1,6 +1,6 @@
-// ===== CONFIGURAÇÃO =====
-// CONFIGURAR: mesma URL do Apps Script que está em js/leads.js
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyn31FIreCa2vrdXxFgJOeJrBs-am1b2JGP5TSrHZ9rnvFhxRulrY948XM-A5UAmMhr/exec";
+// ===== CONFIGURAÇÃO SUPABASE =====
+// Cole os mesmos valores de dados.js:
+const SUPABASE_ADMIN_URL = "https://pwdwpcqpiodbotqmrfxq.supabase.co";  // só o domínio — sem /rest/v1/
 
 const SESSION_KEY        = "magnus_admin_session";
 const HASH_KEY           = "magnus_admin_hash";
@@ -108,17 +108,57 @@ const Auth = {
   }
 };
 
-// ===== API (Apps Script) =====
+// ===== API (Supabase REST) =====
+// A service role key (armazenada em TOKEN_KEY no localStorage) bypassa o RLS
+// e permite todas as operações de leitura e escrita do admin.
 
 const Api = {
-  async post(tipo, payload) {
-    const body = Object.assign({ tipo, token: Auth.getToken() }, payload || {});
-    const r = await fetch(APPS_SCRIPT_URL, {
-      method: "POST",
-      body: JSON.stringify(body)
+  _key() { return Auth.getToken(); },
+
+  _h(extra) {
+    const key = this._key();
+    return Object.assign({
+      "Content-Type": "application/json",
+      "apikey": key,
+      "Authorization": "Bearer " + key
+    }, extra || {});
+  },
+
+  async select(tabela, qs) {
+    const r = await fetch(SUPABASE_ADMIN_URL + "/rest/v1/" + tabela + (qs ? "?" + qs : ""), {
+      headers: this._h()
     });
     if (!r.ok) throw new Error("HTTP " + r.status);
     return r.json();
+  },
+
+  async insert(tabela, dados) {
+    const r = await fetch(SUPABASE_ADMIN_URL + "/rest/v1/" + tabela, {
+      method: "POST",
+      headers: this._h({ "Prefer": "return=representation" }),
+      body: JSON.stringify(dados)
+    });
+    if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || "HTTP " + r.status); }
+    return r.json();
+  },
+
+  async update(tabela, filtro, dados) {
+    const r = await fetch(SUPABASE_ADMIN_URL + "/rest/v1/" + tabela + "?" + filtro, {
+      method: "PATCH",
+      headers: this._h({ "Prefer": "return=minimal" }),
+      body: JSON.stringify(dados)
+    });
+    if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || "HTTP " + r.status); }
+    return true;
+  },
+
+  async delete(tabela, filtro) {
+    const r = await fetch(SUPABASE_ADMIN_URL + "/rest/v1/" + tabela + "?" + filtro, {
+      method: "DELETE",
+      headers: this._h()
+    });
+    if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || "HTTP " + r.status); }
+    return true;
   }
 };
 
@@ -269,31 +309,23 @@ function renderImoveis() {
 
 async function mudarStatus(ref, novoStatus) {
   try {
-    const res = await Api.post("admin_status", { ref, status: novoStatus });
-    if (res.status === 200) {
-      const im = state.imoveis.find(i => i.ref === ref);
-      if (im) im.status = novoStatus;
-      renderImoveis(); renderStats();
-      showToast("Status atualizado!", "success");
-      window.dadosImoveis.invalidarCache();
-    } else {
-      showToast("Erro: " + res.mensagem, "error");
-    }
+    await Api.update("imoveis", "ref=eq." + encodeURIComponent(ref), { status: novoStatus });
+    const im = state.imoveis.find(i => i.ref === ref);
+    if (im) im.status = novoStatus;
+    renderImoveis(); renderStats();
+    showToast("Status atualizado!", "success");
+    window.dadosImoveis.invalidarCache();
   } catch { showToast("Erro de conexão", "error"); }
 }
 
 async function toggleDestaque(ref, novoDestaque) {
   try {
-    const res = await Api.post("admin_status", { ref, destaque: novoDestaque });
-    if (res.status === 200) {
-      const im = state.imoveis.find(i => i.ref === ref);
-      if (im) im.destaque = novoDestaque;
-      renderImoveis(); renderStats();
-      showToast(novoDestaque ? "Marcado como destaque!" : "Destaque removido!", "success");
-      window.dadosImoveis.invalidarCache();
-    } else {
-      showToast("Erro: " + res.mensagem, "error");
-    }
+    await Api.update("imoveis", "ref=eq." + encodeURIComponent(ref), { destaque: novoDestaque });
+    const im = state.imoveis.find(i => i.ref === ref);
+    if (im) im.destaque = novoDestaque;
+    renderImoveis(); renderStats();
+    showToast(novoDestaque ? "Marcado como destaque!" : "Destaque removido!", "success");
+    window.dadosImoveis.invalidarCache();
   } catch { showToast("Erro de conexão", "error"); }
 }
 
@@ -348,15 +380,11 @@ function duplicarImovel(ref) {
 async function confirmarDeletar(ref, titulo) {
   if (!confirm(`Excluir "${titulo}" (${ref})?\n\nEsta ação não pode ser desfeita.`)) return;
   try {
-    const res = await Api.post("admin_deletar", { ref });
-    if (res.status === 200) {
-      state.imoveis = state.imoveis.filter(i => i.ref !== ref);
-      renderImoveis(); renderStats();
-      showToast("Imóvel excluído!", "success");
-      window.dadosImoveis.invalidarCache();
-    } else {
-      showToast("Erro: " + res.mensagem, "error");
-    }
+    await Api.delete("imoveis", "ref=eq." + encodeURIComponent(ref));
+    state.imoveis = state.imoveis.filter(i => i.ref !== ref);
+    renderImoveis(); renderStats();
+    showToast("Imóvel excluído!", "success");
+    window.dadosImoveis.invalidarCache();
   } catch { showToast("Erro de conexão", "error"); }
 }
 
@@ -655,31 +683,32 @@ async function salvarImovel(e) {
   btn.disabled = true; btn.textContent = "Salvando…";
 
   try {
-    const tipo    = state.editandoRef ? "admin_editar" : "admin_criar";
-    const payload = state.editandoRef ? { ref: state.editandoRef, imovel } : { imovel };
-    const res     = await Api.post(tipo, payload);
+    const refEditando = state.editandoRef; // captura ANTES de fecharDrawer() zerar
 
-    if (res.status === 200) {
-      showToast(state.editandoRef ? "Imóvel atualizado!" : "Imóvel criado!", "success");
-      const refEditando = state.editandoRef; // captura ANTES de fecharDrawer() zerar
-      fecharDrawer();
-
-      // Atualiza estado local imediatamente — não espera o cache do CSV do Google (até 5 min)
-      if (refEditando) {
-        const idx = state.imoveis.findIndex(i => i.ref === refEditando);
-        if (idx !== -1) state.imoveis[idx] = Object.assign({}, state.imoveis[idx], imovel);
-        else            state.imoveis.push(imovel);
-      } else {
-        state.imoveis.push(imovel);
-      }
-      renderImoveis();
-
-      // Persiste o estado atualizado no cache — sobrevive a reload de página
-      // sem depender do cache CDN do Google Sheets (até 5 min de atraso)
-      window.dadosImoveis.salvarCache(state.imoveis);
+    if (refEditando) {
+      // Edição: PATCH filtrando por ref (ref não entra no corpo para não tentar atualizá-lo)
+      const { ref: _ref, ...camposEditar } = imovel;
+      await Api.update("imoveis", "ref=eq." + encodeURIComponent(refEditando), camposEditar);
     } else {
-      showToast("Erro: " + res.mensagem, "error");
+      // Criação: POST com todos os campos
+      await Api.insert("imoveis", imovel);
     }
+
+    showToast(refEditando ? "Imóvel atualizado!" : "Imóvel criado!", "success");
+    fecharDrawer();
+
+    // Atualiza estado local imediatamente (sem aguardar cache expirar)
+    if (refEditando) {
+      const idx = state.imoveis.findIndex(i => i.ref === refEditando);
+      if (idx !== -1) state.imoveis[idx] = Object.assign({}, state.imoveis[idx], imovel);
+      else            state.imoveis.push(imovel);
+    } else {
+      state.imoveis.push(imovel);
+    }
+    renderImoveis();
+
+    // Persiste no cache para sobreviver a reload antes do TTL de 5 min
+    window.dadosImoveis.salvarCache(state.imoveis);
   } catch (err) {
     showToast("Erro de conexão: " + err.message, "error");
   } finally {
@@ -762,11 +791,15 @@ function getLeadsFiltrados() {
 async function carregarLeads() {
   setLoading(true);
   try {
-    const res = await Api.post("admin_listar_leads");
-    if (res.status === 200) { state.leads = res.leads || []; renderLeads(); }
-    else showToast("Erro ao carregar leads: " + res.mensagem, "error");
+    const rows = await Api.select("leads", "select=*&order=criado_em.desc");
+    state.leads = rows.map(l => ({
+      ...l,
+      // Normaliza campo de data para o formato esperado pelo renderLeads e getLeadsFiltrados
+      data: l.criado_em ? new Date(l.criado_em).toLocaleString("pt-BR") : "—"
+    }));
+    renderLeads();
   } catch (err) {
-    showToast("Erro de conexão: " + err.message, "error");
+    showToast("Erro ao carregar leads: " + err.message, "error");
   } finally { setLoading(false); }
 }
 
@@ -802,11 +835,16 @@ function renderLeads() {
 async function carregarAgendamentos() {
   setLoading(true);
   try {
-    const res = await Api.post("admin_listar_agendamentos");
-    if (res.status === 200) { state.agendamentos = res.agendamentos || []; renderAgendamentos(); }
-    else showToast("Erro ao carregar agendamentos: " + res.mensagem, "error");
+    const rows = await Api.select("agendamentos", "select=*&order=criado_em.desc");
+    state.agendamentos = rows.map(a => ({
+      ...a,
+      // Normaliza campos para compatibilidade com renderAgendamentos
+      data_criacao: a.criado_em ? new Date(a.criado_em).toLocaleString("pt-BR") : "—",
+      data: a.data_visita  // renderAgendamentos usa a.data para a data da visita
+    }));
+    renderAgendamentos();
   } catch (err) {
-    showToast("Erro de conexão: " + err.message, "error");
+    showToast("Erro ao carregar agendamentos: " + err.message, "error");
   } finally { setLoading(false); }
 }
 
@@ -837,14 +875,14 @@ function renderAgendamentos() {
 
     const acoesPendente = a.status === "pendente" ? `
       <button class="btn-sm btn-confirmar" title="Confirmar"
-        onclick="atualizarStatusAgend(${a.row},'confirmado','${esc(a.nome)}','${a.data}','${a.horario}','${waNum}')">✅</button>
+        onclick="atualizarStatusAgend(${a.id},'confirmado','${esc(a.nome)}','${a.data}','${a.horario}','${waNum}')">✅</button>
       <button class="btn-sm btn-cancelar" title="Cancelar"
-        onclick="atualizarStatusAgend(${a.row},'cancelado','${esc(a.nome)}','${a.data}','${a.horario}','${waNum}')">❌</button>` : "";
+        onclick="atualizarStatusAgend(${a.id},'cancelado','${esc(a.nome)}','${a.data}','${a.horario}','${waNum}')">❌</button>` : "";
     const acoesConfirmado = a.status === "confirmado" ? `
       <button class="btn-sm btn-realizado" title="Marcar realizado"
-        onclick="atualizarStatusAgend(${a.row},'realizado','${esc(a.nome)}','${a.data}','${a.horario}','')">🏁</button>
+        onclick="atualizarStatusAgend(${a.id},'realizado','${esc(a.nome)}','${a.data}','${a.horario}','')">🏁</button>
       <button class="btn-sm btn-cancelar" title="Cancelar"
-        onclick="atualizarStatusAgend(${a.row},'cancelado','${esc(a.nome)}','${a.data}','${a.horario}','${waNum}')">❌</button>` : "";
+        onclick="atualizarStatusAgend(${a.id},'cancelado','${esc(a.nome)}','${a.data}','${a.horario}','${waNum}')">❌</button>` : "";
 
     return `<tr>
       <td class="td-data">${a.data_criacao || "—"}</td>
@@ -861,26 +899,22 @@ function renderAgendamentos() {
   }).join("");
 }
 
-async function atualizarStatusAgend(row, novoStatus, nome, data, horario, waNum) {
+async function atualizarStatusAgend(id, novoStatus, nome, data, horario, waNum) {
   try {
-    const res = await Api.post("admin_status_agendamento", { row, status: novoStatus });
-    if (res.status === 200) {
-      const a = state.agendamentos.find(ag => ag.row === row);
-      if (a) a.status = novoStatus;
-      renderAgendamentos();
-      showToast("Status atualizado!", "success");
+    await Api.update("agendamentos", "id=eq." + id, { status: novoStatus });
+    const a = state.agendamentos.find(ag => ag.id === id);
+    if (a) a.status = novoStatus;
+    renderAgendamentos();
+    showToast("Status atualizado!", "success");
 
-      // Abre WhatsApp para notificar o cliente
-      if (waNum && (novoStatus === "confirmado" || novoStatus === "cancelado")) {
-        const dataFmt = data ? new Date(data + "T12:00:00").toLocaleDateString("pt-BR") : "";
-        const hora    = (horario || "").replace(":","h");
-        const msg     = novoStatus === "confirmado"
-          ? `Olá ${nome}! Sua visita foi *confirmada* para ${dataFmt} às ${hora}. Contamos com sua presença! — Magnus Imóveis`
-          : `Olá ${nome}! Infelizmente precisamos *cancelar* sua visita de ${dataFmt}. Entre em contato para reagendar. — Magnus Imóveis`;
-        setTimeout(() => window.open(`https://wa.me/55${waNum}?text=${encodeURIComponent(msg)}`, "_blank"), 400);
-      }
-    } else {
-      showToast("Erro: " + res.mensagem, "error");
+    // Abre WhatsApp para notificar o cliente
+    if (waNum && (novoStatus === "confirmado" || novoStatus === "cancelado")) {
+      const dataFmt = data ? new Date(data + "T12:00:00").toLocaleDateString("pt-BR") : "";
+      const hora    = (horario || "").replace(":","h");
+      const msg     = novoStatus === "confirmado"
+        ? `Olá ${nome}! Sua visita foi *confirmada* para ${dataFmt} às ${hora}. Contamos com sua presença! — Magnus Imóveis`
+        : `Olá ${nome}! Infelizmente precisamos *cancelar* sua visita de ${dataFmt}. Entre em contato para reagendar. — Magnus Imóveis`;
+      setTimeout(() => window.open(`https://wa.me/55${waNum}?text=${encodeURIComponent(msg)}`, "_blank"), 400);
     }
   } catch { showToast("Erro de conexão", "error"); }
 }
@@ -1118,7 +1152,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (senha !== confirmar) return showToast("Senhas não conferem", "error");
     if (senha.length < 6)    return showToast("Senha muito curta (mín. 6 caracteres)", "error");
-    if (!token)              return showToast("Token do Apps Script obrigatório", "error");
+    if (!token)              return showToast("Service Role Key obrigatória", "error");
 
     const btn = e.target.querySelector("button[type=submit]");
     btn.disabled = true; btn.textContent = "Salvando…";
