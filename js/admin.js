@@ -190,7 +190,7 @@ function showScreen(nome) {
 function showTab(tab) {
   state.tabAtual = tab;
   document.querySelectorAll(".tab-content").forEach(el => el.style.display = "none");
-  document.querySelectorAll(".nav-btn").forEach(btn =>
+  document.querySelectorAll(".nav-btn, .mobile-nav-btn").forEach(btn =>
     btn.classList.toggle("active", btn.dataset.tab === tab));
   document.getElementById("tab-" + tab).style.display = "block";
 
@@ -261,19 +261,21 @@ function renderStats() {
 // ===== IMÓVEIS — LISTA =====
 
 function renderImoveis() {
-  const lista = getImoveisFiltrados();
-  const tbody = document.getElementById("imoveis-tbody");
+  const lista   = getImoveisFiltrados();
+  const tbody   = document.getElementById("imoveis-tbody");
+  const cards   = document.getElementById("imoveis-cards");
+  const countEl = document.getElementById("imoveis-count");
   if (!tbody) return;
-
-  if (!lista.length) {
-    tbody.innerHTML = `<tr><td colspan="7" class="empty-row">Nenhum imóvel encontrado</td></tr>`;
-    return;
-  }
 
   const statusMap  = { disponivel: ["badge-green","Disponível"], reservado: ["badge-yellow","Reservado"], vendido: ["badge-red","Vendido"] };
   const totalLabel = `${lista.length} ${lista.length !== 1 ? "imóveis" : "imóvel"}`;
-  const countEl    = document.getElementById("imoveis-count");
   if (countEl) countEl.textContent = totalLabel;
+
+  if (!lista.length) {
+    tbody.innerHTML = `<tr><td colspan="7" class="empty-row">Nenhum imóvel encontrado</td></tr>`;
+    if (cards) cards.innerHTML = `<p style="text-align:center;padding:40px 0;color:var(--gray-400);font-size:.85rem">Nenhum imóvel encontrado</p>`;
+    return;
+  }
 
   tbody.innerHTML = lista.map(im => {
     const [cls, label] = statusMap[im.status] || ["badge-gray", im.status];
@@ -303,6 +305,43 @@ function renderImoveis() {
       </td>
     </tr>`;
   }).join("");
+
+  if (cards) {
+    cards.innerHTML = lista.map(im => {
+      const [cls, label] = statusMap[im.status] || ["badge-gray", im.status];
+      const destStar  = im.destaque ? "★" : "☆";
+      const destClass = im.destaque ? " active" : "";
+      return `<div class="admin-card">
+        <div class="admin-card-head">
+          <div class="admin-card-head-left">
+            <code>${im.ref || "—"}</code>
+            <span class="badge ${cls}">${label}</span>
+            <button class="btn-star${destClass}" title="${im.destaque ? "Remover destaque" : "Marcar destaque"}"
+              onclick="toggleDestaque('${esc(im.ref)}', ${!im.destaque})">${destStar}</button>
+          </div>
+          <div class="admin-card-acoes">
+            <button class="btn-sm btn-editar" onclick="abrirFormEditar('${esc(im.ref)}')" title="Editar">✏️</button>
+            <button class="btn-sm btn-duplicar" onclick="duplicarImovel('${esc(im.ref)}')" title="Duplicar">📋</button>
+            <button class="btn-sm btn-deletar" title="Excluir"
+              onclick="confirmarDeletar('${esc(im.ref)}','${esc(im.titulo)}')">🗑️</button>
+          </div>
+        </div>
+        <div class="admin-card-body">
+          <div class="admin-card-titulo">${im.titulo || "—"}</div>
+          <div class="admin-card-sub">${im.tipo || "—"} · ${im.finalidade || "—"} · 📍 ${im.bairro || "—"}, ${im.cidade || "—"}</div>
+        </div>
+        <div class="admin-card-foot">
+          <span class="admin-card-preco">${im.preco ? fmtPreco(im.preco) : "—"}</span>
+          <select class="sel-status" title="Mudar status"
+            onchange="mudarStatus('${esc(im.ref)}', this.value)">
+            <option value="disponivel"${im.status==="disponivel"?" selected":""}>Disponível</option>
+            <option value="reservado"${im.status==="reservado"?" selected":""}>Reservado</option>
+            <option value="vendido"${im.status==="vendido"?" selected":""}>Vendido</option>
+          </select>
+        </div>
+      </div>`;
+    }).join("");
+  }
 }
 
 // ===== IMÓVEIS — AÇÕES RÁPIDAS =====
@@ -707,8 +746,6 @@ async function salvarImovel(e) {
     }
     renderImoveis();
 
-    // Persiste no cache para sobreviver a reload antes do TTL de 5 min
-    window.dadosImoveis.salvarCache(state.imoveis);
   } catch (err) {
     showToast("Erro de conexão: " + err.message, "error");
   } finally {
@@ -806,12 +843,14 @@ async function carregarLeads() {
 function renderLeads() {
   const lista   = getLeadsFiltrados();
   const tbody   = document.getElementById("leads-tbody");
+  const cards   = document.getElementById("leads-cards");
   const countEl = document.getElementById("leads-count");
   if (countEl) countEl.textContent = `${lista.length} lead${lista.length !== 1 ? "s" : ""}`;
   if (!tbody) return;
 
   if (!lista.length) {
     tbody.innerHTML = `<tr><td colspan="6" class="empty-row">Nenhum lead encontrado</td></tr>`;
+    if (cards) cards.innerHTML = `<p style="text-align:center;padding:40px 0;color:var(--gray-400);font-size:.85rem">Nenhum lead encontrado</p>`;
     return;
   }
 
@@ -828,6 +867,26 @@ function renderLeads() {
       <td><span class="badge badge-gray">${l.origem || "site"}</span></td>
     </tr>`;
   }).join("");
+
+  if (cards) {
+    cards.innerHTML = lista.map(l => {
+      const waNum = (l.telefone || "").replace(/\D/g,"");
+      return `<div class="admin-card">
+        <div class="admin-card-head">
+          <span class="admin-card-nome">${l.nome || "—"}</span>
+          <span class="admin-card-data">${l.data || "—"}</span>
+        </div>
+        <div class="admin-card-body">
+          ${waNum
+            ? `<div><a href="https://wa.me/55${waNum}" target="_blank" class="link-wa">📱 ${fmtTelefone(l.telefone)}</a></div>`
+            : `<div>${l.telefone || "—"}</div>`}
+          <div class="admin-card-info">Interesse: ${l.interesse || "—"}</div>
+          <div class="admin-card-info">Imóvel: <code>${l.ref_imovel || "—"}</code></div>
+          <div style="margin-top:2px"><span class="badge badge-gray">${l.origem || "site"}</span></div>
+        </div>
+      </div>`;
+    }).join("");
+  }
 }
 
 // ===== AGENDAMENTOS =====
@@ -849,15 +908,16 @@ async function carregarAgendamentos() {
 }
 
 function renderAgendamentos() {
-  const lista  = getAgendamentosFiltrados();
-
+  const lista   = getAgendamentosFiltrados();
   const tbody   = document.getElementById("agend-tbody");
+  const cards   = document.getElementById("agend-cards");
   const countEl = document.getElementById("agend-count");
   if (countEl) countEl.textContent = `${lista.length} agendamento${lista.length !== 1 ? "s" : ""}`;
   if (!tbody) return;
 
   if (!lista.length) {
     tbody.innerHTML = `<tr><td colspan="8" class="empty-row">Nenhum agendamento encontrado</td></tr>`;
+    if (cards) cards.innerHTML = `<p style="text-align:center;padding:40px 0;color:var(--gray-400);font-size:.85rem">Nenhum agendamento encontrado</p>`;
     return;
   }
 
@@ -868,22 +928,25 @@ function renderAgendamentos() {
     cancelado:  ["badge-red","Cancelado"]
   };
 
+  const _acoes = a => {
+    const waNum = (a.telefone || "").replace(/\D/g,"");
+    if (a.status === "pendente") return `
+      <button class="btn-sm btn-confirmar" title="Confirmar"
+        onclick="atualizarStatusAgend(${a.id},'confirmado','${esc(a.nome)}','${a.data}','${a.horario}','${waNum}')">✅</button>
+      <button class="btn-sm btn-cancelar" title="Cancelar"
+        onclick="atualizarStatusAgend(${a.id},'cancelado','${esc(a.nome)}','${a.data}','${a.horario}','${waNum}')">❌</button>`;
+    if (a.status === "confirmado") return `
+      <button class="btn-sm btn-realizado" title="Marcar realizado"
+        onclick="atualizarStatusAgend(${a.id},'realizado','${esc(a.nome)}','${a.data}','${a.horario}','')">🏁</button>
+      <button class="btn-sm btn-cancelar" title="Cancelar"
+        onclick="atualizarStatusAgend(${a.id},'cancelado','${esc(a.nome)}','${a.data}','${a.horario}','${waNum}')">❌</button>`;
+    return "";
+  };
+
   tbody.innerHTML = lista.map(a => {
     const [cls, label] = statusMap[a.status] || ["badge-gray", a.status];
     const dataFmt = a.data ? new Date(a.data + "T12:00:00").toLocaleDateString("pt-BR") : "—";
     const waNum   = (a.telefone || "").replace(/\D/g,"");
-
-    const acoesPendente = a.status === "pendente" ? `
-      <button class="btn-sm btn-confirmar" title="Confirmar"
-        onclick="atualizarStatusAgend(${a.id},'confirmado','${esc(a.nome)}','${a.data}','${a.horario}','${waNum}')">✅</button>
-      <button class="btn-sm btn-cancelar" title="Cancelar"
-        onclick="atualizarStatusAgend(${a.id},'cancelado','${esc(a.nome)}','${a.data}','${a.horario}','${waNum}')">❌</button>` : "";
-    const acoesConfirmado = a.status === "confirmado" ? `
-      <button class="btn-sm btn-realizado" title="Marcar realizado"
-        onclick="atualizarStatusAgend(${a.id},'realizado','${esc(a.nome)}','${a.data}','${a.horario}','')">🏁</button>
-      <button class="btn-sm btn-cancelar" title="Cancelar"
-        onclick="atualizarStatusAgend(${a.id},'cancelado','${esc(a.nome)}','${a.data}','${a.horario}','${waNum}')">❌</button>` : "";
-
     return `<tr>
       <td class="td-data">${a.data_criacao || "—"}</td>
       <td class="td-nome">${a.nome || "—"}</td>
@@ -894,9 +957,36 @@ function renderAgendamentos() {
       <td>${a.tipo_visita || "—"}</td>
       <td><code>${a.ref_imovel || "—"}</code></td>
       <td><span class="badge ${cls}">${label}</span></td>
-      <td class="td-acoes-agend">${acoesPendente}${acoesConfirmado}</td>
+      <td class="td-acoes-agend">${_acoes(a)}</td>
     </tr>`;
   }).join("");
+
+  if (cards) {
+    cards.innerHTML = lista.map(a => {
+      const [cls, label] = statusMap[a.status] || ["badge-gray", a.status];
+      const dataFmt = a.data ? new Date(a.data + "T12:00:00").toLocaleDateString("pt-BR") : "—";
+      const waNum   = (a.telefone || "").replace(/\D/g,"");
+      return `<div class="admin-card">
+        <div class="admin-card-head">
+          <div class="admin-card-head-left">
+            <span class="admin-card-nome">${a.nome || "—"}</span>
+            <span class="badge ${cls}">${label}</span>
+          </div>
+          <div class="admin-card-acoes">${_acoes(a)}</div>
+        </div>
+        <div class="admin-card-body">
+          ${waNum
+            ? `<div><a href="https://wa.me/55${waNum}" target="_blank" class="link-wa">📱 ${fmtTelefone(a.telefone)}</a></div>`
+            : `<div>${a.telefone || "—"}</div>`}
+          <div class="admin-card-info">📅 ${dataFmt}${a.horario ? " · " + a.horario.replace(":","h") : ""}</div>
+          <div class="admin-card-info">Imóvel: <code>${a.ref_imovel || "—"}</code> · ${a.tipo_visita || "Presencial"}</div>
+        </div>
+        <div class="admin-card-foot">
+          <span class="admin-card-data">Solicitado: ${a.data_criacao || "—"}</span>
+        </div>
+      </div>`;
+    }).join("");
+  }
 }
 
 async function atualizarStatusAgend(id, novoStatus, nome, data, horario, waNum) {
@@ -1210,9 +1300,16 @@ document.addEventListener("DOMContentLoaded", () => {
     if (confirm("Deseja sair do painel?")) Auth.logout();
   });
 
-  // ── Tabs ──
-  document.querySelectorAll(".nav-btn").forEach(btn =>
-    btn.addEventListener("click", () => showTab(btn.dataset.tab)));
+  // ── Tabs (sidebar + mobile nav) ──
+  document.querySelectorAll(".nav-btn, .mobile-nav-btn").forEach(btn => {
+    if (btn.dataset.tab) btn.addEventListener("click", () => showTab(btn.dataset.tab));
+  });
+  const btnConfigMobile = document.getElementById("btn-config-cloudinary-mobile");
+  if (btnConfigMobile) btnConfigMobile.addEventListener("click", abrirModalCloudinary);
+  const btnSairMobile = document.getElementById("btn-sair-mobile");
+  if (btnSairMobile) btnSairMobile.addEventListener("click", () => {
+    if (confirm("Deseja sair do painel?")) Auth.logout();
+  });
 
   // ── Imóveis ──
   document.getElementById("btn-novo-imovel").addEventListener("click", abrirFormNovo);

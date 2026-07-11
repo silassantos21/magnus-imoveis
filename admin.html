@@ -552,6 +552,68 @@
     .cloudinary-status.ok  { background: var(--green-l);  color: var(--green); }
     .cloudinary-status.nok { background: var(--yellow-l); color: var(--yellow); }
 
+    /* ── CARDS (mobile) ── */
+    .cards-wrap { display: none; flex-direction: column; gap: 10px; }
+    .admin-card {
+      background: var(--white); border-radius: var(--radius);
+      box-shadow: var(--shadow); overflow: hidden;
+    }
+    .admin-card-head {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 8px; padding: 12px 14px 10px;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .admin-card-head-left {
+      display: flex; align-items: center; gap: 6px;
+      flex-wrap: wrap; min-width: 0; flex: 1;
+    }
+    .admin-card-body {
+      padding: 8px 14px 10px; display: flex; flex-direction: column; gap: 5px;
+      font-size: .85rem;
+    }
+    .admin-card-foot {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 10px; padding: 10px 14px;
+      background: var(--gray-100); border-top: 1px solid var(--gray-200);
+    }
+    .admin-card-titulo { font-size: .9rem; font-weight: 700; color: var(--navy-dark); line-height: 1.3; }
+    .admin-card-sub    { font-size: .78rem; color: var(--gray-600); }
+    .admin-card-preco  { font-weight: 800; color: var(--navy-dark); font-size: 1rem; white-space: nowrap; }
+    .admin-card-nome   { font-weight: 700; color: var(--navy-dark); font-size: .9rem; }
+    .admin-card-acoes  { display: flex; gap: 6px; flex-shrink: 0; }
+    .admin-card-data   { font-size: .75rem; color: var(--gray-400); }
+    .admin-card-info   { font-size: .82rem; color: var(--gray-600); }
+
+    /* ── MOBILE HEADER (topo, só < 640px) ── */
+    .mobile-header {
+      display: none; background: var(--navy-dark);
+      padding: 10px 16px; align-items: center; justify-content: space-between;
+      border-bottom: 3px solid var(--gold); flex-shrink: 0;
+    }
+    .mobile-header-logo { display: flex; align-items: center; gap: 8px; }
+    .mobile-header-logo img    { height: 28px; border-radius: 4px; }
+    .mobile-header-logo span   { font-size: .85rem; font-weight: 700; color: var(--white); letter-spacing: .06em; }
+    .mobile-header-logo strong { color: var(--gold); }
+    .mobile-header-creci       { font-size: .62rem; color: var(--gray-400); letter-spacing: .04em; }
+
+    /* ── MOBILE NAV (bottom bar) ── */
+    .mobile-nav {
+      display: none; position: fixed; bottom: 0; left: 0; right: 0;
+      background: var(--navy-dark); border-top: 1px solid rgba(255,255,255,.1);
+      z-index: 100; padding-bottom: env(safe-area-inset-bottom);
+    }
+    .mobile-nav-inner { display: flex; }
+    .mobile-nav-btn {
+      flex: 1; display: flex; flex-direction: column; align-items: center;
+      gap: 3px; padding: 8px 4px 7px; font-size: .6rem; font-weight: 600;
+      color: var(--gray-400); letter-spacing: .02em;
+      border: none; background: none; cursor: pointer; font-family: inherit;
+      transition: color var(--transition);
+    }
+    .mobile-nav-btn .nav-icon { font-size: 1.2rem; line-height: 1; }
+    .mobile-nav-btn:active    { background: rgba(255,255,255,.06); }
+    .mobile-nav-btn.active    { color: var(--gold); }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
       .sidebar { width: 56px; min-width: 56px; }
@@ -561,10 +623,34 @@
       .sidebar-top { padding: 12px 8px; }
       .sidebar-logo-img { display: none; }
     }
-    @media (max-width: 600px) {
-      .tab-content { padding: 16px; }
-      .stats-bar { gap: 8px; }
-      #form-drawer { width: 100%; }
+    @media (max-width: 640px) {
+      #screen-admin  { flex-direction: column; }
+      .admin-layout  { flex: 1; min-height: 0; }
+      .sidebar       { display: none; }
+      .mobile-header { display: flex; }
+      .mobile-nav    { display: block; }
+      .admin-main    { padding-bottom: 66px; }
+      .tab-content   { padding: 14px 12px; }
+      .stats-bar     { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+      .stat-card     { padding: 10px; min-width: unset; }
+      .stat-value    { font-size: 1.3rem; }
+      .stat-label    { font-size: .62rem; }
+      .count-label   { display: none; }
+      .btn-export    { display: none; }
+      .table-wrap    { display: none; }
+      .cards-wrap    { display: flex; }
+      .filters-bar   { flex-direction: column; align-items: stretch; }
+      .filters-bar input[type=search] { min-width: unset; }
+      .filter-label  { width: 100%; }
+      .toast         { bottom: 76px; right: 12px; left: 12px; text-align: center; }
+      #form-drawer   { width: 100%; }
+      .form-preview-top { display: none; }
+      .drawer-header { padding: 14px 16px; }
+      #form-imovel   { padding: 14px 16px; }
+      .form-row      { flex-direction: column; }
+      .form-row label { flex: unset !important; min-width: 100% !important; max-width: 100% !important; }
+      .page-header   { margin-bottom: 14px; }
+      .btn-sm        { padding: 7px 10px; }
     }
   </style>
 </head>
@@ -644,6 +730,16 @@
 
 <!-- ====== TELA: PAINEL ADMIN ====== -->
 <div id="screen-admin">
+
+  <!-- Header mobile (só visível em < 640px) -->
+  <div class="mobile-header">
+    <div class="mobile-header-logo">
+      <img src="images/logo-icone.png" alt="" onerror="this.style.display='none'">
+      <span>MAGNUS <strong>IMÓVEIS</strong></span>
+    </div>
+    <div class="mobile-header-creci">CRECI 32.402</div>
+  </div>
+
   <div class="admin-layout">
 
     <!-- Sidebar -->
@@ -751,6 +847,7 @@
             </tbody>
           </table>
         </div>
+        <div id="imoveis-cards" class="cards-wrap"></div>
       </section>
 
       <!-- ─── ABA: AGENDAMENTOS ─── -->
@@ -793,6 +890,7 @@
             </tbody>
           </table>
         </div>
+        <div id="agend-cards" class="cards-wrap"></div>
       </section>
 
       <!-- ─── ABA: LEADS ─── -->
@@ -829,10 +927,32 @@
             </tbody>
           </table>
         </div>
+        <div id="leads-cards" class="cards-wrap"></div>
       </section>
 
     </main><!-- /admin-main -->
   </div><!-- /admin-layout -->
+
+  <!-- Bottom nav mobile (só visível em < 640px) -->
+  <nav class="mobile-nav">
+    <div class="mobile-nav-inner">
+      <button class="mobile-nav-btn active" data-tab="imoveis">
+        <span class="nav-icon">🏠</span><span>Imóveis</span>
+      </button>
+      <button class="mobile-nav-btn" data-tab="agendamentos">
+        <span class="nav-icon">📅</span><span>Agendas</span>
+      </button>
+      <button class="mobile-nav-btn" data-tab="leads">
+        <span class="nav-icon">👥</span><span>Leads</span>
+      </button>
+      <button class="mobile-nav-btn" id="btn-config-cloudinary-mobile">
+        <span class="nav-icon">☁</span><span>Config</span>
+      </button>
+      <button class="mobile-nav-btn" id="btn-sair-mobile">
+        <span class="nav-icon">🚪</span><span>Sair</span>
+      </button>
+    </div>
+  </nav>
 
   <!-- Overlay do drawer -->
   <div id="drawer-overlay"></div>
