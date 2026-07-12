@@ -9,7 +9,7 @@ async function carregarImoveis() {
   try {
     const r = await fetch(
       SUPABASE_URL + "/rest/v1/imoveis?select=*&order=id",
-      { headers: { apikey: SUPABASE_ANON_KEY, Accept: "application/json" } }
+      { headers: { apikey: SUPABASE_ANON_KEY, Authorization: "Bearer " + SUPABASE_ANON_KEY, Accept: "application/json" } }
     );
     if (r.ok) {
       const dados = await r.json();

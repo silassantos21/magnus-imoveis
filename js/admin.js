@@ -22,6 +22,21 @@ const FP_LOCALE = {
   firstDayOfWeek: 0
 };
 
+// ===== ÍCONES SVG =====
+const _ico = (p, s = 16) =>
+  `<svg xmlns="http://www.w3.org/2000/svg" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+
+const Icons = {
+  edit:    _ico('<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>'),
+  copy:    _ico('<rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>'),
+  trash:   _ico('<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>'),
+  starOn:  _ico('<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor"/>', 17),
+  starOff: _ico('<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>', 17),
+  check:   _ico('<polyline points="20 6 9 17 4 12"/>'),
+  xMark:   _ico('<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>'),
+  flag:    _ico('<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>'),
+};
+
 // ===== UTILITÁRIOS =====
 
 async function sha256(text) {
@@ -117,6 +132,7 @@ const Api = {
 
   _h(extra) {
     const key = this._key();
+    if (!key) throw new Error("Service Role Key não configurada — clique em Sair e reconfigure o painel");
     return Object.assign({
       "Content-Type": "application/json",
       "apikey": key,
@@ -124,11 +140,16 @@ const Api = {
     }, extra || {});
   },
 
+  _err(r) {
+    if (r.status === 401) throw new Error("Chave inválida — clique em Sair → Redefinir configurações e insira a Service Role Key correta");
+    throw new Error("Erro " + r.status);
+  },
+
   async select(tabela, qs) {
     const r = await fetch(SUPABASE_ADMIN_URL + "/rest/v1/" + tabela + (qs ? "?" + qs : ""), {
       headers: this._h()
     });
-    if (!r.ok) throw new Error("HTTP " + r.status);
+    if (!r.ok) this._err(r);
     return r.json();
   },
 
@@ -138,7 +159,7 @@ const Api = {
       headers: this._h({ "Prefer": "return=representation" }),
       body: JSON.stringify(dados)
     });
-    if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || "HTTP " + r.status); }
+    if (!r.ok) { const e = await r.json().catch(() => ({})); if (r.status === 401) this._err(r); throw new Error(e.message || "Erro " + r.status); }
     return r.json();
   },
 
@@ -148,7 +169,7 @@ const Api = {
       headers: this._h({ "Prefer": "return=minimal" }),
       body: JSON.stringify(dados)
     });
-    if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || "HTTP " + r.status); }
+    if (!r.ok) { if (r.status === 401) this._err(r); const e = await r.json().catch(() => ({})); throw new Error(e.message || "Erro " + r.status); }
     return true;
   },
 
@@ -157,7 +178,7 @@ const Api = {
       method: "DELETE",
       headers: this._h()
     });
-    if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || "HTTP " + r.status); }
+    if (!r.ok) { if (r.status === 401) this._err(r); const e = await r.json().catch(() => ({})); throw new Error(e.message || "Erro " + r.status); }
     return true;
   }
 };
@@ -279,7 +300,6 @@ function renderImoveis() {
 
   tbody.innerHTML = lista.map(im => {
     const [cls, label] = statusMap[im.status] || ["badge-gray", im.status];
-    const destStar  = im.destaque ? "★" : "☆";
     const destClass = im.destaque ? " active" : "";
     return `<tr>
       <td class="td-ref"><code>${im.ref || "—"}</code></td>
@@ -289,11 +309,11 @@ function renderImoveis() {
       <td class="td-preco">${im.preco ? fmtPreco(im.preco) : "—"}</td>
       <td class="td-star">
         <button class="btn-star${destClass}" title="${im.destaque ? "Remover destaque" : "Marcar destaque"}"
-          onclick="toggleDestaque('${esc(im.ref)}', ${!im.destaque})">${destStar}</button>
+          onclick="toggleDestaque('${esc(im.ref)}', ${!im.destaque})">${im.destaque ? Icons.starOn : Icons.starOff}</button>
       </td>
       <td class="td-acoes">
-        <button class="btn-sm btn-editar" onclick="abrirFormEditar('${esc(im.ref)}')" title="Editar">✏️</button>
-        <button class="btn-sm btn-duplicar" onclick="duplicarImovel('${esc(im.ref)}')" title="Duplicar">📋</button>
+        <button class="btn-sm btn-editar" onclick="abrirFormEditar('${esc(im.ref)}')" title="Editar">${Icons.edit}</button>
+        <button class="btn-sm btn-duplicar" onclick="duplicarImovel('${esc(im.ref)}')" title="Duplicar">${Icons.copy}</button>
         <select class="sel-status" title="Mudar status"
           onchange="mudarStatus('${esc(im.ref)}', this.value)">
           <option value="disponivel"${im.status==="disponivel"?" selected":""}>Disponível</option>
@@ -301,7 +321,7 @@ function renderImoveis() {
           <option value="vendido"${im.status==="vendido"?" selected":""}>Vendido</option>
         </select>
         <button class="btn-sm btn-deletar" title="Excluir"
-          onclick="confirmarDeletar('${esc(im.ref)}','${esc(im.titulo)}')">🗑️</button>
+          onclick="confirmarDeletar('${esc(im.ref)}','${esc(im.titulo)}')">  ${Icons.trash}</button>
       </td>
     </tr>`;
   }).join("");
@@ -309,7 +329,6 @@ function renderImoveis() {
   if (cards) {
     cards.innerHTML = lista.map(im => {
       const [cls, label] = statusMap[im.status] || ["badge-gray", im.status];
-      const destStar  = im.destaque ? "★" : "☆";
       const destClass = im.destaque ? " active" : "";
       return `<div class="admin-card">
         <div class="admin-card-head">
@@ -317,13 +336,13 @@ function renderImoveis() {
             <code>${im.ref || "—"}</code>
             <span class="badge ${cls}">${label}</span>
             <button class="btn-star${destClass}" title="${im.destaque ? "Remover destaque" : "Marcar destaque"}"
-              onclick="toggleDestaque('${esc(im.ref)}', ${!im.destaque})">${destStar}</button>
+              onclick="toggleDestaque('${esc(im.ref)}', ${!im.destaque})">${im.destaque ? Icons.starOn : Icons.starOff}</button>
           </div>
           <div class="admin-card-acoes">
-            <button class="btn-sm btn-editar" onclick="abrirFormEditar('${esc(im.ref)}')" title="Editar">✏️</button>
-            <button class="btn-sm btn-duplicar" onclick="duplicarImovel('${esc(im.ref)}')" title="Duplicar">📋</button>
+            <button class="btn-sm btn-editar" onclick="abrirFormEditar('${esc(im.ref)}')" title="Editar">${Icons.edit}</button>
+            <button class="btn-sm btn-duplicar" onclick="duplicarImovel('${esc(im.ref)}')" title="Duplicar">${Icons.copy}</button>
             <button class="btn-sm btn-deletar" title="Excluir"
-              onclick="confirmarDeletar('${esc(im.ref)}','${esc(im.titulo)}')">🗑️</button>
+              onclick="confirmarDeletar('${esc(im.ref)}','${esc(im.titulo)}')">${Icons.trash}</button>
           </div>
         </div>
         <div class="admin-card-body">
@@ -932,14 +951,14 @@ function renderAgendamentos() {
     const waNum = (a.telefone || "").replace(/\D/g,"");
     if (a.status === "pendente") return `
       <button class="btn-sm btn-confirmar" title="Confirmar"
-        onclick="atualizarStatusAgend(${a.id},'confirmado','${esc(a.nome)}','${a.data}','${a.horario}','${waNum}')">✅</button>
+        onclick="atualizarStatusAgend(${a.id},'confirmado','${esc(a.nome)}','${a.data}','${a.horario}','${waNum}')">${Icons.check}</button>
       <button class="btn-sm btn-cancelar" title="Cancelar"
-        onclick="atualizarStatusAgend(${a.id},'cancelado','${esc(a.nome)}','${a.data}','${a.horario}','${waNum}')">❌</button>`;
+        onclick="atualizarStatusAgend(${a.id},'cancelado','${esc(a.nome)}','${a.data}','${a.horario}','${waNum}')">${Icons.xMark}</button>`;
     if (a.status === "confirmado") return `
       <button class="btn-sm btn-realizado" title="Marcar realizado"
-        onclick="atualizarStatusAgend(${a.id},'realizado','${esc(a.nome)}','${a.data}','${a.horario}','')">🏁</button>
+        onclick="atualizarStatusAgend(${a.id},'realizado','${esc(a.nome)}','${a.data}','${a.horario}','')">${Icons.flag}</button>
       <button class="btn-sm btn-cancelar" title="Cancelar"
-        onclick="atualizarStatusAgend(${a.id},'cancelado','${esc(a.nome)}','${a.data}','${a.horario}','${waNum}')">❌</button>`;
+        onclick="atualizarStatusAgend(${a.id},'cancelado','${esc(a.nome)}','${a.data}','${a.horario}','${waNum}')">${Icons.xMark}</button>`;
     return "";
   };
 
