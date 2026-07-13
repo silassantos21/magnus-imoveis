@@ -1,4 +1,4 @@
-const CACHE = 'magnus-admin-v1';
+const CACHE = 'magnus-admin-v2';
 const SHELL = [
   '/admin.html',
   '/js/dados.js',
