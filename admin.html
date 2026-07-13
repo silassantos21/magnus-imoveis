@@ -917,8 +917,10 @@
 
         <div class="filters-bar">
           <input type="search" id="busca-lead" placeholder="🔍  Buscar por nome, telefone ou imóvel…">
-          <label class="filter-label">De <input type="date" id="filtro-lead-de"></label>
-          <label class="filter-label">Até <input type="date" id="filtro-lead-ate"></label>
+          <div style="display:flex;gap:8px">
+            <label class="filter-label" style="flex:1">De <input type="date" id="filtro-lead-de" style="flex:1;min-width:0"></label>
+            <label class="filter-label" style="flex:1">Até <input type="date" id="filtro-lead-ate" style="flex:1;min-width:0"></label>
+          </div>
         </div>
 
         <div class="table-wrap">
