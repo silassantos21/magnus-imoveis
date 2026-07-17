@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ do Contrato — Zeta Tech</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, 'Helvetica Neue', sans-serif;
+      font-size: 10pt;
+      line-height: 1.65;
+      color: #1a1a1a;
+      background: #1a1a1a;
+    }
+
+    :root {
+      --gold: #C9A22B;
+      --dark: #1a1a1a;
+      --charcoal: #2d2d2d;
+      --mid: #5a5650;
+      --light: #e5e3db;
+      --parchment: #efede6;
+      --border: #ccc9be;
+      --green: #1a6b3c;
+      --green-bg: #d4f5e2;
+      --red: #8b2020;
+      --red-bg: #fde8e8;
+      --blue: #1a3c6b;
+      --blue-bg: #e0eaf8;
+    }
+
+    .page {
+      padding: 50px 62px 42px;
+      page-break-after: always;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--parchment);
+    }
+    .page:last-child { page-break-after: auto; }
+
+    /* ===== CAPA ===== */
+    .cover {
+      background: linear-gradient(150deg, #1a1a1a 0%, #242218 60%, #1a1a10 100%);
+      color: #fff;
+      padding: 62px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      page-break-after: always;
+      position: relative;
+      overflow: hidden;
+    }
+    .cover-stripe {
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 3px; background: var(--gold);
+    }
+    .cover-grid {
+      position: absolute; inset: 0; opacity: 0.03;
+      background-image:
+        linear-gradient(rgba(201,162,43,1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,162,43,1) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .cover-top {
+      display: flex; justify-content: space-between;
+      align-items: flex-start; position: relative; z-index: 1;
+    }
+    .cover-tag {
+      font-size: 7.5pt; font-weight: 700; letter-spacing: 2.5px;
+      text-transform: uppercase; color: var(--gold);
+    }
+    .cover-brand {
+      font-size: 9pt; font-weight: 700; color: rgba(255,255,255,0.6);
+      letter-spacing: 0.5px; text-align: right;
+    }
+
+    .cover-main {
+      flex: 1; display: flex; flex-direction: column;
+      justify-content: center; padding: 50px 0; position: relative; z-index: 1;
+    }
+    .cover-eyebrow {
+      font-size: 7.5pt; font-weight: 700; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 18px;
+    }
+    .cover-h1 {
+      font-size: 40pt; font-weight: 900; line-height: 1.05;
+      color: #fff; margin-bottom: 10px; max-width: 480px;
+    }
+    .cover-h1 em { font-style: normal; color: var(--gold); }
+    .cover-bar { width: 48px; height: 3px; background: var(--gold); margin: 22px 0; }
+    .cover-sub {
+      font-size: 10.5pt; color: rgba(255,255,255,0.45);
+      max-width: 420px; line-height: 1.7;
+    }
+
+    .cover-chips {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      margin-top: 28px; position: relative; z-index: 1;
+    }
+    .chip {
+      border: 1px solid rgba(201,162,43,0.3);
+      color: rgba(255,255,255,0.5); font-size: 8pt; font-weight: 600;
+      padding: 4px 13px; border-radius: 20px;
+    }
+    .chip.on { background: rgba(201,162,43,0.15); border-color: rgba(201,162,43,0.6); color: rgba(255,255,255,0.8); }
+
+    /* ===== CABEÇALHO DAS PÁGINAS ===== */
+    .page-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 26px; padding-bottom: 12px;
+      border-bottom: 2px solid var(--charcoal);
+    }
+    .page-header-brand {
+      font-size: 10pt; font-weight: 700; color: var(--charcoal);
+    }
+    .page-header-brand span {
+      display: block; font-size: 7pt; font-weight: 400;
+      color: var(--mid); letter-spacing: 1.5px; text-transform: uppercase;
+    }
+    .page-header-ref {
+      font-size: 8pt; color: var(--mid);
+    }
+
+    /* ===== SEÇÃO ===== */
+    .section-label {
+      font-size: 7.5pt; font-weight: 700; letter-spacing: 2.5px;
+      text-transform: uppercase; color: var(--gold);
+      display: block; margin-bottom: 5px;
+    }
+    .section-title {
+      font-size: 16pt; font-weight: 900; color: var(--dark);
+      margin-bottom: 4px; line-height: 1.2;
+    }
+    .gold-bar { width: 36px; height: 2px; background: var(--gold); margin: 12px 0 18px; }
+
+    /* ===== CARD DE PERGUNTA ===== */
+    .faq-card {
+      margin-bottom: 14px;
+      border-radius: 9px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .faq-q {
+      background: var(--charcoal); color: #fff;
+      padding: 11px 16px;
+      font-size: 9.5pt; font-weight: 700;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .faq-q-num {
+      width: 20px; height: 20px;
+      background: var(--gold); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 7.5pt; font-weight: 900; color: var(--dark);
+      flex-shrink: 0;
+    }
+    .faq-a {
+      background: #f7f6f0; padding: 12px 16px;
+      font-size: 9pt; color: #2a2a2a; line-height: 1.6;
+    }
+    .faq-a p + p { margin-top: 6px; }
+    .faq-tip {
+      background: var(--light);
+      border-left: 3px solid var(--gold);
+      padding: 8px 12px; margin-top: 8px;
+      border-radius: 0 5px 5px 0;
+      font-size: 8.5pt; color: var(--mid);
+    }
+    .faq-tip strong { color: var(--charcoal); display: block; margin-bottom: 2px; }
+
+    /* Variantes de card por tema */
+    .faq-card.tema-implant .faq-q { background: #1e2d1e; }
+    .faq-card.tema-implant .faq-q-num { background: #4caf7a; color: #fff; }
+    .faq-card.tema-implant .faq-tip { border-color: #4caf7a; }
+
+    .faq-card.tema-pgto .faq-q { background: #1c1c2e; }
+    .faq-card.tema-pgto .faq-q-num { background: #5b7fd4; color: #fff; }
+    .faq-card.tema-pgto .faq-tip { border-color: #5b7fd4; }
+
+    .faq-card.tema-rescisao .faq-q { background: #2e1c1c; }
+    .faq-card.tema-rescisao .faq-q-num { background: #d45b5b; color: #fff; }
+    .faq-card.tema-rescisao .faq-tip { border-color: #d45b5b; }
+
+    .faq-card.tema-prop .faq-q { background: #1c2030; }
+    .faq-card.tema-prop .faq-q-num { background: #7b88d4; color: #fff; }
+    .faq-card.tema-prop .faq-tip { border-color: #7b88d4; }
+
+    .faq-card.tema-tec .faq-q { background: #201e14; }
+    .faq-card.tema-tec .faq-q-num { background: var(--gold); color: var(--dark); }
+    .faq-card.tema-tec .faq-tip { border-color: var(--gold); }
+
+    /* ===== REFERÊNCIA RÁPIDA (página 1) ===== */
+    .ref-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 18px 0;
+    }
+    .ref-box {
+      background: var(--charcoal); border-radius: 9px;
+      padding: 16px 14px; text-align: center;
+      border-bottom: 3px solid var(--gold);
+    }
+    .ref-num {
+      font-size: 22pt; font-weight: 900; color: var(--gold);
+      display: block; line-height: 1;
+    }
+    .ref-label {
+      font-size: 8pt; color: rgba(255,255,255,0.55);
+      display: block; margin-top: 5px; line-height: 1.3;
+    }
+
+    .legend {
+      display: flex; gap: 16px; flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .legend-item {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 8pt; color: var(--mid);
+    }
+    .legend-dot {
+      width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+    }
+
+    /* ===== RODAPÉ ===== */
+    .page-footer {
+      margin-top: auto; padding-top: 14px;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 7.5pt; color: var(--border);
+      border-top: 1px solid var(--border);
+    }
+
+    /* ===== GRID 2 COLUNAS ===== */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* ===== PRINT ===== */
+    @media print {
+      body { background: #1a1a1a; }
+      .page { padding: 44px 54px 38px; }
+      .cover { padding: 54px; }
+      .cover, .faq-q, .ref-box,
+      .faq-card.tema-implant .faq-q,
+      .faq-card.tema-pgto .faq-q,
+      .faq-card.tema-rescisao .faq-q,
+      .faq-card.tema-prop .faq-q,
+      .faq-card.tema-tec .faq-q,
+      .cover-stripe, .cover-grid
+      { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .page-footer { break-before: avoid; }
+      a { color: inherit; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ================================================================
+     CAPA
+================================================================ -->
+<div class="cover">
+  <div class="cover-stripe"></div>
+  <div class="cover-grid"></div>
+
+  <div class="cover-top">
+    <div class="cover-tag">Uso Interno · Zeta Tech</div>
+    <div class="cover-brand">FAQ do Contrato</div>
+  </div>
+
+  <div class="cover-main">
+    <div class="cover-eyebrow">Guia de Referência</div>
+    <h1 class="cover-h1">Tudo que você<br>precisa saber<br>para <em>explicar.</em></h1>
+    <div class="cover-bar"></div>
+    <p class="cover-sub">
+      Perguntas e respostas sobre o Contrato de Desenvolvimento e Manutenção,
+      com orientações práticas de como apresentar cada cláusula ao cliente
+      com clareza e segurança.
+    </p>
+    <div class="cover-chips">
+      <span class="chip on">Implantação</span>
+      <span class="chip on">Pagamento</span>
+      <span class="chip on">Rescisão</span>
+      <span class="chip on">Propriedade</span>
+      <span class="chip on">Técnico</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ================================================================
+     PÁGINA 2 — REFERÊNCIA RÁPIDA + IMPLANTAÇÃO
+================================================================ -->
+<div class="page">
+  <div class="page-header">
+    <div class="page-header-brand">
+      FAQ do Contrato
+      <span>Guia de referência interno — Zeta Tech</span>
+    </div>
+    <div class="page-header-ref">2 / 4</div>
+  </div>
+
+  <span class="section-label">Números-chave</span>
+  <div class="section-title">Referência Rápida</div>
+  <div class="gold-bar"></div>
+
+  <div class="ref-grid">
+    <div class="ref-box">
+      <span class="ref-num">R$890</span>
+      <span class="ref-label">Taxa de implantação<br>(pagamento único)</span>
+    </div>
+    <div class="ref-box">
+      <span class="ref-num">R$150</span>
+      <span class="ref-label">Mensalidade<br>manutenção técnica</span>
+    </div>
+    <div class="ref-box">
+      <span class="ref-num">R$380</span>
+      <span class="ref-label">Mensalidade com gestão<br>de portfólio</span>
+    </div>
+    <div class="ref-box">
+      <span class="ref-num">2+3</span>
+      <span class="ref-label">2 meses grátis<br>+ 3 de fidelidade</span>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#4caf7a;"></div>Implantação e entrega</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#5b7fd4;"></div>Pagamento</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#d45b5b;"></div>Rescisão</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#7b88d4;"></div>Propriedade intelectual</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--gold);"></div>Técnico</div>
+  </div>
+
+  <!-- FAQ Implantação -->
+  <span class="section-label" style="margin-top:4px;">Implantação e entrega</span>
+
+  <div class="faq-card tema-implant">
+    <div class="faq-q"><div class="faq-q-num">1</div>O que está incluso na taxa de implantação de R$ 890?</div>
+    <div class="faq-a">
+      <p>A taxa cobre todo o trabalho de configurar o sistema para o negócio específico do cliente: personalização visual com logo e cores, configuração do banco de dados e integrações, publicação no domínio com HTTPS, cadastro inicial de até 5 imóveis, sessão de treinamento de 1h e 30 dias de suporte intensivo pós-entrega.</p>
+      <div class="faq-tip">
+        <strong>Como explicar ao cliente:</strong>
+        "É o custo de montar tudo do zero para você. Assim como uma loja precisa de uma reforma antes de abrir, o sistema precisa ser configurado com a sua cara. Isso acontece uma vez — depois é só a mensalidade."
+      </div>
+    </div>
+  </div>
+
+  <div class="faq-card tema-implant">
+    <div class="faq-q"><div class="faq-q-num">2</div>Em quanto tempo o sistema fica pronto?</div>
+    <div class="faq-a">
+      <p>O prazo fica em branco no contrato e é definido caso a caso, geralmente entre 5 e 10 dias úteis após o pagamento <em>e</em> o recebimento de todos os materiais. O prazo só começa a contar quando o cliente entregar logo, fotos e dados da empresa. Se o cliente demorar a enviar, o prazo acompanha.</p>
+      <div class="faq-tip">
+        <strong>Como explicar ao cliente:</strong>
+        "Dependendo de quando você me mandar o material, a entrega fica entre 1 e 2 semanas. Quanto antes você me mandar, mais rápido vai ao ar."
+      </div>
+    </div>
+  </div>
+
+  <div class="faq-card tema-implant">
+    <div class="faq-q"><div class="faq-q-num">3</div>O que o cliente precisa entregar para começar?</div>
+    <div class="faq-a">
+      <p>Logo em boa resolução (PNG ou SVG), fotos dos imóveis (ou imagens genéricas temporárias), dados completos da empresa (endereço, telefone, e-mail, CRECI), e preferências de domínio se já tiver um. Sem esses materiais, o trabalho não pode começar — e o prazo fica pausado.</p>
+      <div class="faq-tip">
+        <strong>Como explicar ao cliente:</strong>
+        "Você me manda o material, eu cuido do resto. Se não tiver logo ainda, posso usar uma provisória — mas o ideal é ter desde o início."
+      </div>
+    </div>
+  </div>
+
+  <div class="faq-card tema-implant">
+    <div class="faq-q"><div class="faq-q-num">4</div>Posso pedir funcionalidades além do escopo?</div>
+    <div class="faq-a">
+      <p>Não está incluído na taxa de implantação nem na mensalidade. Novas funcionalidades (uma nova página, integração com outro sistema, chatbot, etc.) são orçadas separadamente e precisam de aditivo ao contrato. Isso protege você de escopo crescente sem pagamento.</p>
+      <div class="faq-tip">
+        <strong>Como explicar ao cliente:</strong>
+        "O que está no contrato está coberto. Se surgir algo novo que você queira adicionar, a gente orça e faz um ajuste — sempre com tudo transparente antes de começar."
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>FAQ do Contrato — Guia interno Zeta Tech</span>
+    <span>Referência rápida e implantação · 2 / 4</span>
+  </div>
+</div>
+
+
+<!-- ================================================================
+     PÁGINA 3 — PAGAMENTO E RESCISÃO
+================================================================ -->
+<div class="page">
+  <div class="page-header">
+    <div class="page-header-brand">
+      FAQ do Contrato
+      <span>Guia de referência interno — Zeta Tech</span>
+    </div>
+    <div class="page-header-ref">3 / 4</div>
+  </div>
+
+  <span class="section-label">Pagamento</span>
+
+  <div class="faq-card tema-pgto">
+    <div class="faq-q"><div class="faq-q-num">5</div>O que são os 2 meses de cortesia?</div>
+    <div class="faq-a">
+      <p>Os 2 primeiros meses de manutenção são gratuitos. A cobrança começa apenas no 3º mês após a entrega. Ou seja: o cliente paga R$ 890 na assinatura, usa o sistema por cerca de 2 meses sem pagar mensalidade, e só então começa a receber as faturas de R$ 150 (ou R$ 380).</p>
+      <div class="faq-tip">
+        <strong>Como explicar ao cliente:</strong>
+        "Os primeiros dois meses são por minha conta. Quero que você use, se habitue e veja o valor antes de começar a pagar mensalmente. Se não gostar, nos 3 meses de fidelidade é só avisar com 30 dias de antecedência."
+      </div>
+    </div>
+  </div>
+
+  <div class="faq-card tema-pgto">
+    <div class="faq-q"><div class="faq-q-num">6</div>O que conta como uma "operação" no módulo de portfólio?</div>
+    <div class="faq-a">
+      <p>Qualquer interação com um imóvel no painel: cadastrar um imóvel novo (1 operação), editar preço ou descrição (1 operação), alterar status para vendido (1 operação), trocar fotos (1 operação). O limite é 10 por mês. A partir da 11ª, cobra-se R$ 30 por operação na fatura seguinte.</p>
+      <div class="faq-tip">
+        <strong>Como explicar ao cliente:</strong>
+        "Para a maioria dos corretores, 10 operações por mês é mais do que suficiente. Se em algum mês você movimentar muito o portfólio, cobra R$ 30 por cada extra — eu aviso antes."
+      </div>
+    </div>
+  </div>
+
+  <div class="faq-card tema-pgto">
+    <div class="faq-q"><div class="faq-q-num">7</div>O que acontece se o cliente atrasar um pagamento?</div>
+    <div class="faq-a">
+      <p>Até o 5º dia útil após o vencimento: nada acontece, só corre juros e multa se pagar depois disso (2% de multa + 1% ao mês). Após 30 dias de inadimplemento, o contrato permite suspender o acesso ao sistema. Isso é proteção sua — não precisa trabalhar sem receber.</p>
+      <div class="faq-tip">
+        <strong>Como explicar ao cliente:</strong>
+        "Não tem bicho de sete cabeças — se atrasar alguns dias, sem problema. Só preciso que me avise. Bloqueio só acontece em caso de inadimplemento prolongado."
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 6px;">
+    <span class="section-label">Rescisão</span>
+  </div>
+
+  <div class="faq-card tema-rescisao">
+    <div class="faq-q"><div class="faq-q-num">8</div>O que acontece se o cliente cancelar antes dos 3 meses de fidelidade?</div>
+    <div class="faq-a">
+      <p>Paga uma multa equivalente a 1 mensalidade do plano contratado (R$ 150 ou R$ 380). Isso protege você do risco de gastar semanas no projeto e o cliente cancelar na primeira semana de cobrança. A multa é razoável — não afasta o cliente, mas desencoraja cancelamentos impulsivos.</p>
+      <div class="faq-tip">
+        <strong>Como explicar ao cliente:</strong>
+        "São só 3 meses de fidelidade — menos de um trimestre. Depois disso, é só avisar com 30 dias de antecedência e cancelar na hora que quiser."
+      </div>
+    </div>
+  </div>
+
+  <div class="faq-card tema-rescisao">
+    <div class="faq-q"><div class="faq-q-num">9</div>A taxa de implantação de R$ 890 é devolvida se o cliente cancelar?</div>
+    <div class="faq-a">
+      <p>Não, em nenhuma hipótese. A taxa cobre trabalho já realizado — horas de configuração, personalização, treinamento e implantação. Isso precisa estar claro antes da assinatura para evitar conflitos depois. O sistema continua funcionando mesmo após o cancelamento, sem suporte.</p>
+      <div class="faq-tip">
+        <strong>Como explicar ao cliente:</strong>
+        "A taxa de implantação é pelo trabalho de montar tudo — esse trabalho já foi feito. É como a taxa de instalação de um serviço de internet: não devolve se você cancelar depois."
+      </div>
+    </div>
+  </div>
+
+  <div class="faq-card tema-rescisao">
+    <div class="faq-q"><div class="faq-q-num">10</div>O que acontece com o site se o cliente cancelar?</div>
+    <div class="faq-a">
+      <p>O site continua no ar, funcionando exatamente como está no momento do cancelamento. O cliente perde o suporte e futuras manutenções, mas não perde o sistema em si. Quem paga a hospedagem (Vercel) e o banco de dados (Supabase) precisa ser definido — normalmente fica na conta da Zeta Tech enquanto o contrato está ativo.</p>
+      <div class="faq-tip">
+        <strong>Como explicar ao cliente:</strong>
+        "Se cancelar, o site continua no ar do jeito que está. O que para é o suporte. Se quiser passar a hospedagem para o seu nome, a gente transfere — é simples."
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>FAQ do Contrato — Guia interno Zeta Tech</span>
+    <span>Pagamento e rescisão · 3 / 4</span>
+  </div>
+</div>
+
+
+<!-- ================================================================
+     PÁGINA 4 — PROPRIEDADE INTELECTUAL + TÉCNICO
+================================================================ -->
+<div class="page">
+  <div class="page-header">
+    <div class="page-header-brand">
+      FAQ do Contrato
+      <span>Guia de referência interno — Zeta Tech</span>
+    </div>
+    <div class="page-header-ref">4 / 4</div>
+  </div>
+
+  <span class="section-label">Propriedade intelectual</span>
+
+  <div class="two-col">
+
+    <div>
+      <div class="faq-card tema-prop">
+        <div class="faq-q"><div class="faq-q-num">11</div>O sistema é do cliente após pagar?</div>
+        <div class="faq-a">
+          <p>O sistema é da Zeta Tech. O cliente compra o <em>direito de usar</em>, não a propriedade do código. Isso é igual ao modelo de qualquer SaaS do mercado — Shopify, RD Station, nenhum deles vende o código para o cliente.</p>
+          <div class="faq-tip">
+            <strong>Como explicar:</strong>
+            "É igual ao Office da Microsoft: você paga para usar, mas o código é deles. O que é seu são os seus dados — imóveis, leads, agendamentos."
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-card tema-prop" style="margin-top:0;">
+        <div class="faq-q"><div class="faq-q-num">12</div>O que é "licença de uso"?</div>
+        <div class="faq-a">
+          <p>É a permissão formal para o cliente usar o sistema enquanto o contrato estiver ativo. Rescindido o contrato, a licença é mantida — o sistema continua rodando, mas sem suporte e sem atualizações.</p>
+          <div class="faq-tip">
+            <strong>Como explicar:</strong>
+            "Mesmo se cancelar, o site não apaga. Você só perde o suporte."
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-card tema-prop" style="margin-top:0;">
+        <div class="faq-q"><div class="faq-q-num">13</div>Os dados do cliente ficam com a Zeta Tech?</div>
+        <div class="faq-a">
+          <p>Não. Os dados (imóveis, leads, agendamentos) pertencem ao cliente. Mediante solicitação, são exportados em até 5 dias úteis. A Zeta Tech não pode usá-los para nenhuma outra finalidade — isso está coberto pela cláusula de confidencialidade e pela LGPD.</p>
+          <div class="faq-tip">
+            <strong>Como explicar:</strong>
+            "Seus dados são seus. Se um dia precisar de uma cópia de tudo, é só pedir."
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <span class="section-label">Técnico</span>
+
+      <div class="faq-card tema-tec">
+        <div class="faq-q"><div class="faq-q-num">14</div>O que acontece se Vercel ou Supabase ficarem fora do ar?</div>
+        <div class="faq-a">
+          <p>Esses são serviços de terceiros — Vercel (hospedagem) e Supabase (banco de dados). A Zeta Tech não controla a disponibilidade deles e não é responsável por quedas causadas por eles. Ambos têm histórico de 99,9% de uptime, mas não há garantia contratual de disponibilidade. O contrato deixa isso explícito para evitar cobranças indevidas.</p>
+          <div class="faq-tip">
+            <strong>Como explicar:</strong>
+            "É como o Correios — se eles atrasarem, não é culpa do vendedor. Esses serviços raramente caem, mas quando caem, eu monitoro e aviso você."
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-card tema-tec" style="margin-top:0;">
+        <div class="faq-q"><div class="faq-q-num">15</div>O suporte cobre qualquer problema?</div>
+        <div class="faq-a">
+          <p>Cobre problemas do sistema entregue — bugs, falhas de integração, ajustes de conteúdo. Não cobre: problemas causados por terceiros (quedas do Google, Vercel, Supabase), danos causados pelo próprio cliente ao sistema, ou solicitações de novas funcionalidades. O prazo de resposta é de 48 horas úteis — não é suporte 24h.</p>
+          <div class="faq-tip">
+            <strong>Como explicar:</strong>
+            "Se o sistema fizer algo errado, eu resolvo. Se o problema for de fora (internet, Google, etc.), monitoro e aviso, mas não tenho como controlar."
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-card tema-tec" style="margin-top:0;">
+        <div class="faq-q"><div class="faq-q-num">16</div>E se o cliente quiser mudar algo no contrato depois?</div>
+        <div class="faq-a">
+          <p>Qualquer mudança de escopo ou valor precisa de um <strong>aditivo contratual</strong> — um documento escrito assinado pelos dois lados. Acordos verbais ou por WhatsApp não têm validade legal para alterar o contrato original. Isso te protege de "mas você tinha falado que incluía isso".</p>
+          <div class="faq-tip">
+            <strong>Como explicar:</strong>
+            "Se a gente combinar algo novo, eu mando um aditivo rápido para a gente assinar. Mantém tudo organizado para os dois lados."
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="page-footer">
+    <span>FAQ do Contrato — Guia interno Zeta Tech</span>
+    <span>Propriedade intelectual e técnico · 4 / 4</span>
+  </div>
+</div>
+
+</body>
+</html>
