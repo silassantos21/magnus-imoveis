@@ -87,7 +87,7 @@ header {
   justify-content: space-between;
   gap: 1.5rem;
 }
-.logo img { height: 90px; width: auto; mix-blend-mode: screen; }
+.logo img { height: 110px; width: auto; mix-blend-mode: screen; }
 .logo-fallback {
   font-size: 1.5rem;
   font-weight: 800;
@@ -618,7 +618,7 @@ footer {
   border-bottom: 1px solid rgba(255,255,255,.1);
 }
 .footer-brand p { font-size: .88rem; margin-top: .75rem; line-height: 1.7; }
-.footer-logo { height: 80px; width: auto; margin-bottom: .25rem; mix-blend-mode: screen; }
+.footer-logo { height: 96px; width: auto; margin-bottom: .25rem; mix-blend-mode: screen; }
 .footer-logo-text {
   font-size: 1.3rem;
   font-weight: 800;
@@ -749,7 +749,7 @@ footer {
     width: 100%;
     max-width: 100%;
   }
-  .logo img { height: 80px; }
+  .logo img { height: 92px; }
   .logo-fallback { font-size: 1.2rem; text-align: center; }
   nav { display: none; }
   /* Remove o botão WhatsApp do header no mobile */
@@ -915,8 +915,9 @@ footer {
 .gallery-slide img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
+  cursor: zoom-in;
 }
 .gallery-placeholder {
   width: 100%;
@@ -1298,6 +1299,46 @@ footer {
 }
 .modal-cta:hover { background: #1ebe57; transform: translateY(-1px); }
 
+/* ===== LIGHTBOX DA GALERIA ===== */
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.92);
+  z-index: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  animation: modalIn .18s ease;
+}
+.lightbox-img {
+  max-width: 92vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
+}
+.lightbox-close {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition);
+  z-index: 10;
+}
+.lightbox-close:hover { background: rgba(255,255,255,.2); }
+.lightbox-close svg { width: 20px; height: 20px; color: var(--white); }
+@media (max-width: 640px) {
+  .lightbox-overlay { padding: 1rem; }
+  .lightbox-close { top: .75rem; right: .75rem; }
+}
+
 /* ===== DETAIL PAGE — RESPONSIVE ===== */
 @media (max-width: 960px) {
   .detail-content {
@@ -1311,6 +1352,7 @@ footer {
 
 @media (max-width: 640px) {
   .gallery-carousel { height: 260px; }
+  .gallery-slide img { object-fit: cover; }
   .gallery-nav { width: 36px; height: 36px; }
   .gallery-nav svg { width: 16px; height: 16px; }
   .detail-content { padding: 1.5rem 1rem; }

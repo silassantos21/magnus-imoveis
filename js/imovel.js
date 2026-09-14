@@ -93,12 +93,45 @@ function initGaleria(fotos) {
     if (Math.abs(diff) > 40) goToSlide(diff > 0 ? galeria.atual + 1 : galeria.atual - 1);
   }, { passive: true });
 
+  // clique na foto abre o lightbox
+  carouselEl.addEventListener("click", e => {
+    const img = e.target.closest(".gallery-slide img");
+    if (!img) return;
+    const idx = parseInt(img.closest(".gallery-slide").dataset.index);
+    openLightbox(idx);
+  });
+
   // keyboard
   document.addEventListener("keydown", e => {
+    if (e.key === "Escape") return closeLightbox();
     if (e.key === "ArrowLeft") goToSlide(galeria.atual - 1);
     if (e.key === "ArrowRight") goToSlide(galeria.atual + 1);
   });
 }
+
+// ===== LIGHTBOX =====
+function openLightbox(index) {
+  const src = galeria.fotos[index];
+  if (_isVideo(src)) return;
+  document.getElementById("lightbox-img").src = src;
+  document.getElementById("lightbox-overlay").style.display = "flex";
+  document.body.style.overflow = "hidden";
+}
+
+function closeLightbox() {
+  const overlay = document.getElementById("lightbox-overlay");
+  if (overlay.style.display === "none") return;
+  overlay.style.display = "none";
+  document.getElementById("lightbox-img").src = "";
+  document.body.style.overflow = "";
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("lightbox-close").addEventListener("click", closeLightbox);
+  document.getElementById("lightbox-overlay").addEventListener("click", e => {
+    if (e.target.id === "lightbox-overlay") closeLightbox();
+  });
+});
 
 function goToSlide(index) {
   const total = galeria.fotos.length;
