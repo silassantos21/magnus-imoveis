@@ -10,6 +10,51 @@ const _SB_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsI
 const WA_NUM = "5531999845813";
 const DEBOUNCE_MS = 10000; // 10s anti-spam
 
+// ===== VENDEDORES (rodízio) =====
+const VENDEDORES = [
+  { nome: "Thiago Ferreira",  telefone: "5531999845813", email: "magnusimoveisbh@hotmail.com" },
+  { nome: "Adriano Pacheco",  telefone: "5531991064201", email: "pacheco1365@yahoo.com" }
+];
+
+// Descobre/atribui o vendedor responsável por um imóvel para o visitante atual.
+// 1) Se esse navegador já tem um vendedor salvo para esse imóvel (ex: já enviou
+//    "Tenho Interesse" antes), reusa o mesmo — garante que interesse + agendamento
+//    do mesmo imóvel caem sempre no mesmo vendedor.
+// 2) Caso contrário, sorteia em rodízio (alternado) via Supabase e salva no navegador.
+async function _atribuirVendedor(ref) {
+  const chave = "vendedor_" + (ref || "generico");
+  const salvo = localStorage.getItem(chave);
+  const existente = VENDEDORES.find(v => v.nome === salvo);
+  if (existente) return existente;
+
+  let escolhido;
+  try {
+    const r = await fetch(_SB_URL + "/rest/v1/vendedor_rodizio?id=eq.1&select=ultimo", {
+      headers: { apikey: _SB_ANON, Authorization: "Bearer " + _SB_ANON }
+    });
+    const rows = await r.json();
+    const ultimo = rows && rows[0] && rows[0].ultimo;
+    const idxUltimo = VENDEDORES.findIndex(v => v.nome === ultimo);
+    escolhido = VENDEDORES[(idxUltimo + 1) % VENDEDORES.length];
+
+    await fetch(_SB_URL + "/rest/v1/vendedor_rodizio?id=eq.1", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: _SB_ANON,
+        Authorization: "Bearer " + _SB_ANON
+      },
+      body: JSON.stringify({ ultimo: escolhido.nome })
+    });
+  } catch {
+    // Sem conexão com o rodízio: sorteia 50/50 pra não travar o envio do formulário.
+    escolhido = VENDEDORES[Math.floor(Math.random() * VENDEDORES.length)];
+  }
+
+  try { localStorage.setItem(chave, escolhido.nome); } catch {}
+  return escolhido;
+}
+
 let _imovelAtivo = null;
 let _leadDebounce = false;
 let _agendDebounce = false;
@@ -136,7 +181,6 @@ function _criarModalLead() {
           <label for="lead-interesse">Interesse</label>
           <select id="lead-interesse" name="interesse">
             <option value="Comprar">Quero comprar</option>
-            <option value="Alugar">Quero alugar</option>
             <option value="Mais informações">Mais informações</option>
             <option value="Visita">Agendar uma visita</option>
           </select>
@@ -164,13 +208,18 @@ function _criarModalLead() {
     if (!nome) { _setEstado("form-lead", "erro", "Preencha seu <strong>nome</strong>."); return; }
     if (tel.replace(/\D/g, "").length < 10) { _setEstado("form-lead", "erro", "Número de <strong>WhatsApp inválido</strong>."); return; }
 
+    const ref = _imovelAtivo?.ref || "";
+    const vendedor = await _atribuirVendedor(ref);
+
     const payload = {
       tipo: "lead",
       nome,
       telefone: tel.replace(/\D/g, ""),
       interesse: form.interesse.value,
-      ref_imovel: _imovelAtivo?.ref || "",
-      origem: "site"
+      ref_imovel: ref,
+      origem: "site",
+      vendedor_nome: vendedor.nome,
+      vendedor_email: vendedor.email
     };
 
     _setEstado("form-lead", "loading");
@@ -183,22 +232,23 @@ function _criarModalLead() {
         telefone:  payload.telefone,
         interesse: payload.interesse,
         ref_imovel: payload.ref_imovel,
-        origem:    "site"
+        origem:    "site",
+        vendedor:  payload.vendedor_nome
       });
       _notificarAppsScript("notificar_lead", payload);
       if (typeof trackLeadFormSubmit === "function") trackLeadFormSubmit(payload.ref_imovel);
       _setEstado("form-lead", "sucesso", `
         <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        <div><h4>Interesse enviado!</h4><p>Recebemos sua solicitação. Em breve um corretor entrará em contato pelo WhatsApp.</p></div>`);
+        <div><h4>Interesse enviado!</h4><p>Recebemos sua solicitação. Em breve <strong>${vendedor.nome}</strong> entrará em contato pelo WhatsApp.</p></div>`);
     } catch {
-      _fallbackLeadWA(payload, tel);
+      _fallbackLeadWA(payload, tel, vendedor);
     }
   });
 }
 
-function _fallbackLeadWA(p, tel) {
+function _fallbackLeadWA(p, tel, vendedor) {
   const msg = `Olá! Tenho interesse no imóvel ${p.ref_imovel || ""}.\n\nMeu nome: ${p.nome}\nInteresse: ${p.interesse}`;
-  window.open(`https://wa.me/${WA_NUM}?text=${encodeURIComponent(msg)}`, "_blank");
+  window.open(`https://wa.me/${vendedor?.telefone || WA_NUM}?text=${encodeURIComponent(msg)}`, "_blank");
   _setEstado("form-lead", "sucesso", `
     <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
     <div><h4>WhatsApp aberto!</h4><p>Uma conversa com nosso corretor foi aberta com seus dados pré-preenchidos.</p></div>`);
@@ -343,6 +393,8 @@ function _criarModalAgendamento() {
     if (!horario) { _setEstado("form-agendar", "erro", "Selecione o <strong>horário</strong> preferido."); return; }
 
     const dataFmt = new Date(data + "T12:00:00").toLocaleDateString("pt-BR");
+    const ref = _imovelAtivo?.ref || "";
+    const vendedor = await _atribuirVendedor(ref);
 
     const payload = {
       tipo: "agendamento",
@@ -350,10 +402,12 @@ function _criarModalAgendamento() {
       telefone: tel.replace(/\D/g, ""),
       data, horario,
       tipo_visita: form.tipo_visita.value,
-      ref_imovel: _imovelAtivo?.ref || "",
+      ref_imovel: ref,
       titulo_imovel: _imovelAtivo?.titulo || "",
       tipo_imovel: _imovelAtivo?.tipo || "",
-      observacoes: form.observacoes.value.trim()
+      observacoes: form.observacoes.value.trim(),
+      vendedor_nome: vendedor.nome,
+      vendedor_email: vendedor.email
     };
 
     _setEstado("form-agendar", "loading");
@@ -371,21 +425,22 @@ function _criarModalAgendamento() {
         titulo_imovel: payload.titulo_imovel,
         tipo_imovel:   payload.tipo_imovel,
         observacoes:   payload.observacoes,
-        status:        "pendente"
+        status:        "pendente",
+        vendedor:      payload.vendedor_nome
       });
       _notificarAppsScript("notificar_agendamento", payload);
       _setEstado("form-agendar", "sucesso", `
         <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        <div><h4>Visita agendada!</h4><p>Solicitação para <strong>${dataFmt} às ${horario.replace(":", "h")}</strong> registrada. Confirmaremos pelo WhatsApp <strong>${tel}</strong>.</p></div>`);
+        <div><h4>Visita agendada!</h4><p>Solicitação para <strong>${dataFmt} às ${horario.replace(":", "h")}</strong> registrada. <strong>${vendedor.nome}</strong> confirmará pelo WhatsApp <strong>${tel}</strong>.</p></div>`);
     } catch {
-      _fallbackAgendWA(payload, dataFmt, tel);
+      _fallbackAgendWA(payload, dataFmt, tel, vendedor);
     }
   });
 }
 
-function _fallbackAgendWA(p, dataFmt, tel) {
+function _fallbackAgendWA(p, dataFmt, tel, vendedor) {
   const msg = `Olá! Gostaria de agendar uma visita.\n\nImóvel: ${p.titulo_imovel || p.ref_imovel}\nData: ${dataFmt}\nHorário: ${p.horario.replace(":", "h")}\nTipo: ${p.tipo_visita}\nMeu nome: ${p.nome}${p.observacoes ? "\nObs: " + p.observacoes : ""}`;
-  window.open(`https://wa.me/${WA_NUM}?text=${encodeURIComponent(msg)}`, "_blank");
+  window.open(`https://wa.me/${vendedor?.telefone || WA_NUM}?text=${encodeURIComponent(msg)}`, "_blank");
   _setEstado("form-agendar", "sucesso", `
     <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
     <div><h4>WhatsApp aberto!</h4><p>Os detalhes do agendamento foram enviados para nosso corretor.</p></div>`);

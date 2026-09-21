@@ -868,7 +868,7 @@ function renderLeads() {
   if (!tbody) return;
 
   if (!lista.length) {
-    tbody.innerHTML = `<tr><td colspan="6" class="empty-row">Nenhum lead encontrado</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" class="empty-row">Nenhum lead encontrado</td></tr>`;
     if (cards) cards.innerHTML = `<p style="text-align:center;padding:40px 0;color:var(--gray-400);font-size:.85rem">Nenhum lead encontrado</p>`;
     return;
   }
@@ -883,6 +883,7 @@ function renderLeads() {
         : (l.telefone || "—")}</td>
       <td>${l.interesse || "—"}</td>
       <td><code>${l.ref_imovel || "—"}</code></td>
+      <td>${l.vendedor || "—"}</td>
       <td><span class="badge badge-gray">${l.origem || "site"}</span></td>
     </tr>`;
   }).join("");
@@ -901,6 +902,7 @@ function renderLeads() {
             : `<div>${l.telefone || "—"}</div>`}
           <div class="admin-card-info">Interesse: ${l.interesse || "—"}</div>
           <div class="admin-card-info">Imóvel: <code>${l.ref_imovel || "—"}</code></div>
+          <div class="admin-card-info">Vendedor: ${l.vendedor || "—"}</div>
           <div style="margin-top:2px"><span class="badge badge-gray">${l.origem || "site"}</span></div>
         </div>
       </div>`;
@@ -935,7 +937,7 @@ function renderAgendamentos() {
   if (!tbody) return;
 
   if (!lista.length) {
-    tbody.innerHTML = `<tr><td colspan="8" class="empty-row">Nenhum agendamento encontrado</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="9" class="empty-row">Nenhum agendamento encontrado</td></tr>`;
     if (cards) cards.innerHTML = `<p style="text-align:center;padding:40px 0;color:var(--gray-400);font-size:.85rem">Nenhum agendamento encontrado</p>`;
     return;
   }
@@ -975,6 +977,7 @@ function renderAgendamentos() {
       <td>${dataFmt} ${a.horario ? a.horario.replace(":","h") : ""}</td>
       <td>${a.tipo_visita || "—"}</td>
       <td><code>${a.ref_imovel || "—"}</code></td>
+      <td>${a.vendedor || "—"}</td>
       <td><span class="badge ${cls}">${label}</span></td>
       <td class="td-acoes-agend">${_acoes(a)}</td>
     </tr>`;
@@ -999,6 +1002,7 @@ function renderAgendamentos() {
             : `<div>${a.telefone || "—"}</div>`}
           <div class="admin-card-info">📅 ${dataFmt}${a.horario ? " · " + a.horario.replace(":","h") : ""}</div>
           <div class="admin-card-info">Imóvel: <code>${a.ref_imovel || "—"}</code> · ${a.tipo_visita || "Presencial"}</div>
+          <div class="admin-card-info">Vendedor: ${a.vendedor || "—"}</div>
         </div>
         <div class="admin-card-foot">
           <span class="admin-card-data">Solicitado: ${a.data_criacao || "—"}</span>
@@ -1130,19 +1134,20 @@ function exportarLeadsPDF() {
 
   doc.autoTable({
     startY: y,
-    head: [["Data", "Nome", "WhatsApp", "Interesse", "Imovel", "Origem"]],
+    head: [["Data", "Nome", "WhatsApp", "Interesse", "Imovel", "Vendedor", "Origem"]],
     body: lista.map(l => [
       l.data || "—",
       l.nome || "—",
       fmtTelefone(l.telefone),
       l.interesse || "—",
       l.ref_imovel || "—",
+      l.vendedor || "—",
       l.origem || "site"
     ]),
     styles:             { fontSize: 8, cellPadding: { top: 3, right: 4, bottom: 3, left: 4 }, overflow: "linebreak" },
     headStyles:         { fillColor: [26, 26, 26], textColor: [255, 255, 255], fontStyle: "bold" },
     alternateRowStyles: { fillColor: [248, 249, 252] },
-    columnStyles: { 0: { cellWidth: 40 }, 2: { cellWidth: 32 }, 4: { cellWidth: 24 }, 5: { cellWidth: 18 } }
+    columnStyles: { 0: { cellWidth: 40 }, 2: { cellWidth: 32 }, 4: { cellWidth: 24 }, 5: { cellWidth: 28 }, 6: { cellWidth: 18 } }
   });
 
   _pdfRodape(doc);
@@ -1212,7 +1217,7 @@ function exportarAgendamentosPDF() {
 
   doc.autoTable({
     startY: y,
-    head: [["Solicitado em", "Cliente", "WhatsApp", "Data Visita", "Horario", "Tipo", "Imovel", "Status"]],
+    head: [["Solicitado em", "Cliente", "WhatsApp", "Data Visita", "Horario", "Tipo", "Imovel", "Vendedor", "Status"]],
     body: lista.map(a => {
       const dataFmt = a.data ? new Date(a.data + "T12:00:00").toLocaleDateString("pt-BR") : "—";
       return [
@@ -1223,13 +1228,14 @@ function exportarAgendamentosPDF() {
         a.horario ? a.horario.replace(":", "h") : "—",
         a.tipo_visita || "—",
         a.ref_imovel  || "—",
+        a.vendedor    || "—",
         statusLabel[a.status] || a.status || "—"
       ];
     }),
     styles:             { fontSize: 8, cellPadding: { top: 3, right: 4, bottom: 3, left: 4 }, overflow: "linebreak" },
     headStyles:         { fillColor: [26, 26, 26], textColor: [255, 255, 255], fontStyle: "bold" },
     alternateRowStyles: { fillColor: [248, 249, 252] },
-    columnStyles: { 0: { cellWidth: 38 }, 2: { cellWidth: 32 }, 3: { cellWidth: 24 }, 4: { cellWidth: 16 }, 6: { cellWidth: 22 }, 7: { cellWidth: 22 } }
+    columnStyles: { 0: { cellWidth: 34 }, 2: { cellWidth: 30 }, 3: { cellWidth: 22 }, 4: { cellWidth: 16 }, 6: { cellWidth: 20 }, 7: { cellWidth: 26 }, 8: { cellWidth: 20 } }
   });
 
   _pdfRodape(doc);

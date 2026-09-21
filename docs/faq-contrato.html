@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FAQ do Contrato — Zeta Tech</title>
+  <title>FAQ do Contrato</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -248,6 +248,22 @@
       { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       .page-footer { break-before: avoid; }
       a { color: inherit; text-decoration: none; }
+      /* Compacta para caber em uma folha A4 */
+      body { line-height: 1.4; }
+      .page { padding: 34px 50px 26px; }
+      .page-header { margin-bottom: 14px; padding-bottom: 8px; }
+      .section-label { margin-bottom: 3px; }
+      .section-title { margin-bottom: 2px; }
+      .gold-bar { margin: 6px 0 10px; }
+      .ref-grid { margin: 8px 0; }
+      .ref-box { padding: 8px 10px; }
+      .ref-num { font-size: 17pt; }
+      .legend { margin-bottom: 6px; }
+      .faq-card { margin-bottom: 2px; page-break-inside: avoid; break-inside: avoid; }
+      .faq-q { padding: 4px 14px; font-size: 9pt; }
+      .faq-a { padding: 4px 14px; font-size: 8.5pt; }
+      .faq-a p + p { margin-top: 3px; }
+      .faq-tip { padding: 4px 10px; margin-top: 3px; font-size: 8pt; }
     }
   </style>
 </head>
@@ -261,7 +277,7 @@
   <div class="cover-grid"></div>
 
   <div class="cover-top">
-    <div class="cover-tag">Uso Interno · Zeta Tech</div>
+    <div class="cover-tag">Uso Interno</div>
     <div class="cover-brand">FAQ do Contrato</div>
   </div>
 
@@ -286,13 +302,13 @@
 
 
 <!-- ================================================================
-     PÁGINA 2 — REFERÊNCIA RÁPIDA + IMPLANTAÇÃO
+     PÁGINA 2: REFERÊNCIA RÁPIDA + IMPLANTAÇÃO
 ================================================================ -->
 <div class="page">
   <div class="page-header">
     <div class="page-header-brand">
       FAQ do Contrato
-      <span>Guia de referência interno — Zeta Tech</span>
+      <span>Guia de referência interno</span>
     </div>
     <div class="page-header-ref">2 / 4</div>
   </div>
@@ -304,19 +320,19 @@
   <div class="ref-grid">
     <div class="ref-box">
       <span class="ref-num">R$890</span>
-      <span class="ref-label">Taxa de implantação<br>(pagamento único)</span>
+      <span class="ref-label">Taxa de implantação<br>(50% + 50%)</span>
     </div>
     <div class="ref-box">
-      <span class="ref-num">R$150</span>
-      <span class="ref-label">Mensalidade<br>manutenção técnica</span>
+      <span class="ref-num">R$35</span>
+      <span class="ref-label">Valor da hora de<br>desenvolvimento</span>
     </div>
     <div class="ref-box">
-      <span class="ref-num">R$380</span>
-      <span class="ref-label">Mensalidade com gestão<br>de portfólio</span>
+      <span class="ref-num">R$115</span>
+      <span class="ref-label">Infra estimada/mês<br>(hospedagem + domínio)</span>
     </div>
     <div class="ref-box">
-      <span class="ref-num">2+3</span>
-      <span class="ref-label">2 meses grátis<br>+ 3 de fidelidade</span>
+      <span class="ref-num">48h</span>
+      <span class="ref-label">Prazo de resposta<br>às solicitações</span>
     </div>
   </div>
 
@@ -337,7 +353,7 @@
       <p>A taxa cobre todo o trabalho de configurar o sistema para o negócio específico do cliente: personalização visual com logo e cores, configuração do banco de dados e integrações, publicação no domínio com HTTPS, cadastro inicial de até 5 imóveis, sessão de treinamento de 1h e 30 dias de suporte intensivo pós-entrega.</p>
       <div class="faq-tip">
         <strong>Como explicar ao cliente:</strong>
-        "É o custo de montar tudo do zero para você. Assim como uma loja precisa de uma reforma antes de abrir, o sistema precisa ser configurado com a sua cara. Isso acontece uma vez — depois é só a mensalidade."
+        "É o custo de montar tudo do zero para você. Assim como uma loja precisa de uma reforma antes de abrir, o sistema precisa ser configurado com a sua cara. Isso acontece uma vez. Depois, só paga pelas horas quando precisar de algo."
       </div>
     </div>
   </div>
@@ -356,40 +372,40 @@
   <div class="faq-card tema-implant">
     <div class="faq-q"><div class="faq-q-num">3</div>O que o cliente precisa entregar para começar?</div>
     <div class="faq-a">
-      <p>Logo em boa resolução (PNG ou SVG), fotos dos imóveis (ou imagens genéricas temporárias), dados completos da empresa (endereço, telefone, e-mail, CRECI), e preferências de domínio se já tiver um. Sem esses materiais, o trabalho não pode começar — e o prazo fica pausado.</p>
+      <p>Logo em boa resolução (PNG ou SVG), fotos dos imóveis (ou imagens genéricas temporárias), dados completos da empresa (endereço, telefone, e-mail, CRECI), e preferências de domínio se já tiver um. Sem esses materiais, o trabalho não pode começar, e o prazo fica pausado.</p>
       <div class="faq-tip">
         <strong>Como explicar ao cliente:</strong>
-        "Você me manda o material, eu cuido do resto. Se não tiver logo ainda, posso usar uma provisória — mas o ideal é ter desde o início."
+        "Você me manda o material, eu cuido do resto. Se não tiver logo ainda, posso usar uma provisória, mas o ideal é ter desde o início."
       </div>
     </div>
   </div>
 
   <div class="faq-card tema-implant">
-    <div class="faq-q"><div class="faq-q-num">4</div>Posso pedir funcionalidades além do escopo?</div>
+    <div class="faq-q"><div class="faq-q-num">4</div>Posso pedir funcionalidades além do escopo da implantação?</div>
     <div class="faq-a">
-      <p>Não está incluído na taxa de implantação nem na mensalidade. Novas funcionalidades (uma nova página, integração com outro sistema, chatbot, etc.) são orçadas separadamente e precisam de aditivo ao contrato. Isso protege você de escopo crescente sem pagamento.</p>
+      <p>Sim. Não está incluído na taxa de implantação, mas não precisa de um orçamento à parte nem de aditivo: é só mais uma solicitação de desenvolvimento, cobrada por hora (Cláusula 3). Antes de começar, você informa a estimativa de horas e o cliente aprova por escrito.</p>
       <div class="faq-tip">
         <strong>Como explicar ao cliente:</strong>
-        "O que está no contrato está coberto. Se surgir algo novo que você queira adicionar, a gente orça e faz um ajuste — sempre com tudo transparente antes de começar."
+        "Se surgir algo novo que você queira adicionar, eu te passo quantas horas deve levar antes de começar. Você aprova, eu faço, e entra na fatura do mês, sem burocracia."
       </div>
     </div>
   </div>
 
   <div class="page-footer">
-    <span>FAQ do Contrato — Guia interno Zeta Tech</span>
+    <span>FAQ do Contrato: Guia interno</span>
     <span>Referência rápida e implantação · 2 / 4</span>
   </div>
 </div>
 
 
 <!-- ================================================================
-     PÁGINA 3 — PAGAMENTO E RESCISÃO
+     PÁGINA 3: PAGAMENTO E RESCISÃO
 ================================================================ -->
 <div class="page">
   <div class="page-header">
     <div class="page-header-brand">
       FAQ do Contrato
-      <span>Guia de referência interno — Zeta Tech</span>
+      <span>Guia de referência interno</span>
     </div>
     <div class="page-header-ref">3 / 4</div>
   </div>
@@ -397,34 +413,34 @@
   <span class="section-label">Pagamento</span>
 
   <div class="faq-card tema-pgto">
-    <div class="faq-q"><div class="faq-q-num">5</div>O que são os 2 meses de cortesia?</div>
+    <div class="faq-q"><div class="faq-q-num">5</div>Como funciona a cobrança por hora, na prática?</div>
     <div class="faq-a">
-      <p>Os 2 primeiros meses de manutenção são gratuitos. A cobrança começa apenas no 3º mês após a entrega. Ou seja: o cliente paga R$ 890 na assinatura, usa o sistema por cerca de 2 meses sem pagar mensalidade, e só então começa a receber as faturas de R$ 150 (ou R$ 380).</p>
+      <p>O cliente pede algo (um ajuste, um cadastro de imóvel, uma funcionalidade nova). Você estima quantas horas leva e envia por WhatsApp ou e-mail. O cliente aprova antes de você começar. O tempo é contado em blocos de 15 minutos, e todas as horas do mês são somadas em uma única fatura.</p>
       <div class="faq-tip">
         <strong>Como explicar ao cliente:</strong>
-        "Os primeiros dois meses são por minha conta. Quero que você use, se habitue e veja o valor antes de começar a pagar mensalmente. Se não gostar, nos 3 meses de fidelidade é só avisar com 30 dias de antecedência."
+        "Você só paga pelo que pedir. Antes de eu começar qualquer coisa, te aviso quanto tempo deve levar, sem surpresa na fatura."
       </div>
     </div>
   </div>
 
   <div class="faq-card tema-pgto">
-    <div class="faq-q"><div class="faq-q-num">6</div>O que conta como uma "operação" no módulo de portfólio?</div>
+    <div class="faq-q"><div class="faq-q-num">6</div>O que é gratuito e o que é cobrado por hora?</div>
     <div class="faq-a">
-      <p>Qualquer interação com um imóvel no painel: cadastrar um imóvel novo (1 operação), editar preço ou descrição (1 operação), alterar status para vendido (1 operação), trocar fotos (1 operação). O limite é 10 por mês. A partir da 11ª, cobra-se R$ 30 por operação na fatura seguinte.</p>
+      <p>Gratuito, sem prazo de validade: correção de bugs, falhas que vieram do sistema originalmente entregue. Cobrado por hora: qualquer coisa solicitada pelo cliente, cadastro e gestão de imóveis no painel, ajustes de conteúdo, novas funcionalidades, integrações. A diferença é simples: erro meu, eu conserto; pedido do cliente, é hora trabalhada.</p>
       <div class="faq-tip">
         <strong>Como explicar ao cliente:</strong>
-        "Para a maioria dos corretores, 10 operações por mês é mais do que suficiente. Se em algum mês você movimentar muito o portfólio, cobra R$ 30 por cada extra — eu aviso antes."
+        "Se o sistema quebrar por um erro meu, eu conserto de graça, não importa quando. Agora, se você quiser que eu cadastre imóveis ou mude alguma coisa, aí é hora trabalhada."
       </div>
     </div>
   </div>
 
   <div class="faq-card tema-pgto">
-    <div class="faq-q"><div class="faq-q-num">7</div>O que acontece se o cliente atrasar um pagamento?</div>
+    <div class="faq-q"><div class="faq-q-num">7</div>O que acontece se o cliente atrasar o pagamento de uma fatura de horas?</div>
     <div class="faq-a">
-      <p>Até o 5º dia útil após o vencimento: nada acontece, só corre juros e multa se pagar depois disso (2% de multa + 1% ao mês). Após 30 dias de inadimplemento, o contrato permite suspender o acesso ao sistema. Isso é proteção sua — não precisa trabalhar sem receber.</p>
+      <p>Até o 5º dia útil após o vencimento: nada acontece, só corre juros e multa se pagar depois disso (2% de multa + 1% ao mês). Após 30 dias de inadimplemento, o contrato permite pausar novas solicitações até o pagamento, mas o site continua no ar normalmente, já que não depende de mensalidade.</p>
       <div class="faq-tip">
         <strong>Como explicar ao cliente:</strong>
-        "Não tem bicho de sete cabeças — se atrasar alguns dias, sem problema. Só preciso que me avise. Bloqueio só acontece em caso de inadimplemento prolongado."
+        "Não tem bicho de sete cabeças. Se atrasar alguns dias, sem problema. Só preciso que me avise. Eu só seguro novos pedidos em caso de atraso bem prolongado; o site continua no ar do mesmo jeito."
       </div>
     </div>
   </div>
@@ -434,12 +450,12 @@
   </div>
 
   <div class="faq-card tema-rescisao">
-    <div class="faq-q"><div class="faq-q-num">8</div>O que acontece se o cliente cancelar antes dos 3 meses de fidelidade?</div>
+    <div class="faq-q"><div class="faq-q-num">8</div>O contrato é de 12 meses. O cliente fica preso até lá?</div>
     <div class="faq-a">
-      <p>Paga uma multa equivalente a 1 mensalidade do plano contratado (R$ 150 ou R$ 380). Isso protege você do risco de gastar semanas no projeto e o cliente cancelar na primeira semana de cobrança. A multa é razoável — não afasta o cliente, mas desencoraja cancelamentos impulsivos.</p>
+      <p>Não. O prazo de 12 meses (Cláusula 5.1) existe só para dar um ponto de reajuste anual do valor da hora pelo IPCA (Cláusula 5.2), não fidelidade. O cliente pode cancelar a qualquer momento, sem multa, mediante aviso por escrito (WhatsApp ou e-mail). Se ninguém se manifestar até o vencimento, o contrato renova automaticamente por mais 12 meses, com o valor já reajustado.</p>
       <div class="faq-tip">
         <strong>Como explicar ao cliente:</strong>
-        "São só 3 meses de fidelidade — menos de um trimestre. Depois disso, é só avisar com 30 dias de antecedência e cancelar na hora que quiser."
+        "O prazo de 12 meses é só pra eu poder reajustar o valor da hora pela inflação uma vez por ano, igual qualquer contrato de serviço. Não é fidelidade: se um dia não quiser mais suporte, é só avisar, sem multa."
       </div>
     </div>
   </div>
@@ -447,10 +463,10 @@
   <div class="faq-card tema-rescisao">
     <div class="faq-q"><div class="faq-q-num">9</div>A taxa de implantação de R$ 890 é devolvida se o cliente cancelar?</div>
     <div class="faq-a">
-      <p>Não, em nenhuma hipótese. A taxa cobre trabalho já realizado — horas de configuração, personalização, treinamento e implantação. Isso precisa estar claro antes da assinatura para evitar conflitos depois. O sistema continua funcionando mesmo após o cancelamento, sem suporte.</p>
+      <p>Não, em nenhuma hipótese. A taxa é paga em 2 parcelas de R$ 445: a 1ª na assinatura, a 2ª na entrega. A 1ª parcela cobre o trabalho já iniciado e não é devolvida mesmo que o cliente cancele antes da entrega — nesse caso, a 2ª parcela simplesmente não chega a ser cobrada, já que está condicionada à entrega. Isso precisa estar claro antes da assinatura para evitar conflitos depois.</p>
       <div class="faq-tip">
         <strong>Como explicar ao cliente:</strong>
-        "A taxa de implantação é pelo trabalho de montar tudo — esse trabalho já foi feito. É como a taxa de instalação de um serviço de internet: não devolve se você cancelar depois."
+        "A primeira metade é pelo trabalho que já começa assim que você assina. Se cancelar antes de eu entregar, não devolvo essa parte, mas também não cobro a segunda metade."
       </div>
     </div>
   </div>
@@ -458,29 +474,29 @@
   <div class="faq-card tema-rescisao">
     <div class="faq-q"><div class="faq-q-num">10</div>O que acontece com o site se o cliente cancelar?</div>
     <div class="faq-a">
-      <p>O site continua no ar, funcionando exatamente como está no momento do cancelamento. O cliente perde o suporte e futuras manutenções, mas não perde o sistema em si. Quem paga a hospedagem (Vercel) e o banco de dados (Supabase) precisa ser definido — normalmente fica na conta da Zeta Tech enquanto o contrato está ativo.</p>
+      <p>O site continua no ar, funcionando exatamente como está no momento do cancelamento. O cliente perde o suporte e futuras horas de desenvolvimento, mas não perde o sistema em si. A hospedagem (Vercel) e o banco de dados (Supabase) normalmente ficam na sua conta enquanto o contrato está ativo.</p>
       <div class="faq-tip">
         <strong>Como explicar ao cliente:</strong>
-        "Se cancelar, o site continua no ar do jeito que está. O que para é o suporte. Se quiser passar a hospedagem para o seu nome, a gente transfere — é simples."
+        "Se cancelar, o site continua no ar do jeito que está. O que para é o suporte. Se quiser passar a hospedagem para o seu nome, a gente transfere. É simples."
       </div>
     </div>
   </div>
 
   <div class="page-footer">
-    <span>FAQ do Contrato — Guia interno Zeta Tech</span>
+    <span>FAQ do Contrato: Guia interno</span>
     <span>Pagamento e rescisão · 3 / 4</span>
   </div>
 </div>
 
 
 <!-- ================================================================
-     PÁGINA 4 — PROPRIEDADE INTELECTUAL + TÉCNICO
+     PÁGINA 4: PROPRIEDADE INTELECTUAL + TÉCNICO
 ================================================================ -->
 <div class="page">
   <div class="page-header">
     <div class="page-header-brand">
       FAQ do Contrato
-      <span>Guia de referência interno — Zeta Tech</span>
+      <span>Guia de referência interno</span>
     </div>
     <div class="page-header-ref">4 / 4</div>
   </div>
@@ -493,10 +509,10 @@
       <div class="faq-card tema-prop">
         <div class="faq-q"><div class="faq-q-num">11</div>O sistema é do cliente após pagar?</div>
         <div class="faq-a">
-          <p>O sistema é da Zeta Tech. O cliente compra o <em>direito de usar</em>, não a propriedade do código. Isso é igual ao modelo de qualquer SaaS do mercado — Shopify, RD Station, nenhum deles vende o código para o cliente.</p>
+          <p>O sistema é da CONTRATADA. O cliente compra o <em>direito de usar</em>, não a propriedade do código. Isso é igual ao modelo de qualquer SaaS do mercado: Shopify, RD Station, nenhum deles vende o código para o cliente.</p>
           <div class="faq-tip">
             <strong>Como explicar:</strong>
-            "É igual ao Office da Microsoft: você paga para usar, mas o código é deles. O que é seu são os seus dados — imóveis, leads, agendamentos."
+            "É igual ao Office da Microsoft: você paga para usar, mas o código é deles. O que é seu são os seus dados: imóveis, leads, agendamentos."
           </div>
         </div>
       </div>
@@ -504,7 +520,7 @@
       <div class="faq-card tema-prop" style="margin-top:0;">
         <div class="faq-q"><div class="faq-q-num">12</div>O que é "licença de uso"?</div>
         <div class="faq-a">
-          <p>É a permissão formal para o cliente usar o sistema enquanto o contrato estiver ativo. Rescindido o contrato, a licença é mantida — o sistema continua rodando, mas sem suporte e sem atualizações.</p>
+          <p>É a permissão formal para o cliente usar o sistema enquanto o contrato estiver ativo. Rescindido o contrato, a licença é mantida: o sistema continua rodando, mas sem suporte e sem atualizações.</p>
           <div class="faq-tip">
             <strong>Como explicar:</strong>
             "Mesmo se cancelar, o site não apaga. Você só perde o suporte."
@@ -513,9 +529,9 @@
       </div>
 
       <div class="faq-card tema-prop" style="margin-top:0;">
-        <div class="faq-q"><div class="faq-q-num">13</div>Os dados do cliente ficam com a Zeta Tech?</div>
+        <div class="faq-q"><div class="faq-q-num">13</div>Os dados do cliente ficam com a CONTRATADA?</div>
         <div class="faq-a">
-          <p>Não. Os dados (imóveis, leads, agendamentos) pertencem ao cliente. Mediante solicitação, são exportados em até 5 dias úteis. A Zeta Tech não pode usá-los para nenhuma outra finalidade — isso está coberto pela cláusula de confidencialidade e pela LGPD.</p>
+          <p>Não. Os dados (imóveis, leads, agendamentos) pertencem ao cliente. Mediante solicitação, são exportados em até 5 dias úteis. A CONTRATADA não pode usá-los para nenhuma outra finalidade: isso está coberto pela cláusula de confidencialidade e pela LGPD.</p>
           <div class="faq-tip">
             <strong>Como explicar:</strong>
             "Seus dados são seus. Se um dia precisar de uma cópia de tudo, é só pedir."
@@ -530,32 +546,33 @@
       <div class="faq-card tema-tec">
         <div class="faq-q"><div class="faq-q-num">14</div>O que acontece se Vercel ou Supabase ficarem fora do ar?</div>
         <div class="faq-a">
-          <p>Esses são serviços de terceiros — Vercel (hospedagem) e Supabase (banco de dados). A Zeta Tech não controla a disponibilidade deles e não é responsável por quedas causadas por eles. Ambos têm histórico de 99,9% de uptime, mas não há garantia contratual de disponibilidade. O contrato deixa isso explícito para evitar cobranças indevidas.</p>
+          <p>Esses são serviços de terceiros: Vercel (hospedagem) e Supabase (banco de dados). A CONTRATADA não controla a disponibilidade deles e não é responsável por quedas causadas por eles. Ambos têm histórico de 99,9% de uptime, mas não há garantia contratual de disponibilidade. O contrato deixa isso explícito para evitar cobranças indevidas.</p>
+          <p>Importante: a Vercel exige plano pago para sites de uso comercial desde o início. Não é uma questão de tráfego crescer, é regra da plataforma. O custo (≈ R$110-125/mês, mais o domínio ≈ R$40/ano) é repassado ao cliente, sem acréscimo (Cláusula 4.7).</p>
           <div class="faq-tip">
             <strong>Como explicar:</strong>
-            "É como o Correios — se eles atrasarem, não é culpa do vendedor. Esses serviços raramente caem, mas quando caem, eu monitoro e aviso você."
+            "É como o Correios. Se eles atrasarem, não é culpa do vendedor. Esses serviços raramente caem, mas quando caem, eu monitoro e aviso você. A hospedagem paga entra na sua fatura, no valor exato que eu pago, sem repasse a mais."
           </div>
         </div>
       </div>
 
       <div class="faq-card tema-tec" style="margin-top:0;">
-        <div class="faq-q"><div class="faq-q-num">15</div>O suporte cobre qualquer problema?</div>
+        <div class="faq-q"><div class="faq-q-num">15</div>O suporte gratuito (correção de bugs) cobre qualquer problema?</div>
         <div class="faq-a">
-          <p>Cobre problemas do sistema entregue — bugs, falhas de integração, ajustes de conteúdo. Não cobre: problemas causados por terceiros (quedas do Google, Vercel, Supabase), danos causados pelo próprio cliente ao sistema, ou solicitações de novas funcionalidades. O prazo de resposta é de 48 horas úteis — não é suporte 24h.</p>
+          <p>Cobre falhas que vieram do sistema originalmente entregue: bugs, erros de integração. Não cobre, e por isso é cobrado por hora: problemas causados por terceiros (quedas do Google, Vercel, Supabase), danos causados pelo próprio cliente ao sistema, ajustes de conteúdo ou novas funcionalidades. O prazo de resposta é de 48 horas úteis. Não é suporte 24h.</p>
           <div class="faq-tip">
             <strong>Como explicar:</strong>
-            "Se o sistema fizer algo errado, eu resolvo. Se o problema for de fora (internet, Google, etc.), monitoro e aviso, mas não tenho como controlar."
+            "Se o sistema fizer algo errado por culpa minha, eu resolvo de graça. Se for um pedido seu ou algo de fora do meu controle, entra como hora trabalhada ou eu só aviso, dependendo do caso."
           </div>
         </div>
       </div>
 
       <div class="faq-card tema-tec" style="margin-top:0;">
-        <div class="faq-q"><div class="faq-q-num">16</div>E se o cliente quiser mudar algo no contrato depois?</div>
+        <div class="faq-q"><div class="faq-q-num">16</div>Pedido de trabalho é diferente de mudar o contrato?</div>
         <div class="faq-a">
-          <p>Qualquer mudança de escopo ou valor precisa de um <strong>aditivo contratual</strong> — um documento escrito assinado pelos dois lados. Acordos verbais ou por WhatsApp não têm validade legal para alterar o contrato original. Isso te protege de "mas você tinha falado que incluía isso".</p>
+          <p>Sim. Um pedido do dia a dia (ajuste, cadastro, funcionalidade nova) só precisa da estimativa de horas aprovada por WhatsApp ou e-mail (Cláusula 3.4). Não altera o contrato. Já mudar os <strong>termos</strong> do contrato (o valor da hora, a forma de pagamento) exige um <strong>aditivo escrito</strong> assinado pelos dois lados.</p>
           <div class="faq-tip">
             <strong>Como explicar:</strong>
-            "Se a gente combinar algo novo, eu mando um aditivo rápido para a gente assinar. Mantém tudo organizado para os dois lados."
+            "No dia a dia, um combinado por WhatsApp já resolve. Só faço um aditivo formal se a gente for mudar alguma regra do contrato em si, tipo o valor da hora."
           </div>
         </div>
       </div>
@@ -564,7 +581,7 @@
   </div>
 
   <div class="page-footer">
-    <span>FAQ do Contrato — Guia interno Zeta Tech</span>
+    <span>FAQ do Contrato: Guia interno</span>
     <span>Propriedade intelectual e técnico · 4 / 4</span>
   </div>
 </div>

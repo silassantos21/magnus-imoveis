@@ -379,6 +379,13 @@
       .ai-card { padding: 12px 14px; }
       .ai-num { font-size: 18pt; margin-bottom: 2px; }
       .ai-card h3 { margin-bottom: 4px; }
+      /* Compacta página 5 (Investimento) para caber em uma folha A4 */
+      .pricing-grid { margin: 12px 0; }
+      .price-card { padding: 16px 16px 14px; min-height: 0; }
+      .incluso-grid { margin: 10px 0; gap: 7px; }
+      .incluso-item { padding: 8px 12px; }
+      .flex-box { margin-top: 10px !important; padding: 12px 18px !important; }
+      .price-card, .incluso-item, .flex-box { page-break-inside: avoid; break-inside: avoid; }
       /* Impede que o rodapé fique órfão em página separada */
       .page-footer { break-before: avoid; page-break-before: avoid; }
       a { color: inherit; text-decoration: none; }
@@ -405,8 +412,8 @@
       </div>
     </div>
     <div class="cover-by">
-      Apresentado por<br>
-      <strong>Zeta Tech</strong>
+      Proposta comercial<br>
+      <strong>Setembro 2026</strong>
     </div>
   </div>
 
@@ -713,36 +720,34 @@
      PÁGINA 5 — INVESTIMENTO (3 opções)
 ================================================================ -->
 <div class="page">
-  <!-- VALORES SUGERIDOS — ajuste antes de apresentar -->
   <div class="section-label">Investimento</div>
-  <div class="section-title">Escolha a forma que<br>cabe no seu planejamento.</div>
+  <div class="section-title">Um valor fixo pra começar.<br>Depois, só o que você usar.</div>
   <div class="gold-line"></div>
 
   <div class="pricing-grid">
 
     <div class="price-card featured">
-      <span class="price-badge">Melhor custo-benefício</span>
-      <span class="price-label">À Vista</span>
-      <span class="price-amount">R$&nbsp;3.150</span>
-      <span class="price-period">pagamento único</span>
+      <span class="price-label">Implantação</span>
+      <span class="price-amount">R$&nbsp;890</span>
+      <span class="price-period">50% na assinatura + 50% na entrega</span>
       <hr class="price-sep">
-      <span class="price-detail">10% de desconto · economia de R$ 350<br>em relação ao valor total de R$ 3.500</span>
+      <span class="price-detail">Sistema completo no ar, configurado<br>com a identidade da sua imobiliária</span>
     </div>
 
     <div class="price-card">
-      <span class="price-label">3× sem juros</span>
-      <span class="price-amount">R$&nbsp;1.167</span>
-      <span class="price-period">por parcela</span>
+      <span class="price-label">Hora de desenvolvimento</span>
+      <span class="price-amount">R$&nbsp;35</span>
+      <span class="price-period">por hora, sob demanda</span>
       <hr class="price-sep">
-      <span class="price-detail">3 parcelas iguais, sem encargos<br>Total: R$ 3.500</span>
+      <span class="price-detail">Sem mensalidade fixa<br>paga só quando pedir algo novo</span>
     </div>
 
     <div class="price-card">
-      <span class="price-label">6× parcelado</span>
-      <span class="price-amount">R$&nbsp;620</span>
-      <span class="price-period">por parcela</span>
+      <span class="price-label">Infraestrutura</span>
+      <span class="price-amount">≈&nbsp;R$&nbsp;115</span>
+      <span class="price-period">por mês, repassado ao custo</span>
       <hr class="price-sep">
-      <span class="price-detail">6 parcelas mensais com encargos mínimos<br>Total: R$ 3.720</span>
+      <span class="price-detail">Hospedagem + domínio próprio<br>sem nenhuma margem embutida</span>
     </div>
 
   </div>
@@ -774,24 +779,32 @@
         <div class="incluso-check">✓</div>
         <div class="incluso-text"><strong>Documentação completa</strong>Briefing do sistema entregue ao cliente</div>
       </div>
+      <div class="incluso-item">
+        <div class="incluso-check">✓</div>
+        <div class="incluso-text"><strong>Cadastro inicial de imóveis</strong>Até 5 imóveis, pra ir ao ar com conteúdo</div>
+      </div>
+      <div class="incluso-item">
+        <div class="incluso-check">✓</div>
+        <div class="incluso-text"><strong>Suporte intensivo pós-entrega</strong>30 dias, sem custo adicional</div>
+      </div>
     </div>
   </div>
 
-  <div style="margin-top: 18px; background: var(--charcoal); border-radius: 12px; padding: 18px 22px; display: flex; align-items: center; gap: 22px;">
+  <div class="flex-box" style="margin-top: 18px; background: var(--charcoal); border-radius: 12px; padding: 18px 22px; display: flex; align-items: center; gap: 22px;">
     <div style="flex-shrink: 0;">
-      <div style="font-size: 7pt; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 4px;">Opcional — Plano de Manutenção</div>
-      <div style="font-size: 22pt; font-weight: 900; color: #fff; line-height: 1;">R$&nbsp;200<span style="font-size: 9pt; font-weight: 400; color: rgba(255,255,255,0.45);">/mês</span></div>
-      <div style="font-size: 7.5pt; color: rgba(255,255,255,0.4); margin-top: 3px;">cobrado a partir do 3º mês</div>
+      <div style="font-size: 7pt; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 4px;">Flexibilidade</div>
+      <div style="font-size: 20pt; font-weight: 900; color: #fff; line-height: 1;">Sem fidelidade</div>
+      <div style="font-size: 7.5pt; color: rgba(255,255,255,0.4); margin-top: 3px;">contrato de 12 meses, mas cancela quando quiser</div>
     </div>
     <div style="flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 5px 18px;">
-      <div style="font-size: 8.5pt; color: rgba(255,255,255,0.7);">✓ Suporte técnico via WhatsApp e e-mail</div>
-      <div style="font-size: 8.5pt; color: rgba(255,255,255,0.7);">✓ Monitoramento do sistema e integrações</div>
-      <div style="font-size: 8.5pt; color: rgba(255,255,255,0.7);">✓ Ajustes e pequenas melhorias mensais</div>
-      <div style="font-size: 8.5pt; color: rgba(255,255,255,0.7);">✓ Revisão anual das políticas de privacidade</div>
+      <div style="font-size: 8.5pt; color: rgba(255,255,255,0.7);">✓ Cancela a qualquer momento, sem multa</div>
+      <div style="font-size: 8.5pt; color: rgba(255,255,255,0.7);">✓ Bugs do sistema original: sempre grátis</div>
+      <div style="font-size: 8.5pt; color: rgba(255,255,255,0.7);">✓ Estimativa de horas aprovada antes de cobrar</div>
+      <div style="font-size: 8.5pt; color: rgba(255,255,255,0.7);">✓ Reajuste anual pelo IPCA, sem surpresas</div>
     </div>
     <div style="flex-shrink: 0; text-align: center; background: var(--gold); border-radius: 10px; padding: 12px 18px;">
-      <div style="font-size: 26pt; font-weight: 900; color: #1a1a1a; line-height: 1;">2</div>
-      <div style="font-size: 7pt; font-weight: 800; color: #1a1a1a; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.3;">meses<br>grátis</div>
+      <div style="font-size: 26pt; font-weight: 900; color: #1a1a1a; line-height: 1;">0</div>
+      <div style="font-size: 7pt; font-weight: 800; color: #1a1a1a; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.3;">multa de<br>cancelamento</div>
     </div>
   </div>
 
@@ -814,8 +827,8 @@
     <div class="step">
       <div class="step-num">1</div>
       <div>
-        <h3>Definir a forma de pagamento</h3>
-        <p>Escolha a opção que melhor encaixa no seu planejamento financeiro — à vista ou parcelado. Confirmado o acordo, o sistema é ativado no seu domínio.</p>
+        <h3>Confirmar e pagar a implantação</h3>
+        <p>R$ 445 via Pix na assinatura do contrato — os outros R$ 445 ficam pra entrega do sistema. Confirmado o primeiro pagamento, o trabalho de configuração começa.</p>
       </div>
     </div>
 
@@ -857,7 +870,7 @@
   </div>
 
   <div class="page-footer">
-    <span>Magnus Imóveis — Proposta Comercial · Zeta Tech · Junho 2026</span>
+    <span>Magnus Imóveis — Proposta Comercial · Setembro 2026</span>
     <span>6 / 6</span>
   </div>
 </div>

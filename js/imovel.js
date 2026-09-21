@@ -245,7 +245,7 @@ const BASE_URL = "https://magnus-imoveis.vercel.app";
 
 function atualizarSEO(im) {
   const ogTitle = `${im.titulo} — Magnus Imóveis`;
-  const ogDesc = `${im.tipo} ${im.finalidade === "Aluguel" ? "para alugar" : "à venda"} em ${im.bairro}, ${im.cidade}.${im.quartos > 0 ? " " + im.quartos + " quartos." : ""}${im.area_util ? " " + im.area_util + "m²." : ""} ${fmt(im.preco)}.`;
+  const ogDesc = `${im.tipo} à venda em ${im.bairro}, ${im.cidade}.${im.quartos > 0 ? " " + im.quartos + " quartos." : ""}${im.area_util ? " " + im.area_util + "m²." : ""} ${fmt(im.preco)}.`;
   const primeiraFoto = im.fotos && im.fotos[0] && !_isVideo(im.fotos[0]) ? im.fotos[0] : `${BASE_URL}/images/og-cover.jpg`;
   const ogUrl = `${BASE_URL}/imovel.html?ref=${im.ref}`;
 
@@ -314,7 +314,7 @@ function renderPage(im, todos) {
   // header
   const badges = document.getElementById("detail-badges");
   badges.innerHTML = `
-    <span class="detail-badge finalidade ${im.finalidade === "Aluguel" ? "aluguel" : ""}">${im.finalidade}</span>
+    <span class="detail-badge finalidade">${im.finalidade}</span>
     <span class="detail-badge tipo">${im.tipo}</span>
     ${im.destaque ? `<span class="detail-badge destaque">⭐ Destaque</span>` : ""}
   `;
@@ -337,9 +337,9 @@ function renderPage(im, todos) {
 
   // sidebar
   document.getElementById("sidebar-finalidade").innerHTML = `
-    <span class="sidebar-badge ${im.finalidade === "Aluguel" ? "aluguel" : ""}">${im.finalidade}</span>
+    <span class="sidebar-badge">${im.finalidade}</span>
   `;
-  document.getElementById("sidebar-price").textContent = fmt(im.preco) + (im.finalidade === "Aluguel" ? "/mês" : "");
+  document.getElementById("sidebar-price").textContent = fmt(im.preco);
   document.getElementById("sidebar-ref").textContent = `Ref.: ${im.ref}`;
   document.getElementById("action-wa").href = waLink(im);
 

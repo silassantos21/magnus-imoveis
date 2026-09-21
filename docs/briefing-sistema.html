@@ -449,12 +449,22 @@
 
     /* ===== PRINT ===== */
     @media print {
-      body { font-size: 10pt; }
-      .page, .toc-page, .cover { padding: 40px 45px; }
+      body { font-size: 10pt; line-height: 1.42; }
+      .page, .toc-page, .cover { padding: 32px 40px; }
       .cover { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       .callout-dark, .section-num, .funnel-bar, .stack-item,
       .event-name, th, .roadmap-phase { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       a { color: inherit; text-decoration: none; }
+      /* Compacta para caber em folha A4 */
+      p { margin-bottom: 6px; }
+      h2 { margin-bottom: 6px; }
+      h3 { margin-bottom: 3px; }
+      .page-header { margin-bottom: 14px; padding-bottom: 8px; }
+      .callout, .callout-dark { padding: 8px 14px; margin: 8px 0; }
+      table { margin: 8px 0; }
+      th, td { padding: 4px 12px; }
+      .stack-grid { margin: 8px 0 !important; gap: 8px !important; }
+      .stack-item { padding: 8px 10px !important; }
     }
   </style>
 </head>
@@ -614,7 +624,7 @@
 
   <p>
     O sistema da Magnus Imóveis é uma <strong>landing page de alta performance</strong> construída com HTML, CSS e JavaScript
-    puro — sem framework — integrada ao ecossistema Google para gestão de dados, captação de leads e analytics.
+    puro — sem framework — com dados no Supabase (PostgreSQL) e notificações via Google Apps Script (e-mail e Calendar).
     A escolha por simplicidade técnica foi intencional: menor custo de hospedagem, menor dependência de
     infraestrutura e manutenção mais direta.
   </p>
@@ -627,7 +637,7 @@
     </div>
     <div class="stack-item">
       <h4>Banco de dados</h4>
-      <p>Google Sheets (CSV público)</p>
+      <p>Supabase (PostgreSQL)</p>
     </div>
     <div class="stack-item">
       <h4>Back-end leve</h4>
@@ -647,17 +657,17 @@
     </div>
     <div class="stack-item" style="grid-column: span 3;">
       <h4>Fotos / Mídias</h4>
-      <p>Cloudinary — upload via widget no admin, URLs armazenadas no Sheets</p>
+      <p>Cloudinary — upload via widget no admin, URLs armazenadas no Supabase</p>
     </div>
   </div>
 
   <h3 style="margin-top:20px">Arquitetura de dados</h3>
   <div class="callout-dark">
     <p>
-      <strong>Site público</strong> lê imóveis via CSV do Google Sheets (cache de 5 min no browser) →
-      <strong>Formulários</strong> enviam leads/agendamentos ao Apps Script → Apps Script grava na planilha e
-      cria evento no Google Calendar → <strong>Painel admin</strong> lê/escreve via Apps Script com token secreto →
-      nunca expõe a planilha diretamente ao público.
+      <strong>Site público</strong> lê imóveis do Supabase via REST API com chave anônima (somente leitura, sub-200ms, sem cache) →
+      <strong>Formulários</strong> gravam leads/agendamentos direto no Supabase e disparam o Apps Script, que envia o e-mail de
+      notificação e cria o evento no Google Calendar → <strong>Painel admin</strong> lê e escreve no Supabase com a chave de
+      serviço (service role), que nunca fica exposta no código público.
     </p>
   </div>
 
@@ -700,6 +710,11 @@
         <td><strong>Sprint 5</strong></td>
         <td>SEO + Analytics + Deploy</td>
         <td>GA4, Open Graph, Schema.org, Vercel, performance</td>
+      </tr>
+      <tr>
+        <td><strong>—</strong></td>
+        <td>Migração para Supabase</td>
+        <td>Google Sheets → Supabase (PostgreSQL); leitura sub-200ms, sem cache (concluída em 11/07/2026)</td>
       </tr>
     </tbody>
   </table>
@@ -978,7 +993,7 @@
     <span class="tool-badge badge-paid">Plano pago</span>
     <div class="tool-content">
       <h3>CRM Imobiliário (ex: Kenlo, Ville Imob, Facilita)</h3>
-      <p>Quando o volume de leads crescer, um CRM substitui a planilha de Leads com pipeline visual, automação de follow-up e gestão de relacionamento. O sistema atual pode alimentar um CRM via integração de webhook no Apps Script — sem reescrever o código do site.</p>
+      <p>Quando o volume de leads crescer, um CRM substitui a tabela de Leads do Supabase com pipeline visual, automação de follow-up e gestão de relacionamento. O sistema atual pode alimentar um CRM via integração direta com o Supabase ou webhook no Apps Script — sem reescrever o código do site.</p>
     </div>
   </div>
 
@@ -1085,16 +1100,32 @@
     <p>
       <strong>Atenção ao trocar de conta Google:</strong> se migrar o sistema para uma conta corporativa,
       será necessário copiar o código do Apps Script para a nova conta, republicar como Web App e atualizar
-      a URL em <em>js/leads.js</em> (APPS_SCRIPT_URL) e <em>js/admin.js</em>. A planilha também precisa
-      ser compartilhada com a nova conta ou transferida.
+      a URL em <em>js/leads.js</em> (APPS_SCRIPT_URL) e <em>js/admin.js</em>. O projeto do Supabase (banco de
+      dados) é independente da conta Google e não precisa ser migrado junto — basta transferir a propriedade
+      do projeto no painel do Supabase, se necessário.
     </p>
   </div>
 
-  <h3 style="margin-top:24px">Limites da infraestrutura gratuita</h3>
+  <div class="page-footer">
+    <span>Magnus Imóveis — Briefing do Sistema</span>
+    <span>Seção 05 · Deploy e Rotina</span>
+  </div>
+</div>
+
+
+<!-- ===== SEÇÃO 5 (cont.) ===== -->
+<div class="page">
+  <div class="page-label">Seção 05 — continuação</div>
+  <div class="page-header">
+    <div class="section-num">5</div>
+    <h2>Limites da Infraestrutura</h2>
+  </div>
+
   <p>
-    O sistema usa exclusivamente serviços no plano gratuito. Cada serviço tem limites generosos que
-    dificilmente serão atingidos em escala normal — mas é importante conhecê-los para agir antes de
-    uma interrupção.
+    A Vercel exige plano pago (Pro, ~US$ 20/mês) para sites de uso comercial — não é sobre atingir um limite
+    de tráfego, é regra da própria plataforma, válida desde o primeiro dia. Os demais serviços seguem no plano
+    gratuito, com limites generosos que dificilmente serão atingidos em escala normal — mas é importante
+    conhecê-los para agir antes de uma interrupção.
   </p>
 
   <table>
@@ -1108,15 +1139,15 @@
     </thead>
     <tbody>
       <tr>
-        <td><strong>Google Sheets</strong></td>
-        <td>10 milhões de células</td>
-        <td>~2.100 células (100 imóveis × 21 colunas) — ínfimo</td>
-        <td>Aba Leads/Agendamentos cresce: mover linhas antigas para aba de arquivo a cada 6–12 meses</td>
+        <td><strong>Supabase</strong></td>
+        <td>500 MB de banco · 5 GB de tráfego/mês</td>
+        <td>Poucos MB (imóveis + leads + agendamentos) — ínfimo</td>
+        <td>Praticamente sem risco nessa escala; upgrade a partir de US$ 25/mês se necessário</td>
       </tr>
       <tr>
         <td><strong>Cloudinary</strong></td>
-        <td>25 GB armazenamento · 25 GB banda/mês</td>
-        <td>~250 MB (100 imóveis × 5 fotos × 500 KB)</td>
+        <td>25 créditos/mês (1 crédito = 1 GB de armazenamento <em>ou</em> 1 GB de banda <em>ou</em> 1.000 transformações — é um total compartilhado, não 25 GB de cada)</td>
+        <td>~250 MB de armazenamento (100 imóveis × 5 fotos × 500 KB) — menos de 1 crédito</td>
         <td>Excluir fotos de imóveis vendidos; se necessário, upgrade ~US$ 89/ano</td>
       </tr>
       <tr>
@@ -1127,25 +1158,27 @@
       </tr>
       <tr>
         <td><strong>Vercel</strong></td>
-        <td>100 GB banda/mês · deploys ilimitados</td>
-        <td>Site estático — &lt; 1 GB/mês estimado</td>
-        <td>Praticamente sem risco; alternativa gratuita: Netlify</td>
+        <td>Plano Pro obrigatório (uso comercial) · 1 TB de banda/mês incluído</td>
+        <td>Site estático — &lt; 1 GB/mês estimado, bem abaixo do incluso no Pro</td>
+        <td>Sem risco de limite técnico; o que exige atenção é manter o plano Pro ativo, não o consumo</td>
       </tr>
     </tbody>
   </table>
 
   <div class="callout" style="margin-top:12px">
     <p>
-      <strong>Rotina preventiva recomendada (anual):</strong> 1) Exportar e arquivar linhas de Leads e Agendamentos
-      do ano anterior em abas separadas na planilha. 2) No Cloudinary, revisar a pasta de imagens e excluir
-      fotos de imóveis que foram removidos do portfólio. 3) Verificar o painel do Cloudinary
+      <strong>Rotina preventiva recomendada (anual):</strong> 1) No Cloudinary, revisar a pasta de imagens e excluir
+      fotos de imóveis que foram removidos do portfólio. 2) Verificar o painel do Cloudinary
       (<em>cloudinary.com → Media Library → Usage</em>) para confirmar que o uso está abaixo de 80% do limite.
+      3) Confirmar no dashboard da Vercel que o plano Pro segue ativo. O banco no Supabase (PostgreSQL) não
+      precisa de arquivamento manual — comporta milhões de registros de leads e agendamentos sem se aproximar
+      do limite de 500 MB.
     </p>
   </div>
 
   <div class="page-footer">
     <span>Magnus Imóveis — Briefing do Sistema</span>
-    <span>Seção 05 · Manutenção</span>
+    <span>Seção 05 · Limites da Infraestrutura</span>
   </div>
 </div>
 
@@ -1223,7 +1256,7 @@
     <span class="roadmap-phase">Longo prazo</span>
     <div class="roadmap-content">
       <h3>CRM Imobiliário</h3>
-      <p>Quando o volume de leads tornar a planilha do Google Sheets insuficiente, migrar para um CRM com pipeline visual, lembretes automáticos e gestão de relacionamento. O Apps Script atual pode alimentar qualquer CRM via webhook.</p>
+      <p>Quando o volume de leads justificar, migrar para um CRM com pipeline visual, lembretes automáticos e gestão de relacionamento. Tanto o Supabase quanto o Apps Script atual podem alimentar qualquer CRM via webhook ou integração direta.</p>
     </div>
   </div>
 
@@ -1370,7 +1403,7 @@
       <tr>
         <td><strong>Exclusão de dados mediante solicitação</strong></td>
         <td>Quando recebida</td>
-        <td>Apagar o lead/agendamento da planilha; confirmar exclusão por e-mail ao titular</td>
+        <td>Apagar o lead/agendamento no Supabase (painel admin ou diretamente no banco); confirmar exclusão por e-mail ao titular</td>
       </tr>
       <tr>
         <td><strong>Notificar incidentes de segurança</strong></td>

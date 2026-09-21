@@ -1,6 +1,6 @@
 // ===== ESTADO =====
 let imoveis = [];
-let filtros = { finalidade: "todos", tipo: "todos", cidade: "todos", bairro: "todos", valor: "todos" };
+let filtros = { tipo: "todos", cidade: "todos", bairro: "todos", valor: "todos" };
 let ordenacao = "preco-asc";
 let visiveis = 9;
 const POR_PAGINA = 3;
@@ -25,7 +25,6 @@ const tipoIcon = (tipo) => {
 // ===== FILTRAR & ORDENAR =====
 function getImovelFiltrado() {
   let lista = imoveis.filter(im => {
-    if (filtros.finalidade !== "todos" && im.finalidade.toLowerCase() !== filtros.finalidade) return false;
     if (filtros.tipo !== "todos" && im.tipo !== filtros.tipo) return false;
     if (filtros.cidade !== "todos" && im.cidade !== filtros.cidade) return false;
     if (filtros.bairro !== "todos" && im.bairro !== filtros.bairro) return false;
@@ -63,7 +62,7 @@ function renderCard(im) {
           ${tipoIcon(im.tipo)}
           <span>${im.tipo}</span>
         </div>
-        <span class="card-badge ${im.finalidade === "Aluguel" ? "aluguel" : ""}">${im.finalidade}</span>
+        <span class="card-badge">${im.finalidade}</span>
         <span class="badge-tipo">${im.tipo}</span>
         ${vendido ? `<div class="badge-sold"><span>VENDIDO</span></div>` : ""}
         <button class="badge-fav" title="Favoritar" onclick="toggleFav(this)">
@@ -75,7 +74,7 @@ function renderCard(im) {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
           <span>${im.bairro} · ${im.cidade} - ${im.estado}</span>
         </div>
-        <div class="card-price">${fmt(im.preco)}${im.finalidade === "Aluguel" ? '<span class="periodo">/mês</span>' : ""}</div>
+        <div class="card-price">${fmt(im.preco)}</div>
         ${hasFeatures ? `
         <div class="card-features">
           ${im.quartos > 0 ? `<span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 22V12a9 9 0 0118 0v10"/><path d="M3 18h18"/></svg>${im.quartos} qts</span>` : ""}
@@ -147,7 +146,6 @@ function popularSelects() {
 
 // ===== EVENTOS =====
 function buscar() {
-  filtros.finalidade = document.querySelector(".tab-btn.active")?.dataset.finalidade || "todos";
   filtros.tipo = document.getElementById("sel-tipo").value;
   filtros.cidade = document.getElementById("sel-cidade").value;
   filtros.bairro = document.getElementById("sel-bairro").value;
@@ -180,14 +178,6 @@ document.addEventListener("DOMContentLoaded", () => {
           <span>Tente recarregar a página</span>
         </div>`;
     });
-
-  // tabs comprar/alugar
-  document.querySelectorAll(".tab-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-    });
-  });
 
   // ordenação
   document.getElementById("sel-ordenar")?.addEventListener("change", e => {

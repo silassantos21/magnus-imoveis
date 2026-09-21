@@ -12,7 +12,7 @@
  * 5. A URL de implantação NÃO muda — não é necessário atualizar leads.js
  */
 
-const EMAIL_CORRETOR = "silasribeiro11@gmail.com";
+const EMAIL_CORRETOR = "silasribeiro11@gmail.com"; // fallback, só usado se o lead não tiver vendedor atribuído
 
 // ===== ROTEADOR PRINCIPAL =====
 
@@ -66,9 +66,13 @@ function _notificarLead(d) {
         <p style="margin:0;font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.8px">Interesse</p>
         <p style="margin:3px 0 0;font-size:15px;color:#0f172a;font-weight:600">${d.interesse || "—"}</p>
       </td></tr>
-      <tr><td style="padding:9px 0">
+      <tr><td style="padding:9px 0;border-bottom:1px solid #f1f5f9">
         <p style="margin:0;font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.8px">Imóvel</p>
         <p style="margin:3px 0 0;font-size:15px;color:#0f172a;font-weight:600">${d.ref_imovel || "não informado"}</p>
+      </td></tr>
+      <tr><td style="padding:9px 0">
+        <p style="margin:0;font-size:10px;font-weight:700;color:#c9a84c;text-transform:uppercase;letter-spacing:.8px">Vendedor responsável</p>
+        <p style="margin:3px 0 0;font-size:15px;color:#0f172a;font-weight:600">${d.vendedor_nome || "—"}</p>
       </td></tr>
     </table>
     <p style="margin:20px 0 0;text-align:center">
@@ -76,7 +80,7 @@ function _notificarLead(d) {
     </p>
   </td></tr>
   <tr><td style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:14px 32px;text-align:center">
-    <p style="margin:0;font-size:11px;color:#94a3b8">Magnus Imóveis · Av. Senador Levindo Coelho, 54 - Tirol, Belo Horizonte/MG</p>
+    <p style="margin:0;font-size:11px;color:#94a3b8">Magnus Imóveis · R. José do Carmo de Oliveira, 74 - Tirol, Belo Horizonte/MG</p>
     <p style="margin:3px 0 0;font-size:11px;color:#94a3b8">(31) 3321-6775 · magnusimoveisbh@hotmail.com</p>
   </td></tr>
 </table>
@@ -84,9 +88,9 @@ function _notificarLead(d) {
 </td></tr></table></body></html>`;
 
   MailApp.sendEmail({
-    to: EMAIL_CORRETOR,
+    to: d.vendedor_email || EMAIL_CORRETOR,
     subject: "Novo lead — " + (d.nome || "sem nome") + " — " + (d.ref_imovel || "sem imóvel"),
-    body: "Novo interesse: " + (d.nome || "—") + " | " + (d.telefone || "—") + " | " + (d.ref_imovel || "—"),
+    body: "Novo interesse: " + (d.nome || "—") + " | " + (d.telefone || "—") + " | " + (d.ref_imovel || "—") + " | Vendedor: " + (d.vendedor_nome || "—"),
     htmlBody: htmlLead
   });
 
@@ -135,17 +139,21 @@ function _notificarAgendamento(d) {
         <p style="margin:0;font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.8px">Tipo</p>
         <p style="margin:3px 0 0;font-size:14px;color:#0f172a;font-weight:600">${d.tipo_visita || "Presencial"}</p>
       </td></tr>
-      ${d.observacoes ? `<tr><td colspan="2" style="padding:9px 0">
+      ${d.observacoes ? `<tr><td colspan="2" style="padding:9px 0;border-bottom:1px solid #f1f5f9">
         <p style="margin:0;font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.8px">Observações</p>
         <p style="margin:3px 0 0;font-size:13px;color:#374151">${d.observacoes}</p>
       </td></tr>` : ""}
+      <tr><td colspan="2" style="padding:9px 0">
+        <p style="margin:0;font-size:10px;font-weight:700;color:#c9a84c;text-transform:uppercase;letter-spacing:.8px">Vendedor responsável</p>
+        <p style="margin:3px 0 0;font-size:15px;color:#0f172a;font-weight:600">${d.vendedor_nome || "—"}</p>
+      </td></tr>
     </table>
     <p style="margin:20px 0 0;text-align:center">
       <a href="https://wa.me/55${(d.telefone||"").replace(/\D/g,"")}" style="display:inline-block;background:#25d366;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:13px;font-weight:700">Confirmar pelo WhatsApp</a>
     </p>
   </td></tr>
   <tr><td style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:14px 32px;text-align:center">
-    <p style="margin:0;font-size:11px;color:#94a3b8">Magnus Imóveis · Av. Senador Levindo Coelho, 54 - Tirol, Belo Horizonte/MG</p>
+    <p style="margin:0;font-size:11px;color:#94a3b8">Magnus Imóveis · R. José do Carmo de Oliveira, 74 - Tirol, Belo Horizonte/MG</p>
     <p style="margin:3px 0 0;font-size:11px;color:#94a3b8">(31) 3321-6775 · magnusimoveisbh@hotmail.com</p>
   </td></tr>
 </table>
@@ -153,9 +161,9 @@ function _notificarAgendamento(d) {
 </td></tr></table></body></html>`;
 
   MailApp.sendEmail({
-    to: EMAIL_CORRETOR,
+    to: d.vendedor_email || EMAIL_CORRETOR,
     subject: "Nova visita — " + (d.nome || "sem nome") + " — " + dataFmt + " " + (d.horario || ""),
-    body: "Agendamento: " + (d.nome || "—") + " | " + dataFmt + " " + (d.horario || "—") + " | " + (d.ref_imovel || "—"),
+    body: "Agendamento: " + (d.nome || "—") + " | " + dataFmt + " " + (d.horario || "—") + " | " + (d.ref_imovel || "—") + " | Vendedor: " + (d.vendedor_nome || "—"),
     htmlBody: htmlAgend
   });
 
@@ -167,17 +175,18 @@ function _criarEventoCalendar(d) {
     const calendario = CalendarApp.getDefaultCalendar();
     const dataHoraInicio = new Date(d.data + "T" + d.horario + ":00");
     const dataHoraFim = new Date(dataHoraInicio.getTime() + 60 * 60 * 1000);
-    const titulo = "Visita — " + (d.tipo_imovel || "Imóvel") + " " + (d.ref_imovel || "") + " — " + (d.nome || "cliente");
+    const titulo = "Visita — " + (d.tipo_imovel || "Imóvel") + " " + (d.ref_imovel || "") + " — " + (d.nome || "cliente") + " (" + (d.vendedor_nome || "sem vendedor") + ")";
     const descricao = [
       "Cliente: " + (d.nome || "—"),
       "WhatsApp: " + (d.telefone || "—"),
       "Imóvel: " + (d.titulo_imovel || d.ref_imovel || "—"),
       "Tipo: " + (d.tipo_visita || "Presencial"),
+      "Vendedor responsável: " + (d.vendedor_nome || "—"),
       "Obs: " + (d.observacoes || "nenhuma")
     ].join("\n");
     calendario.createEvent(titulo, dataHoraInicio, dataHoraFim, {
       description: descricao,
-      location: "Av. Senador Levindo Coelho, 54 - Tirol, Belo Horizonte, MG"
+      location: "R. José do Carmo de Oliveira, 74 - Tirol, Belo Horizonte, MG"
     });
   } catch (err) {
     Logger.log("Erro Calendar: " + err.toString());
