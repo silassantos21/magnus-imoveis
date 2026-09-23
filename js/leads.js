@@ -123,7 +123,7 @@ function _notificarAppsScript(tipo, payload) {
     method: "POST",
     mode: "no-cors",
     headers: { "Content-Type": "text/plain" },
-    body: JSON.stringify(Object.assign({ tipo }, payload))
+    body: JSON.stringify(Object.assign({}, payload, { tipo }))
   }).catch(() => {});
 }
 
@@ -178,6 +178,10 @@ function _criarModalLead() {
           <input type="tel" id="lead-tel" name="telefone" placeholder="(31) 99999-9999" required autocomplete="tel">
         </div>
         <div class="form-group">
+          <label for="lead-email">E-mail (opcional)</label>
+          <input type="email" id="lead-email" name="email" placeholder="seu@email.com" autocomplete="email">
+        </div>
+        <div class="form-group">
           <label for="lead-interesse">Interesse</label>
           <select id="lead-interesse" name="interesse">
             <option value="Comprar">Quero comprar</option>
@@ -204,6 +208,7 @@ function _criarModalLead() {
     const form = e.target;
     const nome = form.nome.value.trim();
     const tel = form.telefone.value.trim();
+    const email = form.email.value.trim();
 
     if (!nome) { _setEstado("form-lead", "erro", "Preencha seu <strong>nome</strong>."); return; }
     if (tel.replace(/\D/g, "").length < 10) { _setEstado("form-lead", "erro", "Número de <strong>WhatsApp inválido</strong>."); return; }
@@ -215,11 +220,13 @@ function _criarModalLead() {
       tipo: "lead",
       nome,
       telefone: tel.replace(/\D/g, ""),
+      email,
       interesse: form.interesse.value,
       ref_imovel: ref,
       origem: "site",
       vendedor_nome: vendedor.nome,
-      vendedor_email: vendedor.email
+      vendedor_email: vendedor.email,
+      vendedor_telefone: vendedor.telefone
     };
 
     _setEstado("form-lead", "loading");
@@ -230,6 +237,7 @@ function _criarModalLead() {
       await _sbInsert("leads", {
         nome:      payload.nome,
         telefone:  payload.telefone,
+        email:     payload.email,
         interesse: payload.interesse,
         ref_imovel: payload.ref_imovel,
         origem:    "site",
@@ -318,6 +326,12 @@ function _criarModalAgendamento() {
         </div>
         <div class="form-row">
           <div class="form-group">
+            <label for="agenda-email">E-mail (opcional)</label>
+            <input type="email" id="agenda-email" name="email" placeholder="seu@email.com" autocomplete="email">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
             <label for="agenda-data">Data preferida *</label>
             <input type="date" id="agenda-data" name="data" required>
           </div>
@@ -384,6 +398,7 @@ function _criarModalAgendamento() {
     const form = e.target;
     const nome = form.nome.value.trim();
     const tel = form.telefone.value.trim();
+    const email = form.email.value.trim();
     const data = form.data.value;
     const horario = form.horario.value;
 
@@ -400,6 +415,7 @@ function _criarModalAgendamento() {
       tipo: "agendamento",
       nome,
       telefone: tel.replace(/\D/g, ""),
+      email,
       data, horario,
       tipo_visita: form.tipo_visita.value,
       ref_imovel: ref,
@@ -407,7 +423,8 @@ function _criarModalAgendamento() {
       tipo_imovel: _imovelAtivo?.tipo || "",
       observacoes: form.observacoes.value.trim(),
       vendedor_nome: vendedor.nome,
-      vendedor_email: vendedor.email
+      vendedor_email: vendedor.email,
+      vendedor_telefone: vendedor.telefone
     };
 
     _setEstado("form-agendar", "loading");
@@ -418,6 +435,7 @@ function _criarModalAgendamento() {
       await _sbInsert("agendamentos", {
         nome:          payload.nome,
         telefone:      payload.telefone,
+        email:         payload.email,
         data_visita:   payload.data,
         horario:       payload.horario,
         tipo_visita:   payload.tipo_visita,

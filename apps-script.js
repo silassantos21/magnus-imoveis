@@ -94,6 +94,8 @@ function _notificarLead(d) {
     htmlBody: htmlLead
   });
 
+  _confirmarClienteEmail(d, "lead");
+
   return _resposta(200, "Email enviado");
 }
 
@@ -167,7 +169,59 @@ function _notificarAgendamento(d) {
     htmlBody: htmlAgend
   });
 
+  _confirmarClienteEmail(d, "agendamento", dataFmt);
+
   return _resposta(200, "Email e Calendar enviados");
+}
+
+// ===== CONFIRMAÇÃO AO CLIENTE (opcional, só se ele informou e-mail) =====
+
+function _confirmarClienteEmail(d, contexto, dataFmt) {
+  if (!d.email) return;
+
+  const nomeVendedor = d.vendedor_nome || "nossa equipe";
+  const foneVendedor = (d.vendedor_telefone || "").replace(/\D/g, "") || "5531999845813";
+  const linkWhats = "https://wa.me/" + foneVendedor;
+
+  const assunto = contexto === "agendamento"
+    ? "Visita agendada — Magnus Imóveis"
+    : "Recebemos seu interesse — Magnus Imóveis";
+
+  const mensagem = contexto === "agendamento"
+    ? "Sua visita para " + (dataFmt || "a data solicitada") + " às " + (d.horario || "—").replace(":", "h") + " foi registrada. " + nomeVendedor + " vai confirmar os detalhes com você pelo WhatsApp em breve."
+    : "Recebemos seu interesse no imóvel " + (d.ref_imovel || "selecionado") + ". " + nomeVendedor + " vai entrar em contato pelo WhatsApp em breve.";
+
+  const html = `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f1f5f9;font-family:Arial,sans-serif">
+<table width="100%" cellpadding="0" cellspacing="0" style="padding:32px 16px"><tr><td align="center">
+<table width="540" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,.08)">
+  <tr><td style="background:#0f172a;padding:24px 32px;text-align:center">
+    <p style="margin:0;font-size:22px;font-weight:800;color:#fff;letter-spacing:2px">MAGNUS <span style="color:#c9a84c">IMÓVEIS</span></p>
+    <p style="margin:5px 0 0;font-size:11px;color:#94a3b8;letter-spacing:1px">CRECI 32.402</p>
+  </td></tr>
+  <tr><td style="padding:28px 32px">
+    <p style="margin:0 0 14px;font-size:16px;color:#0f172a;font-weight:700">Olá, ${d.nome || "tudo bem"}!</p>
+    <p style="margin:0 0 18px;font-size:14px;color:#374151;line-height:1.6">${mensagem}</p>
+    <p style="margin:0;text-align:center">
+      <a href="${linkWhats}" style="display:inline-block;background:#25d366;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:13px;font-weight:700">Falar no WhatsApp</a>
+    </p>
+  </td></tr>
+  <tr><td style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:14px 32px;text-align:center">
+    <p style="margin:0;font-size:11px;color:#94a3b8">Magnus Imóveis · R. José do Carmo de Oliveira, 74 - Tirol, Belo Horizonte/MG</p>
+    <p style="margin:3px 0 0;font-size:11px;color:#94a3b8">(31) 3321-6775 · magnusimoveisbh@hotmail.com</p>
+  </td></tr>
+</table>
+</td></tr></table></body></html>`;
+
+  try {
+    MailApp.sendEmail({
+      to: d.email,
+      subject: assunto,
+      body: mensagem,
+      htmlBody: html
+    });
+  } catch (err) {
+    Logger.log("Erro ao enviar confirmação ao cliente: " + err.toString());
+  }
 }
 
 function _criarEventoCalendar(d) {
