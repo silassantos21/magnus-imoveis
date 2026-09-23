@@ -46,7 +46,7 @@ function _notificarLead(d) {
 <table width="540" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,.08)">
   <tr><td style="background:#0f172a;padding:24px 32px;text-align:center">
     <p style="margin:0;font-size:22px;font-weight:800;color:#fff;letter-spacing:2px">MAGNUS <span style="color:#c9a84c">IMÓVEIS</span></p>
-    <p style="margin:5px 0 0;font-size:11px;color:#94a3b8;letter-spacing:1px">CRECI 32.402</p>
+    <p style="margin:5px 0 0;font-size:11px;color:#94a3b8;letter-spacing:1px">CRECI-PJ 8817</p>
   </td></tr>
   <tr><td style="padding:16px 32px 12px;background:#fafafa;border-bottom:1px solid #e2e8f0">
     <p style="margin:0;font-size:11px;font-weight:700;color:#c9a84c;text-transform:uppercase;letter-spacing:1.5px">Novo Interesse — Site</p>
@@ -112,7 +112,7 @@ function _notificarAgendamento(d) {
 <table width="540" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,.08)">
   <tr><td style="background:#0f172a;padding:24px 32px;text-align:center">
     <p style="margin:0;font-size:22px;font-weight:800;color:#fff;letter-spacing:2px">MAGNUS <span style="color:#c9a84c">IMÓVEIS</span></p>
-    <p style="margin:5px 0 0;font-size:11px;color:#94a3b8;letter-spacing:1px">CRECI 32.402</p>
+    <p style="margin:5px 0 0;font-size:11px;color:#94a3b8;letter-spacing:1px">CRECI-PJ 8817</p>
   </td></tr>
   <tr><td style="padding:16px 32px 12px;background:#fafafa;border-bottom:1px solid #e2e8f0">
     <p style="margin:0;font-size:11px;font-weight:700;color:#c9a84c;text-transform:uppercase;letter-spacing:1.5px">Nova Visita Agendada</p>
@@ -196,7 +196,7 @@ function _confirmarClienteEmail(d, contexto, dataFmt) {
 <table width="540" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,.08)">
   <tr><td style="background:#0f172a;padding:24px 32px;text-align:center">
     <p style="margin:0;font-size:22px;font-weight:800;color:#fff;letter-spacing:2px">MAGNUS <span style="color:#c9a84c">IMÓVEIS</span></p>
-    <p style="margin:5px 0 0;font-size:11px;color:#94a3b8;letter-spacing:1px">CRECI 32.402</p>
+    <p style="margin:5px 0 0;font-size:11px;color:#94a3b8;letter-spacing:1px">CRECI-PJ 8817</p>
   </td></tr>
   <tr><td style="padding:28px 32px">
     <p style="margin:0 0 14px;font-size:16px;color:#0f172a;font-weight:700">Olá, ${d.nome || "tudo bem"}!</p>

@@ -1067,7 +1067,7 @@ function _pdfCabecalho(doc, titulo, filtroTexto, totalTexto) {
   doc.setTextColor(201, 162, 43);
   doc.setFontSize(8);
   doc.setFont("helvetica", "normal");
-  doc.text("CRECI 32.402", 12, 17);
+  doc.text("CRECI-PJ 8817", 12, 17);
   doc.setTextColor(200, 200, 200);
   doc.setFontSize(10);
   doc.setFont("helvetica", "bold");
@@ -1111,7 +1111,7 @@ function _pdfRodape(doc) {
     doc.setTextColor(160, 160, 160);
     doc.setFontSize(7);
     doc.setFont("helvetica", "normal");
-    doc.text("Magnus Imoveis  |  CRECI 32.402  |  magnusimoveisbh@hotmail.com  |  (31) 3321-6775", 12, H - 7);
+    doc.text("Magnus Imoveis  |  CRECI-PJ 8817  |  magnusimoveisbh@hotmail.com  |  (31) 3321-6775", 12, H - 7);
     doc.text(i + " / " + pages, W - 12, H - 7, { align: "right" });
   }
 }
