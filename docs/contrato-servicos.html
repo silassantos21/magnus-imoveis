@@ -11,19 +11,16 @@
       font-family: Georgia, 'Times New Roman', serif;
       font-size: 10pt;
       line-height: 1.7;
-      color: #1a1a1a;
-      background: #1a1a1a;
+      color: #111;
+      background: #fff;
     }
 
     :root {
-      --gold: #C9A22B;
-      --gold-light: #ddb93a;
-      --dark: #1a1a1a;
-      --charcoal: #2d2d2d;
-      --mid: #5a5650;
-      --light: #e5e3db;
-      --parchment: #efede6;
-      --border: #ccc9be;
+      --ink: #111;
+      --text: #222;
+      --mid: #555;
+      --line: #999;
+      --line-light: #ccc;
     }
 
     /* ===== PÁGINAS ===== */
@@ -34,14 +31,14 @@
       display: flex;
       flex-direction: column;
       position: relative;
-      background: var(--parchment);
+      background: #fff;
     }
     .page:last-child { page-break-after: auto; }
 
     /* ===== CAPA ===== */
     .cover {
-      background: linear-gradient(160deg, #111 0%, #1c1c1c 50%, #252218 100%);
-      color: #fff;
+      background: #fff;
+      color: var(--ink);
       padding: 64px;
       min-height: 100vh;
       display: flex;
@@ -49,80 +46,61 @@
       justify-content: space-between;
       page-break-after: always;
       position: relative;
-      overflow: hidden;
-    }
-    .cover-accent {
-      position: absolute; top: 0; left: 0; right: 0;
-      height: 3px;
-      background: var(--gold);
-    }
-    .cover-corner {
-      position: absolute; bottom: -60px; right: -60px;
-      width: 280px; height: 280px;
-      border: 1px solid rgba(201,162,43,0.12);
-      border-radius: 50%;
-    }
-    .cover-corner-2 {
-      position: absolute; bottom: -100px; right: -100px;
-      width: 380px; height: 380px;
-      border: 1px solid rgba(201,162,43,0.06);
-      border-radius: 50%;
+      border-top: 3px solid var(--ink);
+      border-bottom: 3px solid var(--ink);
     }
 
     .cover-top {
       display: flex; justify-content: space-between; align-items: flex-start;
-      position: relative; z-index: 1;
     }
     .cover-brand {
       font-family: Arial, sans-serif;
       font-size: 11pt; font-weight: 700;
-      color: rgba(255,255,255,0.9);
+      color: var(--ink);
       letter-spacing: 0.5px;
     }
     .cover-brand span {
       display: block; font-size: 7.5pt; font-weight: 400;
-      color: rgba(255,255,255,0.35); letter-spacing: 2px;
+      color: var(--mid); letter-spacing: 2px;
       text-transform: uppercase; margin-top: 2px;
     }
     .cover-doc-num {
       text-align: right;
       font-family: Arial, sans-serif;
-      font-size: 8pt; color: rgba(255,255,255,0.3);
+      font-size: 8pt; color: var(--mid);
       line-height: 1.8;
     }
-    .cover-doc-num strong { color: rgba(255,255,255,0.55); display: block; }
+    .cover-doc-num strong { color: var(--ink); display: block; }
 
     .cover-main {
       flex: 1; display: flex; flex-direction: column;
       justify-content: center; padding: 60px 0 40px;
-      position: relative; z-index: 1;
     }
     .cover-type {
       font-family: Arial, sans-serif;
       font-size: 7.5pt; font-weight: 700;
       letter-spacing: 3px; text-transform: uppercase;
-      color: var(--gold); margin-bottom: 24px;
+      color: var(--mid); margin-bottom: 24px;
     }
     .cover-title {
-      font-size: 30pt; font-weight: 400; line-height: 1.2;
-      color: #fff; margin-bottom: 10px;
-      font-style: italic; max-width: 520px;
+      font-size: 27pt; font-weight: 400; line-height: 1.25;
+      color: var(--ink); margin-bottom: 10px;
+      max-width: 520px;
     }
-    .cover-title strong { font-style: normal; font-weight: 700; }
+    .cover-title strong { font-weight: 700; }
     .cover-divider {
       width: 48px; height: 2px;
-      background: var(--gold); margin: 24px 0;
+      background: var(--ink); margin: 24px 0;
     }
     .cover-desc {
       font-family: Arial, sans-serif;
-      font-size: 9.5pt; color: rgba(255,255,255,0.45);
+      font-size: 9.5pt; color: var(--mid);
       max-width: 440px; line-height: 1.65;
     }
 
     .cover-parties {
-      position: relative; z-index: 1;
       display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
-      border-top: 1px solid rgba(255,255,255,0.08);
+      border-top: 1px solid var(--line-light);
       padding-top: 28px; margin-bottom: 0;
     }
     .party-block { }
@@ -130,13 +108,13 @@
       font-family: Arial, sans-serif;
       font-size: 7pt; font-weight: 700;
       letter-spacing: 2px; text-transform: uppercase;
-      color: var(--gold); margin-bottom: 8px; display: block;
+      color: var(--ink); margin-bottom: 8px; display: block;
     }
     .party-field {
       display: block;
-      border-bottom: 1px solid rgba(255,255,255,0.15);
+      border-bottom: 1px solid var(--line-light);
       padding: 4px 0 3px;
-      color: rgba(255,255,255,0.35);
+      color: var(--mid);
       font-family: Arial, sans-serif;
       font-size: 8.5pt; font-style: italic;
       margin-bottom: 6px;
@@ -145,12 +123,12 @@
     /* ===== ELEMENTOS DO CONTRATO ===== */
     .contract-header {
       display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 28px; padding-bottom: 14px;
-      border-bottom: 2px solid var(--charcoal);
+      margin-bottom: 28px; padding-bottom: 10px;
+      border-bottom: 1.5px solid var(--ink);
     }
     .contract-brand {
       font-family: Arial, sans-serif;
-      font-size: 10pt; font-weight: 700; color: var(--charcoal);
+      font-size: 10pt; font-weight: 700; color: var(--ink);
     }
     .contract-brand span {
       display: block; font-size: 7pt; font-weight: 400;
@@ -161,23 +139,6 @@
       font-size: 8pt; color: var(--mid); text-align: right;
     }
 
-    /* Seção */
-    .section-num {
-      font-family: Arial, sans-serif;
-      font-size: 7pt; font-weight: 700; letter-spacing: 2px;
-      text-transform: uppercase; color: var(--gold);
-      display: block; margin-bottom: 3px;
-    }
-    .section-title {
-      font-size: 13pt; font-weight: 700;
-      color: var(--dark); margin-bottom: 14px;
-      font-family: Arial, sans-serif;
-    }
-    .gold-bar {
-      width: 36px; height: 2px;
-      background: var(--gold); margin-bottom: 16px;
-    }
-
     /* Cláusulas */
     .clause {
       margin-bottom: 20px;
@@ -185,54 +146,43 @@
     .clause-title {
       font-family: Arial, sans-serif;
       font-size: 9.5pt; font-weight: 700;
-      color: var(--charcoal); margin-bottom: 6px;
-      border-bottom: 1px solid var(--border);
+      color: var(--ink); margin-bottom: 6px;
+      border-bottom: 1px solid var(--line-light);
       padding-bottom: 4px;
     }
     .clause p {
       margin-bottom: 7px;
-      font-size: 9.5pt; color: #2a2a2a;
+      font-size: 9.5pt; color: var(--text);
     }
     .clause p:last-child { margin-bottom: 0; }
 
     /* Sub-items numerados */
     .sub-item {
       display: flex; gap: 10px;
-      margin-bottom: 6px; font-size: 9pt; color: #2a2a2a;
+      margin-bottom: 6px; font-size: 9pt; color: var(--text);
     }
     .sub-num {
       font-family: Arial, sans-serif;
-      font-weight: 700; color: var(--gold);
+      font-weight: 700; color: var(--ink);
       min-width: 28px; flex-shrink: 0;
     }
 
-    /* Lista com checks */
+    /* Lista com marcadores simples */
     .check-list { margin: 8px 0; }
     .check-item {
       display: flex; align-items: flex-start; gap: 9px;
-      margin-bottom: 5px; font-size: 9pt; color: #2a2a2a;
+      margin-bottom: 5px; font-size: 9pt; color: var(--text);
     }
-    .check-dot {
-      width: 16px; height: 16px; flex-shrink: 0;
-      background: var(--charcoal); border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      margin-top: 1px;
+    .check-item::before {
+      content: "–";
+      font-weight: 700; color: var(--ink);
+      flex-shrink: 0;
     }
-    .check-dot svg {
-      width: 8px; height: 8px;
-      stroke: var(--gold); stroke-width: 2.5;
-      stroke-linecap: round; stroke-linejoin: round; fill: none;
-    }
-    .cross-dot {
-      background: transparent;
-      border: 1.5px solid var(--border);
-    }
-    .cross-dot svg { stroke: var(--mid); }
 
     /* Campo de preenchimento */
     .field {
       display: inline-block;
-      border-bottom: 1.5px solid var(--gold);
+      border-bottom: 1.5px solid var(--ink);
       min-width: 180px; padding: 0 4px 1px;
       color: var(--mid); font-style: italic;
       font-size: 9.5pt;
@@ -246,27 +196,23 @@
     /* Tabela de valores */
     .value-table { width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 9pt; margin: 12px 0; }
     .value-table th {
-      background: var(--charcoal); color: #fff;
-      padding: 7px 12px; text-align: left; font-size: 8pt; font-weight: 700;
+      color: var(--ink);
+      padding: 7px 4px; text-align: left; font-size: 8pt; font-weight: 700;
+      border-bottom: 1.5px solid var(--ink);
     }
-    .value-table th:first-child { border-radius: 5px 0 0 0; }
-    .value-table th:last-child { border-radius: 0 5px 0 0; text-align: right; }
-    .value-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .value-table th:last-child { text-align: right; }
+    .value-table td { padding: 7px 4px; border-bottom: 1px solid var(--line-light); vertical-align: middle; }
     .value-table td:last-child { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
-    .value-table tr:nth-child(even) td { background: var(--light); }
-    .value-table tr:last-child td { border-bottom: none; }
-    .value-table .total-row td { background: var(--charcoal) !important; color: #fff; font-weight: 700; }
-    .value-table .total-row td:last-child { color: var(--gold); }
+    .value-table tr:last-child td { border-bottom: 1.5px solid var(--ink); }
 
     /* Callout */
     .callout {
-      background: var(--light);
-      border-left: 3px solid var(--gold);
-      padding: 10px 14px; border-radius: 0 6px 6px 0;
+      border-left: 2px solid var(--ink);
+      padding: 6px 0 6px 14px;
       font-family: Arial, sans-serif; font-size: 8.5pt;
       color: var(--mid); margin: 10px 0;
     }
-    .callout strong { color: var(--charcoal); }
+    .callout strong { color: var(--ink); }
 
     /* Bloco de partes na página 2 */
     .parties-grid {
@@ -274,14 +220,16 @@
       margin-bottom: 22px;
     }
     .party-card {
-      background: var(--light); border-radius: 8px;
-      padding: 16px 18px; border-top: 3px solid var(--gold);
+      border: 1px solid var(--line-light);
+      padding: 16px 18px;
     }
     .party-card-label {
       font-family: Arial, sans-serif;
       font-size: 7pt; font-weight: 700; letter-spacing: 2px;
-      text-transform: uppercase; color: var(--gold);
+      text-transform: uppercase; color: var(--ink);
       display: block; margin-bottom: 10px;
+      border-bottom: 1px solid var(--line-light);
+      padding-bottom: 6px;
     }
     .party-row {
       margin-bottom: 7px;
@@ -300,28 +248,16 @@
     }
     .sig-block { }
     .sig-line {
-      border-top: 1.5px solid var(--charcoal);
+      border-top: 1.5px solid var(--ink);
       margin-bottom: 6px; margin-top: 44px;
     }
     .sig-name {
       font-family: Arial, sans-serif;
-      font-size: 9pt; font-weight: 700; color: var(--charcoal);
+      font-size: 9pt; font-weight: 700; color: var(--ink);
     }
     .sig-detail {
       font-family: Arial, sans-serif;
       font-size: 8pt; color: var(--mid);
-    }
-    .wit-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
-      margin-top: 20px; padding-top: 16px;
-      border-top: 1px solid var(--border);
-    }
-    .wit-block .sig-line { margin-top: 36px; }
-    .wit-label {
-      font-family: Arial, sans-serif;
-      font-size: 7pt; font-weight: 700; letter-spacing: 1.5px;
-      text-transform: uppercase; color: var(--mid);
-      display: block; margin-bottom: 2px;
     }
 
     /* Rodapé */
@@ -329,32 +265,28 @@
       margin-top: auto; padding-top: 16px;
       display: flex; justify-content: space-between; align-items: center;
       font-family: Arial, sans-serif;
-      font-size: 7.5pt; color: var(--border);
-      border-top: 1px solid var(--border);
+      font-size: 7.5pt; color: var(--mid);
+      border-top: 1px solid var(--line-light);
     }
 
     /* Divider entre cláusulas */
     .clause-divider {
-      border: none; border-top: 1px solid var(--border);
+      border: none; border-top: 1px solid var(--line-light);
       margin: 16px 0;
     }
 
     /* Destaque inline */
-    .hl { color: var(--gold); font-weight: 700; }
+    .hl { font-weight: 700; }
 
     /* ===== PRINT ===== */
     @media print {
-      body { background: #1a1a1a; line-height: 1.5; }
+      body { background: #fff; line-height: 1.5; }
       .page { padding: 40px 56px 32px; }
       .cover { padding: 48px 56px; }
-      .cover, .party-card, .check-dot,
-      .value-table th, .value-table .total-row td,
-      .page, .callout, .cover-accent
-      { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       .page-footer { break-before: avoid; page-break-before: avoid; }
       a { color: inherit; text-decoration: none; }
       /* Compacta para caber em folha A4 */
-      .cover-title { font-size: 25pt; }
+      .cover-title { font-size: 23pt; }
       .cover-main { padding: 30px 0 20px; }
       .contract-header { margin-bottom: 16px; padding-bottom: 8px; }
       .clause { margin-bottom: 12px; }
@@ -365,8 +297,8 @@
       .check-list { margin: 5px 0; }
       .check-item { margin-bottom: 3px; }
       .value-table { margin: 8px 0; }
-      .value-table td, .value-table th { padding: 5px 12px; }
-      .callout { margin: 6px 0; padding: 7px 12px; }
+      .value-table td, .value-table th { padding: 5px 4px; }
+      .callout { margin: 6px 0; padding: 5px 0 5px 12px; }
       .parties-grid { margin-bottom: 14px; }
       .party-card { padding: 12px 16px; }
       .party-row { margin-bottom: 4px; }
@@ -379,10 +311,6 @@
      CAPA
 ================================================================ -->
 <div class="cover">
-  <div class="cover-accent"></div>
-  <div class="cover-corner"></div>
-  <div class="cover-corner-2"></div>
-
   <div class="cover-top">
     <div class="cover-brand">
       Contrato de Prestação de Serviços
@@ -489,16 +417,16 @@
     <div class="clause-title">Cláusula 2: Escopo da Implantação</div>
     <p>A taxa de implantação definida na Cláusula 4 cobre os seguintes serviços, realizados <strong>uma única vez</strong>:</p>
     <div class="check-list">
-      <div class="check-item"><div class="check-dot"><svg viewBox="0 0 10 10"><polyline points="2,5 4,8 8,2"/></svg></div><span>Personalização visual com a identidade do CONTRATANTE (logo, cores, dados de contato e endereço)</span></div>
-      <div class="check-item"><div class="check-dot"><svg viewBox="0 0 10 10"><polyline points="2,5 4,8 8,2"/></svg></div><span>Configuração e conexão do banco de dados, integrações de e-mail, agenda e analytics</span></div>
-      <div class="check-item"><div class="check-dot"><svg viewBox="0 0 10 10"><polyline points="2,5 4,8 8,2"/></svg></div><span>Publicação do sistema no domínio do CONTRATANTE, com HTTPS ativo: inclui configuração de DNS e upgrade do plano de hospedagem para o nível compatível com uso comercial (Cláusula 4.7)</span></div>
-      <div class="check-item"><div class="check-dot"><svg viewBox="0 0 10 10"><polyline points="2,5 4,8 8,2"/></svg></div><span>Cadastro inicial de até <strong>5 (cinco) imóveis</strong> para que o site vá ao ar com conteúdo</span></div>
-      <div class="check-item"><div class="check-dot"><svg viewBox="0 0 10 10"><polyline points="2,5 4,8 8,2"/></svg></div><span>Sessão de treinamento de <strong>1 (uma) hora</strong> para uso do painel administrativo (online ou presencial)</span></div>
-      <div class="check-item"><div class="check-dot"><svg viewBox="0 0 10 10"><polyline points="2,5 4,8 8,2"/></svg></div><span>Suporte intensivo por <strong>30 (trinta) dias</strong> após a entrega, sem custo adicional</span></div>
+      <div class="check-item"><span>Personalização visual com a identidade do CONTRATANTE (logo, cores, dados de contato e endereço)</span></div>
+      <div class="check-item"><span>Configuração e conexão do banco de dados, integrações de e-mail, agenda e analytics</span></div>
+      <div class="check-item"><span>Publicação do sistema no domínio do CONTRATANTE, com HTTPS ativo: inclui configuração de DNS e upgrade do plano de hospedagem para o nível compatível com uso comercial (Cláusula 4.7)</span></div>
+      <div class="check-item"><span>Cadastro inicial de até <strong>5 (cinco) imóveis</strong> para que o site vá ao ar com conteúdo</span></div>
+      <div class="check-item"><span>Sessão de treinamento de <strong>1 (uma) hora</strong> para uso do painel administrativo (online ou presencial)</span></div>
+      <div class="check-item"><span>Suporte intensivo por <strong>30 (trinta) dias</strong> após a entrega, sem custo adicional</span></div>
     </div>
 
     <p style="margin-top:10px; font-family:Arial,sans-serif; font-size:8.5pt; color:var(--mid);">
-      <strong style="color:var(--charcoal);">Não está incluído na implantação:</strong>
+      <strong style="color:var(--ink);">Não está incluído na implantação:</strong>
       criação de logotipo ou identidade visual do zero; produção de fotos ou vídeos dos imóveis; gestão de redes sociais. Integrações não previstas e novas funcionalidades são atendidas sob demanda, cobradas por hora (Cláusula 3).
     </p>
   </div>
@@ -614,17 +542,17 @@
   <!-- Cláusula 7 -->
   <div class="clause">
     <div class="clause-title">Cláusula 7: Responsabilidades</div>
-    <p style="font-family:Arial,sans-serif; font-size:8.5pt; font-weight:700; color:var(--charcoal); margin-bottom:5px;">Da CONTRATADA:</p>
+    <p style="font-family:Arial,sans-serif; font-size:8.5pt; font-weight:700; color:var(--ink); margin-bottom:5px;">Da CONTRATADA:</p>
     <div class="check-list">
-      <div class="check-item"><div class="check-dot"><svg viewBox="0 0 10 10"><polyline points="2,5 4,8 8,2"/></svg></div><span>Executar a implantação dentro do prazo acordado, condicionado ao recebimento dos materiais</span></div>
-      <div class="check-item"><div class="check-dot"><svg viewBox="0 0 10 10"><polyline points="2,5 4,8 8,2"/></svg></div><span>Manter sigilo sobre dados de clientes do CONTRATANTE (LGPD, Lei 13.709/2018)</span></div>
-      <div class="check-item"><div class="check-dot"><svg viewBox="0 0 10 10"><polyline points="2,5 4,8 8,2"/></svg></div><span>Prestar suporte dentro dos prazos definidos e comunicar instabilidades relevantes</span></div>
+      <div class="check-item"><span>Executar a implantação dentro do prazo acordado, condicionado ao recebimento dos materiais</span></div>
+      <div class="check-item"><span>Manter sigilo sobre dados de clientes do CONTRATANTE (LGPD, Lei 13.709/2018)</span></div>
+      <div class="check-item"><span>Prestar suporte dentro dos prazos definidos e comunicar instabilidades relevantes</span></div>
     </div>
-    <p style="font-family:Arial,sans-serif; font-size:8.5pt; font-weight:700; color:var(--charcoal); margin: 10px 0 5px;">Do CONTRATANTE:</p>
+    <p style="font-family:Arial,sans-serif; font-size:8.5pt; font-weight:700; color:var(--ink); margin: 10px 0 5px;">Do CONTRATANTE:</p>
     <div class="check-list">
-      <div class="check-item"><div class="check-dot"><svg viewBox="0 0 10 10"><polyline points="2,5 4,8 8,2"/></svg></div><span>Fornecer logo, fotos e dados necessários em até <span class="field field-sm"></span> dias úteis após a assinatura</span></div>
-      <div class="check-item"><div class="check-dot"><svg viewBox="0 0 10 10"><polyline points="2,5 4,8 8,2"/></svg></div><span>Efetuar os pagamentos nos prazos estipulados e não compartilhar credenciais com terceiros</span></div>
-      <div class="check-item"><div class="check-dot"><svg viewBox="0 0 10 10"><polyline points="2,5 4,8 8,2"/></svg></div><span>Comunicar imediatamente qualquer problema identificado no sistema</span></div>
+      <div class="check-item"><span>Fornecer logo, fotos e dados necessários em até <span class="field field-sm"></span> dias úteis após a assinatura</span></div>
+      <div class="check-item"><span>Efetuar os pagamentos nos prazos estipulados e não compartilhar credenciais com terceiros</span></div>
+      <div class="check-item"><span>Comunicar imediatamente qualquer problema identificado no sistema</span></div>
     </div>
     <div class="callout" style="margin-top:10px;">
       <strong>Limitação de responsabilidade:</strong> a CONTRATADA não responde por indisponibilidade de serviços de terceiros (Vercel, Supabase, Google, Cloudinary), falhas de conexão à internet, ou perdas por uso indevido do sistema.
@@ -676,35 +604,22 @@
   </div>
 
   <!-- Assinaturas -->
-  <p style="font-family:Arial,sans-serif; font-size:9pt; text-align:center; color:var(--mid); margin: 16px 0 0;">
-    Belo Horizonte, &nbsp;<span class="field field-sm"></span>&nbsp; de &nbsp;<span class="field field-md"></span>&nbsp; de 2026.
-  </p>
+  <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+    <p style="font-family:Arial,sans-serif; font-size:9pt; text-align:center; color:var(--mid); margin: 0;">
+      Belo Horizonte, &nbsp;<span class="field field-sm"></span>&nbsp; de &nbsp;<span class="field field-md"></span>&nbsp; de 2026.
+    </p>
 
-  <div class="sig-grid">
-    <div class="sig-block">
-      <div class="sig-line"></div>
-      <div class="sig-detail" style="font-weight:700; color:var(--charcoal);">CONTRATADA</div>
-      <div class="sig-detail">CPF / CNPJ: <span class="field field-md"></span></div>
-    </div>
-    <div class="sig-block">
-      <div class="sig-line"></div>
-      <div class="sig-detail" style="font-weight:700; color:var(--charcoal);">CONTRATANTE</div>
-      <div class="sig-detail">CPF / CNPJ: <span class="field field-md"></span></div>
-    </div>
-  </div>
-
-  <div class="wit-grid">
-    <div class="wit-block">
-      <span class="wit-label">Testemunha 1</span>
-      <div class="sig-line"></div>
-      <div class="sig-detail">Nome: <span class="field field-md"></span></div>
-      <div class="sig-detail">CPF: <span class="field field-md"></span></div>
-    </div>
-    <div class="wit-block">
-      <span class="wit-label">Testemunha 2</span>
-      <div class="sig-line"></div>
-      <div class="sig-detail">Nome: <span class="field field-md"></span></div>
-      <div class="sig-detail">CPF: <span class="field field-md"></span></div>
+    <div class="sig-grid">
+      <div class="sig-block">
+        <div class="sig-line"></div>
+        <div class="sig-detail" style="font-weight:700; color:var(--ink);">CONTRATADA</div>
+        <div class="sig-detail">CPF / CNPJ: <span class="field field-md"></span></div>
+      </div>
+      <div class="sig-block">
+        <div class="sig-line"></div>
+        <div class="sig-detail" style="font-weight:700; color:var(--ink);">CONTRATANTE</div>
+        <div class="sig-detail">CPF / CNPJ: <span class="field field-md"></span></div>
+      </div>
     </div>
   </div>
 

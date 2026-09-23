@@ -12,7 +12,7 @@
  * 5. A URL de implantação NÃO muda — não é necessário atualizar leads.js
  */
 
-const EMAIL_CORRETOR = "silasribeiro11@gmail.com"; // fallback, só usado se o lead não tiver vendedor atribuído
+const EMAIL_CORRETOR = "magnusimoveisbh@hotmail.com"; // fallback, só usado se o lead não tiver vendedor atribuído
 
 // ===== ROTEADOR PRINCIPAL =====
 
