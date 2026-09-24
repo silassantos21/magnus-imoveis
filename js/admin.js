@@ -35,7 +35,24 @@ const Icons = {
   check:   _ico('<polyline points="20 6 9 17 4 12"/>'),
   xMark:   _ico('<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>'),
   flag:    _ico('<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>'),
+  kebab:   _ico('<circle cx="12" cy="5" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="19" r="1.5" fill="currentColor" stroke="none"/>'),
 };
+
+// ===== MENU DE AÇÕES (mobile, "⋮") =====
+
+function toggleCardMenu(id, btn) {
+  const abrindo = document.getElementById(id)?.style.display !== "block";
+  document.querySelectorAll(".card-menu-dropdown").forEach(el => el.style.display = "none");
+  if (abrindo) {
+    const el = document.getElementById(id);
+    if (el) el.style.display = "block";
+  }
+}
+document.addEventListener("click", e => {
+  if (!e.target.closest(".admin-card-menu")) {
+    document.querySelectorAll(".card-menu-dropdown").forEach(el => el.style.display = "none");
+  }
+});
 
 // ===== UTILITÁRIOS =====
 
@@ -58,6 +75,10 @@ function fmtTelefone(tel) {
 
 function esc(str) {
   return String(str || "").replace(/'/g, "\\'").replace(/"/g, "&quot;");
+}
+
+function _domId(str) {
+  return String(str || "").replace(/[^a-zA-Z0-9_-]/g, "");
 }
 
 // ===== AUTENTICAÇÃO =====
@@ -338,11 +359,13 @@ function renderImoveis() {
             <button class="btn-star${destClass}" title="${im.destaque ? "Remover destaque" : "Marcar destaque"}"
               onclick="toggleDestaque('${esc(im.ref)}', ${!im.destaque})">${im.destaque ? Icons.starOn : Icons.starOff}</button>
           </div>
-          <div class="admin-card-acoes">
-            <button class="btn-sm btn-editar" onclick="abrirFormEditar('${esc(im.ref)}')" title="Editar">${Icons.edit}</button>
-            <button class="btn-sm btn-duplicar" onclick="duplicarImovel('${esc(im.ref)}')" title="Duplicar">${Icons.copy}</button>
-            <button class="btn-sm btn-deletar" title="Excluir"
-              onclick="confirmarDeletar('${esc(im.ref)}','${esc(im.titulo)}')">${Icons.trash}</button>
+          <div class="admin-card-menu">
+            <button class="btn-kebab" onclick="event.stopPropagation(); toggleCardMenu('menu-im-${_domId(im.ref)}')" title="Mais ações">${Icons.kebab}</button>
+            <div class="card-menu-dropdown" id="menu-im-${_domId(im.ref)}">
+              <button onclick="abrirFormEditar('${esc(im.ref)}')">${Icons.edit} Editar</button>
+              <button onclick="duplicarImovel('${esc(im.ref)}')">${Icons.copy} Duplicar</button>
+              <button class="danger" onclick="confirmarDeletar('${esc(im.ref)}','${esc(im.titulo)}')">${Icons.trash} Excluir</button>
+            </div>
           </div>
         </div>
         <div class="admin-card-body">
@@ -631,7 +654,7 @@ function abrirFormNovo() {
   form.querySelector('[name="ref"]').disabled    = false;
   form.querySelector('[name="estado"]').value    = "MG";
   form.querySelector('[name="status"]').value    = "disponivel";
-  form.querySelector('[name="finalidade"]').value = "";
+  form.querySelector('[name="finalidade"]').value = "Venda";
   form.querySelector('[name="tipo"]').value       = "";
   atualizarPreview();
   abrirDrawer();
@@ -764,6 +787,7 @@ async function salvarImovel(e) {
       state.imoveis.push(imovel);
     }
     renderImoveis();
+    renderStats();
 
   } catch (err) {
     showToast("Erro de conexão: " + err.message, "error");
@@ -966,6 +990,27 @@ function renderAgendamentos() {
     return "";
   };
 
+  // Mesmas ações, em menu "⋮" com rótulo — usado só nos cards mobile
+  const _acoesMenu = a => {
+    const waNum = (a.telefone || "").replace(/\D/g,"");
+    let itens = "";
+    if (a.status === "pendente") {
+      itens = `
+        <button onclick="atualizarStatusAgend(${a.id},'confirmado','${esc(a.nome)}','${a.data}','${a.horario}','${waNum}')">${Icons.check} Confirmar</button>
+        <button class="danger" onclick="atualizarStatusAgend(${a.id},'cancelado','${esc(a.nome)}','${a.data}','${a.horario}','${waNum}')">${Icons.xMark} Cancelar</button>`;
+    } else if (a.status === "confirmado") {
+      itens = `
+        <button onclick="atualizarStatusAgend(${a.id},'realizado','${esc(a.nome)}','${a.data}','${a.horario}','')">${Icons.flag} Marcar realizado</button>
+        <button class="danger" onclick="atualizarStatusAgend(${a.id},'cancelado','${esc(a.nome)}','${a.data}','${a.horario}','${waNum}')">${Icons.xMark} Cancelar</button>`;
+    }
+    if (!itens) return "";
+    return `
+      <div class="admin-card-menu">
+        <button class="btn-kebab" onclick="event.stopPropagation(); toggleCardMenu('menu-ag-${a.id}')" title="Mais ações">${Icons.kebab}</button>
+        <div class="card-menu-dropdown" id="menu-ag-${a.id}">${itens}</div>
+      </div>`;
+  };
+
   tbody.innerHTML = lista.map(a => {
     const [cls, label] = statusMap[a.status] || ["badge-gray", a.status];
     const dataFmt = a.data ? new Date(a.data + "T12:00:00").toLocaleDateString("pt-BR") : "—";
@@ -997,7 +1042,7 @@ function renderAgendamentos() {
             <span class="admin-card-nome">${a.nome || "—"}</span>
             <span class="badge ${cls}">${label}</span>
           </div>
-          <div class="admin-card-acoes">${_acoes(a)}</div>
+          ${_acoesMenu(a)}
         </div>
         <div class="admin-card-body">
           ${waNum

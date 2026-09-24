@@ -361,18 +361,9 @@ function _criarModalAgendamento() {
             </select>
           </div>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="agenda-tipo">Tipo de visita</label>
-            <select id="agenda-tipo" name="tipo_visita">
-              <option value="Presencial">Presencial</option>
-              <option value="Online">Online (vídeo)</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="agenda-ref">Ref. do imóvel</label>
-            <input type="text" id="agenda-ref" name="ref_imovel" readonly class="form-input-readonly">
-          </div>
+        <div class="form-group">
+          <label for="agenda-ref">Ref. do imóvel</label>
+          <input type="text" id="agenda-ref" name="ref_imovel" readonly class="form-input-readonly">
         </div>
         <div class="form-group">
           <label for="agenda-titulo">Imóvel</label>
@@ -417,7 +408,7 @@ function _criarModalAgendamento() {
       telefone: tel.replace(/\D/g, ""),
       email,
       data, horario,
-      tipo_visita: form.tipo_visita.value,
+      tipo_visita: "Presencial",
       ref_imovel: ref,
       titulo_imovel: _imovelAtivo?.titulo || "",
       tipo_imovel: _imovelAtivo?.tipo || "",

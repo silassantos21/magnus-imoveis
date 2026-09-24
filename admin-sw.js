@@ -1,10 +1,8 @@
-const CACHE = 'magnus-admin-v2';
+const CACHE = 'magnus-admin-v3';
 const SHELL = [
   '/admin.html',
   '/js/dados.js',
   '/js/admin.js',
-  '/images/logo-icone.png',
-  '/images/logo.png',
 ];
 
 self.addEventListener('install', e => {
@@ -38,8 +36,15 @@ self.addEventListener('fetch', e => {
     url.includes('flatpickr')
   ) return;
 
-  // Shell local: cache first, rede como fallback
+  // Shell local: rede primeiro (garante sempre a versão mais nova),
+  // cache só como fallback se estiver offline
   e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request))
+    fetch(e.request)
+      .then(resp => {
+        const copy = resp.clone();
+        caches.open(CACHE).then(c => c.put(e.request, copy));
+        return resp;
+      })
+      .catch(() => caches.match(e.request))
   );
 });

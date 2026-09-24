@@ -102,7 +102,7 @@ function renderGrid() {
 
   const slice = lista.slice(0, visiveis);
 
-  countEl.innerHTML = `<strong>${lista.length}</strong> imóvel${lista.length !== 1 ? "is" : ""} encontrado${lista.length !== 1 ? "s" : ""}`;
+  countEl.innerHTML = `<strong>${lista.length}</strong> ${lista.length !== 1 ? "imóveis" : "imóvel"} encontrado${lista.length !== 1 ? "s" : ""}`;
 
   if (lista.length === 0) {
     grid.innerHTML = `
@@ -169,6 +169,11 @@ document.addEventListener("DOMContentLoaded", () => {
       imoveis = data;
       popularSelects();
       renderGrid();
+      const statTotal = document.getElementById("stat-total-imoveis");
+      if (statTotal) {
+        const disponiveis = imoveis.filter(im => im.status === "disponivel").length;
+        statTotal.textContent = disponiveis + "+";
+      }
     })
     .catch(() => {
       document.getElementById("properties-grid").innerHTML = `

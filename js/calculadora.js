@@ -111,15 +111,15 @@
               <strong id="calc-financiado-val">R$ 0</strong>
             </div>
 
-            <!-- Renda mensal -->
+            <!-- Renda mensal necessária (calculada automaticamente) -->
             <div class="calc-field">
               <label class="calc-label" for="calc-renda">
-                Renda mensal familiar
-                <span class="calc-hint">(opcional)</span>
+                Renda mensal necessária
+                <span class="calc-hint">(mínima p/ aprovação)</span>
               </label>
               <div class="calc-input-wrap">
                 <span class="calc-input-prefix">R$</span>
-                <input type="text" id="calc-renda" class="calc-input" placeholder="0" inputmode="numeric" autocomplete="off">
+                <input type="text" id="calc-renda" class="calc-input" value="0" readonly>
               </div>
             </div>
 
@@ -198,12 +198,6 @@
 
             </div>
 
-            <!-- Aviso renda -->
-            <div class="calc-renda-warn" id="calc-renda-warn" style="display:none">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-              <span id="calc-renda-warn-text">A parcela compromete mais de 30% da renda informada.</span>
-            </div>
-
             <!-- Disclaimer -->
             <p class="calc-disclaimer">
               Simulação estimada com taxa de 10,5% a.a. (SBPE). Condições reais sujeitas à análise de crédito, seguro obrigatório e aprovação do banco.
@@ -240,7 +234,6 @@
   function atualizarResultados() {
     const valorImovel = parseBRL(document.getElementById("calc-valor").value);
     const entradaPerc = parseInt(document.getElementById("calc-entrada-slider").value);
-    const rendaBruta = parseBRL(document.getElementById("calc-renda").value);
     const prazoAnos = parseInt(document.getElementById("calc-prazo-slider").value);
     const prazoMeses = prazoAnos * 12;
 
@@ -272,7 +265,7 @@
       sacEl.style.display = "none";
       priceEl.style.display = "none";
       ctasEl.style.display = "none";
-      document.getElementById("calc-renda-warn").style.display = "none";
+      document.getElementById("calc-renda").value = "0";
       return;
     }
 
@@ -305,20 +298,13 @@
       }
     }
 
-    // aviso renda
-    const warnEl = document.getElementById("calc-renda-warn");
-    if (rendaBruta > 0 && primeiraParcelaCalc > 0) {
-      const comprometimento = (primeiraParcelaCalc / rendaBruta) * 100;
-      if (comprometimento > 30) {
-        const percStr = comprometimento.toFixed(1).replace(".", ",");
-        document.getElementById("calc-renda-warn-text").textContent =
-          `Atenção: a parcela compromete ${percStr}% da renda informada. Os bancos geralmente exigem no máximo 30%.`;
-        warnEl.style.display = "flex";
-      } else {
-        warnEl.style.display = "none";
-      }
+    // renda mensal necessária: bancos geralmente exigem que a parcela
+    // comprometa no máximo 30% da renda bruta familiar
+    if (primeiraParcelaCalc > 0) {
+      const rendaNecessaria = Math.ceil(primeiraParcelaCalc / 0.30);
+      document.getElementById("calc-renda").value = rendaNecessaria.toLocaleString("pt-BR");
     } else {
-      warnEl.style.display = "none";
+      document.getElementById("calc-renda").value = "0";
     }
 
     // CTA WhatsApp com resumo
@@ -374,7 +360,6 @@
     // reset outros campos
     document.getElementById("calc-entrada-slider").value = 20;
     document.getElementById("calc-prazo-slider").value = 30;
-    document.getElementById("calc-renda").value = "";
 
     // reset toggle
     document.querySelectorAll(".calc-toggle-btn").forEach(b => b.classList.remove("active"));
@@ -417,12 +402,6 @@
 
     // slider entrada
     document.getElementById("calc-entrada-slider").addEventListener("input", atualizarResultados);
-
-    // input renda
-    document.getElementById("calc-renda").addEventListener("input", function () {
-      formatarInputBRL(this);
-      atualizarResultados();
-    });
 
     // slider prazo
     document.getElementById("calc-prazo-slider").addEventListener("input", atualizarResultados);
