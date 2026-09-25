@@ -81,6 +81,30 @@ function _domId(str) {
   return String(str || "").replace(/[^a-zA-Z0-9_-]/g, "");
 }
 
+// ===== REFERÊNCIA AUTOMÁTICA =====
+// Padrão definido pelo cliente: 2 letras do tipo + número aleatório,
+// checando que o número não colide com uma referência já existente.
+const PREFIXO_TIPO = {
+  Apartamento: "AP",
+  Casa:        "CA",
+  Terreno:     "TE",
+  Comercial:   "CO",
+  "Galpão":    "GA"
+};
+
+function gerarRefUnica(tipo) {
+  const prefixo = PREFIXO_TIPO[tipo];
+  if (!prefixo) return "";
+  const existentes = new Set(state.imoveis.map(i => i.ref));
+  let ref, tentativas = 0;
+  do {
+    const num = Math.floor(1 + Math.random() * 99999).toString().padStart(5, "0");
+    ref = prefixo + num;
+    tentativas++;
+  } while (existentes.has(ref) && tentativas < 50);
+  return ref;
+}
+
 // ===== AUTENTICAÇÃO =====
 
 const Auth = {
@@ -433,8 +457,10 @@ function duplicarImovel(ref) {
   const destEl = form.querySelector('[name="destaque"]');
   if (destEl) destEl.checked = false;
 
-  form.querySelector('[name="ref"]').disabled = false;
-  form.querySelector('[name="ref"]').value = "";
+  const refEl = form.querySelector('[name="ref"]');
+  refEl.disabled = false;
+  refEl.value = gerarRefUnica(im.tipo);
+  refEl.dataset.auto = "1";
 
   const paths = Array.isArray(im.fotos) ? im.fotos.filter(Boolean)
     : (im.fotos ? String(im.fotos).split("\n").map(s => s.trim()).filter(Boolean) : []);
@@ -597,6 +623,14 @@ function removeFoto(idx) {
   renderFotosList();
 }
 
+function moverFoto(idx, direcao) {
+  const novoIdx = idx + direcao;
+  if (novoIdx < 0 || novoIdx >= fotosState.items.length) return;
+  const [item] = fotosState.items.splice(idx, 1);
+  fotosState.items.splice(novoIdx, 0, item);
+  renderFotosList();
+}
+
 let _skipBrokenCheck = false;
 
 function renderFotosList() {
@@ -611,9 +645,16 @@ function renderFotosList() {
       const thumb = f.isVideo
         ? `<video src="${f.preview}" class="foto-video-thumb" muted preload="metadata"></video><span class="foto-badge-video">🎬</span>`
         : `<img src="${f.preview}" alt="${esc(f.name)}" onerror="this.closest('.foto-item').dataset.broken='1'">`;
+      const isFirst = i === 0;
+      const isLast  = i === fotosState.items.length - 1;
       return `<div class="foto-item" data-idx="${i}">
         ${thumb}
+        ${isFirst ? `<span class="foto-badge-capa">Capa</span>` : ""}
         <span class="foto-name" title="${esc(f.name)}">${esc(f.name)}</span>
+        <div class="foto-ordem">
+          <button type="button" class="foto-mover" onclick="moverFoto(${i},-1)" title="Mover pra cima" ${isFirst ? "disabled" : ""}>▲</button>
+          <button type="button" class="foto-mover" onclick="moverFoto(${i},1)" title="Mover pra baixo" ${isLast ? "disabled" : ""}>▼</button>
+        </div>
         <button type="button" class="foto-remove" onclick="removeFoto(${i})" title="Remover">✕</button>
       </div>`;
     }).join("");
@@ -651,7 +692,10 @@ function abrirFormNovo() {
   form.reset();
   if (fpDataVenda) fpDataVenda.clear();
   setFotosFromPaths([]);
-  form.querySelector('[name="ref"]').disabled    = false;
+  const refEl = form.querySelector('[name="ref"]');
+  refEl.disabled = false;
+  refEl.value = "";
+  refEl.dataset.auto = "1";
   form.querySelector('[name="estado"]').value    = "MG";
   form.querySelector('[name="status"]').value    = "disponivel";
   form.querySelector('[name="finalidade"]').value = "Venda";
@@ -1503,6 +1547,19 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("drawer-overlay").addEventListener("click", fecharDrawer);
   document.getElementById("form-imovel").addEventListener("input",  atualizarPreview);
   document.getElementById("form-imovel").addEventListener("change", atualizarPreview);
+
+  // Referência automática: gera ao escolher o tipo (só em "Novo Imóvel",
+  // e só se o usuário não tiver editado a ref manualmente).
+  document.querySelector('#form-imovel [name="tipo"]').addEventListener("change", e => {
+    if (state.editandoRef) return;
+    const refEl = document.querySelector('#form-imovel [name="ref"]');
+    if (refEl.dataset.auto !== "1") return;
+    refEl.value = gerarRefUnica(e.target.value);
+    atualizarPreview();
+  });
+  document.querySelector('#form-imovel [name="ref"]').addEventListener("input", e => {
+    delete e.target.dataset.auto;
+  });
 
   // ── Leads ──
   document.getElementById("busca-lead").addEventListener("input", e => {
