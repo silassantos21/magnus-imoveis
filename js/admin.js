@@ -1294,6 +1294,40 @@ function exportarAgendamentosPDF() {
   showToast("PDF gerado com sucesso!", "success");
 }
 
+// ===== INSTALAR COMO APP (PWA) =====
+// beforeinstallprompt depende de critérios do Chrome (manifest, service worker)
+// e de heurísticas de engajamento por dispositivo/navegador — nem sempre dispara,
+// mesmo com tudo correto do lado do site. Por isso sempre existe também o botão
+// "Instalar app?" com instruções manuais, que funciona em qualquer aparelho/navegador.
+let _deferredInstallPrompt = null;
+const _jaInstalado = () =>
+  window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+
+window.addEventListener("beforeinstallprompt", e => {
+  e.preventDefault();
+  if (_jaInstalado()) return;
+  _deferredInstallPrompt = e;
+  const b1 = document.getElementById("btn-instalar-app");
+  const b2 = document.getElementById("btn-instalar-app-desktop");
+  if (b1) b1.style.display = "flex";
+  if (b2) b2.style.display = "flex";
+});
+
+window.addEventListener("appinstalled", () => {
+  _deferredInstallPrompt = null;
+  const b1 = document.getElementById("btn-instalar-app");
+  const b2 = document.getElementById("btn-instalar-app-desktop");
+  if (b1) b1.style.display = "none";
+  if (b2) b2.style.display = "none";
+});
+
+async function _clickInstalarApp() {
+  if (!_deferredInstallPrompt) return;
+  _deferredInstallPrompt.prompt();
+  await _deferredInstallPrompt.userChoice;
+  _deferredInstallPrompt = null;
+}
+
 // ===== INICIALIZAÇÃO =====
 
 async function init() {
@@ -1302,6 +1336,11 @@ async function init() {
   showScreen("admin");
   showTab("imoveis");
   atualizarBadgeCloudinary();
+
+  if (_jaInstalado()) {
+    document.getElementById("btn-instalar-ajuda")?.style && (document.getElementById("btn-instalar-ajuda").style.display = "none");
+    document.getElementById("btn-instalar-ajuda-desktop")?.style && (document.getElementById("btn-instalar-ajuda-desktop").style.display = "none");
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -1326,6 +1365,22 @@ document.addEventListener("DOMContentLoaded", () => {
     showToast("Configuração salva! Faça login.", "success");
     setTimeout(() => showScreen("login"), 1200);
     btn.disabled = false; btn.textContent = "Salvar configuração";
+  });
+
+  // ── Instalar app ──
+  document.getElementById("btn-instalar-app")?.addEventListener("click", _clickInstalarApp);
+  document.getElementById("btn-instalar-app-desktop")?.addEventListener("click", _clickInstalarApp);
+  document.getElementById("btn-instalar-ajuda")?.addEventListener("click", () => {
+    document.getElementById("modal-instalar").style.display = "flex";
+  });
+  document.getElementById("btn-instalar-ajuda-desktop")?.addEventListener("click", () => {
+    document.getElementById("modal-instalar").style.display = "flex";
+  });
+  document.getElementById("btn-fechar-instalar")?.addEventListener("click", () => {
+    document.getElementById("modal-instalar").style.display = "none";
+  });
+  document.getElementById("modal-instalar")?.addEventListener("click", e => {
+    if (e.target === e.currentTarget) e.currentTarget.style.display = "none";
   });
 
   // ── Modal Cloudinary ──
