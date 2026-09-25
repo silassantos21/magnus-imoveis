@@ -1,4 +1,4 @@
-const CACHE = 'magnus-admin-v3';
+const CACHE = 'magnus-admin-v4';
 const SHELL = [
   '/admin.html',
   '/js/dados.js',
@@ -36,10 +36,12 @@ self.addEventListener('fetch', e => {
     url.includes('flatpickr')
   ) return;
 
-  // Shell local: rede primeiro (garante sempre a versão mais nova),
-  // cache só como fallback se estiver offline
+  // Shell local: rede primeiro, ignorando qualquer cache HTTP no caminho
+  // (cache: 'no-store' evita depender só do Cache-Control do Vercel —
+  // se algum dia um header de cache ficar errado de novo, isso não trava
+  // o admin numa versão antiga). Cache do service worker só como fallback offline.
   e.respondWith(
-    fetch(e.request)
+    fetch(e.request, { cache: 'no-store' })
       .then(resp => {
         const copy = resp.clone();
         caches.open(CACHE).then(c => c.put(e.request, copy));
