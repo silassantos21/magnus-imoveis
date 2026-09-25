@@ -11,7 +11,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Magnus Admin">
-  <link rel="apple-touch-icon" href="images/logo-icone.png">
+  <link rel="apple-touch-icon" href="images/logo-icone-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -76,7 +76,7 @@
 
     /* ── TELAS CENTRALIZADAS (login / setup) ── */
     .screen-center {
-      display: none; min-height: 100vh; align-items: center; justify-content: center;
+      display: none; min-height: 100vh; min-height: 100dvh; align-items: center; justify-content: center;
       background: var(--navy-dark); padding: 24px;
     }
     .auth-card {
@@ -125,7 +125,7 @@
 
     /* ── PAINEL ADMIN ── */
     #screen-admin {
-      display: none; height: 100vh; overflow: hidden; width: 100%;
+      display: none; height: 100vh; height: 100dvh; overflow: hidden; width: 100%;
     }
     .admin-layout { display: flex; height: 100%; width: 100%; }
 
@@ -293,7 +293,7 @@
     #drawer-overlay.show { display: block; opacity: 1; }
 
     #form-drawer {
-      position: fixed; top: 0; right: 0; height: 100vh; width: 520px; max-width: 96vw;
+      position: fixed; top: 0; right: 0; height: 100vh; height: 100dvh; width: 520px; max-width: 96vw;
       background: var(--white); z-index: 300; display: flex; flex-direction: column;
       box-shadow: -6px 0 40px rgba(0,0,0,.18);
       transform: translateX(100%); transition: transform .28s ease;
