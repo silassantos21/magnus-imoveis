@@ -623,12 +623,24 @@ function removeFoto(idx) {
   renderFotosList();
 }
 
-function moverFoto(idx, direcao) {
-  const novoIdx = idx + direcao;
-  if (novoIdx < 0 || novoIdx >= fotosState.items.length) return;
-  const [item] = fotosState.items.splice(idx, 1);
-  fotosState.items.splice(novoIdx, 0, item);
-  renderFotosList();
+let _fotosSortable = null;
+
+function initFotosSortable() {
+  const list = document.getElementById("fotos-list");
+  if (!list || typeof Sortable === "undefined" || _fotosSortable) return;
+  _fotosSortable = Sortable.create(list, {
+    handle: ".foto-drag-handle",
+    animation: 150,
+    ghostClass: "foto-item-ghost",
+    forceFallback: true, // usa simulação por mouse/touch em vez do drag nativo HTML5,
+                          // que não funciona em navegadores mobile (toque)
+    onEnd: evt => {
+      if (evt.oldIndex === evt.newIndex) return;
+      const [item] = fotosState.items.splice(evt.oldIndex, 1);
+      fotosState.items.splice(evt.newIndex, 0, item);
+      renderFotosList();
+    }
+  });
 }
 
 let _skipBrokenCheck = false;
@@ -646,19 +658,16 @@ function renderFotosList() {
         ? `<video src="${f.preview}" class="foto-video-thumb" muted preload="metadata"></video><span class="foto-badge-video">🎬</span>`
         : `<img src="${f.preview}" alt="${esc(f.name)}" onerror="this.closest('.foto-item').dataset.broken='1'">`;
       const isFirst = i === 0;
-      const isLast  = i === fotosState.items.length - 1;
       return `<div class="foto-item" data-idx="${i}">
         ${thumb}
         ${isFirst ? `<span class="foto-badge-capa">Capa</span>` : ""}
         <span class="foto-name" title="${esc(f.name)}">${esc(f.name)}</span>
-        <div class="foto-ordem">
-          <button type="button" class="foto-mover" onclick="moverFoto(${i},-1)" title="Mover pra cima" ${isFirst ? "disabled" : ""}>▲</button>
-          <button type="button" class="foto-mover" onclick="moverFoto(${i},1)" title="Mover pra baixo" ${isLast ? "disabled" : ""}>▼</button>
-        </div>
+        <div class="foto-drag-handle" title="Arraste para reordenar">⠿⠿⠿</div>
         <button type="button" class="foto-remove" onclick="removeFoto(${i})" title="Remover">✕</button>
       </div>`;
     }).join("");
     hidden.value = fotosState.items.map(f => f.path).join("\n");
+    initFotosSortable();
     if (!_skipBrokenCheck) setTimeout(_removerFotosBroken, 3000);
   }
   atualizarPreview();
