@@ -329,12 +329,12 @@ function _criarModalAgendamento() {
             <label for="agenda-email">E-mail (opcional)</label>
             <input type="email" id="agenda-email" name="email" placeholder="seu@email.com" autocomplete="email">
           </div>
-        </div>
-        <div class="form-row">
           <div class="form-group">
             <label for="agenda-data">Data preferida *</label>
             <input type="date" id="agenda-data" name="data" required>
           </div>
+        </div>
+        <div class="form-row">
           <div class="form-group">
             <label for="agenda-horario">Horário *</label>
             <select id="agenda-horario" name="horario" required>
@@ -360,10 +360,10 @@ function _criarModalAgendamento() {
               <option value="18:00">18h00</option>
             </select>
           </div>
-        </div>
-        <div class="form-group">
-          <label for="agenda-ref">Ref. do imóvel</label>
-          <input type="text" id="agenda-ref" name="ref_imovel" readonly class="form-input-readonly">
+          <div class="form-group">
+            <label for="agenda-ref">Ref. do imóvel</label>
+            <input type="text" id="agenda-ref" name="ref_imovel" readonly class="form-input-readonly">
+          </div>
         </div>
         <div class="form-group">
           <label for="agenda-titulo">Imóvel</label>
