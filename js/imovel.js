@@ -258,7 +258,7 @@ function initModais(im) {
 }
 
 // ===== SEO DINÂMICO =====
-const BASE_URL = "https://magnus-imoveis.vercel.app";
+const BASE_URL = "https://www.magnusimoveisbh.com.br";
 
 function atualizarSEO(im) {
   const ogTitle = `${im.titulo} — Magnus Imóveis`;
