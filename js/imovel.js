@@ -187,7 +187,7 @@ function renderSpecs(im) {
   });
   if (im.aceita_financiamento) specs.push({
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>`,
-    label: "Financiamento", value: "Aceita"
+    label: "Financia­mento", value: "Sim"
   });
 
   return specs.map(s => `
@@ -386,6 +386,20 @@ function renderPage(im, todos) {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); observer.unobserve(e.target); } });
   }, { threshold: 0.1 });
   document.querySelectorAll(".fade-in").forEach(el => observer.observe(el));
+
+  // No layout mobile (sidebar não é sticky, ≤960px) o botão flutuante do WhatsApp
+  // fica fixo bem em cima de "Simular financiamento" assim que a página abre, porque
+  // o bloco de ações (que já tem seu próprio botão "Falar com um corretor") cai
+  // naquela mesma faixa da tela. Esconde o flutuante enquanto esse bloco estiver
+  // visível — ele já tem WhatsApp embutido, então não faz falta.
+  const waFloat = document.querySelector(".wa-float");
+  const sidebarActions = document.querySelector(".sidebar-actions");
+  if (waFloat && sidebarActions && window.innerWidth <= 960) {
+    const waObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => waFloat.classList.toggle("wa-float-oculto", e.isIntersecting));
+    }, { threshold: 0.15 });
+    waObserver.observe(sidebarActions);
+  }
 }
 
 // ===== INIT =====
