@@ -374,6 +374,11 @@
       width: 16px; height: 16px; accent-color: var(--gold);
       margin: 0 !important; cursor: pointer;
     }
+    .checkbox-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 8px 20px; margin: 4px 0 8px;
+    }
+    @media (max-width: 480px) { .checkbox-grid { grid-template-columns: 1fr; } }
 
     .form-hint {
       font-size: .72rem; color: var(--gray-400); line-height: 1.4; margin-top: 4px;
@@ -1095,10 +1100,24 @@
             <label>Área construída (m²)<input type="number" name="area_construida" min="0" step="0.01" placeholder="—"></label>
             <label>Área terreno (m²)<input type="number" name="area_terreno" min="0" step="0.01" placeholder="—"></label>
           </div>
+          <div class="form-row">
+            <label>IPTU (R$/ano)<input type="number" name="iptu" min="0" step="0.01" placeholder="—"></label>
+          </div>
           <div class="form-row" id="row-campos-apartamento" style="display:none">
             <label>Andar<input type="number" name="andar" min="0" placeholder="—"></label>
-            <label>IPTU (R$/ano)<input type="number" name="iptu" min="0" step="0.01" placeholder="—"></label>
             <label>Condomínio (R$/mês)<input type="number" name="condominio" min="0" step="0.01" placeholder="—"></label>
+          </div>
+          <div class="checkbox-grid" id="bloco-amenidades-vertical" style="display:none">
+            <label class="checkbox-label"><input type="checkbox" name="portaria_24h"> Portaria 24h</label>
+            <label class="checkbox-label"><input type="checkbox" name="elevador"> Elevador</label>
+            <label class="checkbox-label"><input type="checkbox" name="gas_canalizado"> Gás canalizado</label>
+            <label class="checkbox-label"><input type="checkbox" name="piscina"> Piscina</label>
+            <label class="checkbox-label"><input type="checkbox" name="quadra_futsal"> Quadra de futsal</label>
+            <label class="checkbox-label"><input type="checkbox" name="playground"> Playground</label>
+            <label class="checkbox-label"><input type="checkbox" name="salao_festas"> Salão de festas</label>
+            <label class="checkbox-label"><input type="checkbox" name="minimercado"> Minimercado</label>
+            <label class="checkbox-label"><input type="checkbox" name="luz_individual"> Luz individual</label>
+            <label class="checkbox-label"><input type="checkbox" name="agua_individual"> Água individual</label>
           </div>
           <label class="checkbox-label">
             <input type="checkbox" name="aceita_financiamento"> Aceita financiamento?

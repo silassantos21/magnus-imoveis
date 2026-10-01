@@ -107,15 +107,34 @@ function gerarRefUnica(tipo) {
   return ref;
 }
 
-// Campos (andar/IPTU/condomínio) só fazem sentido pra apartamento —
-// mostra/esconde conforme o Tipo e limpa os valores quando some.
+// Tipos "verticais" (prédio) — Andar/Condomínio e as amenidades abaixo só
+// fazem sentido pra esses. IPTU não entra aqui: vale pra qualquer tipo.
+const TIPOS_VERTICAL = ["Apartamento", "Cobertura", "Área privativa"];
+
+// Características booleanas que só existem nos tipos verticais. Lista única
+// usada em abrir/editar/duplicar/salvar — pra adicionar uma nova característica
+// assim no futuro, basta incluir o nome da coluna aqui (e o checkbox no HTML).
+const CAMPOS_BOOL_VERTICAL = [
+  "portaria_24h", "elevador", "gas_canalizado", "piscina",
+  "quadra_futsal", "playground", "salao_festas", "minimercado",
+  "luz_individual", "agua_individual"
+];
+
+// Mostra/esconde Andar+Condomínio e as amenidades conforme o Tipo, e limpa
+// os valores quando deixam de se aplicar (evita salvar lixo de um tipo antigo).
 function atualizarCamposApartamento(tipo) {
   const row = document.getElementById("row-campos-apartamento");
-  if (!row) return;
-  const ehApartamento = tipo === "Apartamento";
-  row.style.display = ehApartamento ? "" : "none";
-  if (!ehApartamento) {
+  const bloco = document.getElementById("bloco-amenidades-vertical");
+  if (!row || !bloco) return;
+  const ehVertical = TIPOS_VERTICAL.includes(tipo);
+  row.style.display = ehVertical ? "" : "none";
+  bloco.style.display = ehVertical ? "" : "none";
+  if (!ehVertical) {
     row.querySelectorAll("input").forEach(el => el.value = "");
+    CAMPOS_BOOL_VERTICAL.forEach(c => {
+      const el = document.querySelector(`#form-imovel [name="${c}"]`);
+      if (el) el.checked = false;
+    });
   }
 }
 
@@ -476,6 +495,11 @@ function duplicarImovel(ref) {
   const financEl = form.querySelector('[name="aceita_financiamento"]');
   if (financEl) financEl.checked = !!im.aceita_financiamento;
 
+  CAMPOS_BOOL_VERTICAL.forEach(c => {
+    const el = form.querySelector(`[name="${c}"]`);
+    if (el) el.checked = !!im[c];
+  });
+
   const refEl = form.querySelector('[name="ref"]');
   refEl.disabled = false;
   refEl.value = gerarRefUnica(im.tipo);
@@ -756,6 +780,11 @@ function abrirFormEditar(ref) {
   const financEl = form.querySelector('[name="aceita_financiamento"]');
   if (financEl) financEl.checked = !!im.aceita_financiamento;
 
+  CAMPOS_BOOL_VERTICAL.forEach(c => {
+    const el = form.querySelector(`[name="${c}"]`);
+    if (el) el.checked = !!im[c];
+  });
+
   const paths = Array.isArray(im.fotos) ? im.fotos.filter(Boolean) :
     (im.fotos ? String(im.fotos).split("\n").map(s => s.trim()).filter(Boolean) : []);
   setFotosFromPaths(paths);
@@ -833,6 +862,10 @@ async function salvarImovel(e) {
     destaque:       form.querySelector('[name="destaque"]').checked,
     aceita_financiamento: form.querySelector('[name="aceita_financiamento"]').checked
   };
+
+  CAMPOS_BOOL_VERTICAL.forEach(c => {
+    imovel[c] = form.querySelector(`[name="${c}"]`).checked;
+  });
 
   if (!imovel.ref)        return showToast("Referência obrigatória", "error");
   if (!imovel.tipo)       return showToast("Tipo obrigatório", "error");

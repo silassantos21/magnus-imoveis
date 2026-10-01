@@ -149,6 +149,34 @@ function atualizarGaleria() {
   document.getElementById("gallery-counter").textContent = `${galeria.atual + 1} / ${galeria.fotos.length}`;
 }
 
+// Características de sim/não exibidas na página do imóvel (card some quando
+// o campo não está marcado). Lista única: pra adicionar uma nova no futuro,
+// basta incluir aqui (e o checkbox correspondente no admin).
+const CARACTERISTICAS_BOOL = [
+  { campo: "aceita_financiamento", label: "Financia",
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>` },
+  { campo: "portaria_24h", label: "Portaria 24h",
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>` },
+  { campo: "elevador", label: "Elevador",
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M9 8l3-3 3 3"/><path d="M9 16l3 3 3-3"/></svg>` },
+  { campo: "gas_canalizado", label: "Gás canalizado",
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 002.5 2.5z"/></svg>` },
+  { campo: "piscina", label: "Piscina",
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 17c1.5-1 3-1 4.5 0s3 1 4.5 0 3-1 4.5 0 3 1 4.5 0"/><path d="M2 21c1.5-1 3-1 4.5 0s3 1 4.5 0 3-1 4.5 0 3 1 4.5 0"/><path d="M5 13V5a2 2 0 012-2h3v10"/></svg>` },
+  { campo: "quadra_futsal", label: "Quadra de futsal",
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a15 15 0 010 20M2 12h20"/></svg>` },
+  { campo: "playground", label: "Playground",
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21V9M20 21V9M4 9h16"/><path d="M9 9v6a3 3 0 006 0V9"/></svg>` },
+  { campo: "salao_festas", label: "Salão de festas",
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="5"/><path d="M12 13v8M9 21h6"/></svg>` },
+  { campo: "minimercado", label: "Minimercado",
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 002 1.6h8.6a2 2 0 002-1.6L22 6H6"/></svg>` },
+  { campo: "luz_individual", label: "Luz individual",
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 00-4 12.7V17h8v-2.3A7 7 0 0012 2z"/></svg>` },
+  { campo: "agua_individual", label: "Água individual",
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.7l5.7 5.6a8 8 0 11-11.3 0z"/></svg>` }
+];
+
 // ===== SPECS =====
 function renderSpecs(im) {
   const specs = [];
@@ -185,9 +213,11 @@ function renderSpecs(im) {
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18"/></svg>`,
     label: "Andar", value: im.andar
   });
-  if (im.aceita_financiamento) specs.push({
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>`,
-    label: "Financia­mento", value: "Sim"
+
+  // Características simples de sim/não — só entra no card quando marcado.
+  // Pra adicionar uma nova característica assim no futuro, basta incluir aqui.
+  CARACTERISTICAS_BOOL.forEach(c => {
+    if (im[c.campo]) specs.push({ icon: c.icone, label: c.label, value: "Sim" });
   });
 
   return specs.map(s => `
