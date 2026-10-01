@@ -473,6 +473,9 @@ function duplicarImovel(ref) {
   const destEl = form.querySelector('[name="destaque"]');
   if (destEl) destEl.checked = false;
 
+  const financEl = form.querySelector('[name="aceita_financiamento"]');
+  if (financEl) financEl.checked = !!im.aceita_financiamento;
+
   const refEl = form.querySelector('[name="ref"]');
   refEl.disabled = false;
   refEl.value = gerarRefUnica(im.tipo);
@@ -750,6 +753,9 @@ function abrirFormEditar(ref) {
   const destEl = form.querySelector('[name="destaque"]');
   if (destEl) destEl.checked = !!im.destaque;
 
+  const financEl = form.querySelector('[name="aceita_financiamento"]');
+  if (financEl) financEl.checked = !!im.aceita_financiamento;
+
   const paths = Array.isArray(im.fotos) ? im.fotos.filter(Boolean) :
     (im.fotos ? String(im.fotos).split("\n").map(s => s.trim()).filter(Boolean) : []);
   setFotosFromPaths(paths);
@@ -824,7 +830,8 @@ async function salvarImovel(e) {
                       ? fpDataVenda.formatDate(fpDataVenda.selectedDates[0], "Y-m-d")
                       : null,
     descricao:      gStr("descricao"),
-    destaque:       form.querySelector('[name="destaque"]').checked
+    destaque:       form.querySelector('[name="destaque"]').checked,
+    aceita_financiamento: form.querySelector('[name="aceita_financiamento"]').checked
   };
 
   if (!imovel.ref)        return showToast("Referência obrigatória", "error");

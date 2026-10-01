@@ -185,6 +185,10 @@ function renderSpecs(im) {
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18"/></svg>`,
     label: "Andar", value: im.andar
   });
+  if (im.aceita_financiamento) specs.push({
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>`,
+    label: "Financiamento", value: "Aceita"
+  });
 
   return specs.map(s => `
     <div class="spec-item">
