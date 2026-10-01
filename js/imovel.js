@@ -181,6 +181,10 @@ function renderSpecs(im) {
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M3 21V7l9-4 9 4v14"/></svg>`,
     label: "Área terreno", value: `${im.area_terreno}m²`
   });
+  if (im.andar > 0) specs.push({
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18"/></svg>`,
+    label: "Andar", value: im.andar
+  });
 
   return specs.map(s => `
     <div class="spec-item">
@@ -189,6 +193,19 @@ function renderSpecs(im) {
         <span class="spec-value">${s.value}</span>
         <span class="spec-label">${s.label}</span>
       </div>
+    </div>
+  `).join("");
+}
+
+// ===== CUSTOS ADICIONAIS (IPTU / Condomínio) =====
+function renderCustos(im) {
+  const itens = [];
+  if (im.iptu > 0) itens.push({ label: "IPTU", value: `${fmt(im.iptu)}/ano` });
+  if (im.condominio > 0) itens.push({ label: "Condomínio", value: `${fmt(im.condominio)}/mês` });
+  return itens.map(c => `
+    <div class="custo-item">
+      <span class="custo-label">${c.label}</span>
+      <span class="custo-value">${c.value}</span>
     </div>
   `).join("");
 }
@@ -330,6 +347,13 @@ function renderPage(im, todos) {
     document.getElementById("detail-specs").innerHTML = specsHtml;
   } else {
     document.getElementById("detail-specs-box").style.display = "none";
+  }
+
+  // custos adicionais (IPTU / condomínio)
+  const custosHtml = renderCustos(im);
+  if (custosHtml) {
+    document.getElementById("detail-custos").innerHTML = custosHtml;
+    document.getElementById("detail-custos-box").style.display = "";
   }
 
   // descrição

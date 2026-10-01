@@ -1054,6 +1054,25 @@ footer {
 .spec-value { font-size: 1.05rem; font-weight: 800; color: var(--navy); line-height: 1.1; }
 .spec-label { font-size: .72rem; color: var(--gray-600); margin-top: .1rem; }
 
+/* --- Custos adicionais (IPTU / condomínio) --- */
+.detail-custos-box { margin-bottom: 2rem; }
+.detail-custos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.custo-item {
+  background: rgba(201, 162, 43, .08);
+  border: 1px solid rgba(201, 162, 43, .35);
+  border-radius: var(--radius-sm);
+  padding: .85rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  min-width: 150px;
+}
+.custo-label { font-size: .72rem; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: .03em; }
+.custo-value { font-size: 1.05rem; font-weight: 800; color: var(--navy); margin-top: .2rem; }
+
 .detail-desc-box { margin-bottom: 2rem; }
 .detail-desc {
   color: var(--gray-600);

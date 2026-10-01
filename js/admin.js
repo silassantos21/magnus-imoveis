@@ -89,7 +89,9 @@ const PREFIXO_TIPO = {
   Casa:        "CA",
   Terreno:     "TE",
   Comercial:   "CO",
-  "Galpão":    "GA"
+  "Galpão":    "GA",
+  Cobertura:   "CB",
+  "Área privativa": "AV"
 };
 
 function gerarRefUnica(tipo) {
@@ -103,6 +105,18 @@ function gerarRefUnica(tipo) {
     tentativas++;
   } while (existentes.has(ref) && tentativas < 50);
   return ref;
+}
+
+// Campos (andar/IPTU/condomínio) só fazem sentido pra apartamento —
+// mostra/esconde conforme o Tipo e limpa os valores quando some.
+function atualizarCamposApartamento(tipo) {
+  const row = document.getElementById("row-campos-apartamento");
+  if (!row) return;
+  const ehApartamento = tipo === "Apartamento";
+  row.style.display = ehApartamento ? "" : "none";
+  if (!ehApartamento) {
+    row.querySelectorAll("input").forEach(el => el.value = "");
+  }
 }
 
 // ===== AUTENTICAÇÃO =====
@@ -445,11 +459,13 @@ function duplicarImovel(ref) {
   if (fpDataVenda) fpDataVenda.clear();
 
   const campos = ["tipo","finalidade","status","bairro","cidade","estado",
-    "preco","quartos","suites","banheiros","vagas","area_util","area_construida","area_terreno","descricao"];
+    "preco","quartos","suites","banheiros","vagas","area_util","area_construida","area_terreno",
+    "andar","iptu","condominio","descricao"];
   campos.forEach(c => {
     const el = form.querySelector(`[name="${c}"]`);
     if (el) el.value = im[c] ?? "";
   });
+  atualizarCamposApartamento(im.tipo);
 
   const tituloEl = form.querySelector('[name="titulo"]');
   if (tituloEl) tituloEl.value = "Cópia — " + (im.titulo || "");
@@ -709,6 +725,7 @@ function abrirFormNovo() {
   form.querySelector('[name="status"]').value    = "disponivel";
   form.querySelector('[name="finalidade"]').value = "Venda";
   form.querySelector('[name="tipo"]').value       = "";
+  atualizarCamposApartamento("");
   atualizarPreview();
   abrirDrawer();
 }
@@ -721,12 +738,14 @@ function abrirFormEditar(ref) {
 
   const form = document.getElementById("form-imovel");
   const campos = ["ref","tipo","finalidade","status","titulo","bairro","cidade","estado",
-    "preco","quartos","suites","banheiros","vagas","area_util","area_construida","area_terreno","descricao"];
+    "preco","quartos","suites","banheiros","vagas","area_util","area_construida","area_terreno",
+    "andar","iptu","condominio","descricao"];
 
   campos.forEach(c => {
     const el = form.querySelector(`[name="${c}"]`);
     if (el) el.value = im[c] ?? "";
   });
+  atualizarCamposApartamento(im.tipo);
 
   const destEl = form.querySelector('[name="destaque"]');
   if (destEl) destEl.checked = !!im.destaque;
@@ -797,6 +816,9 @@ async function salvarImovel(e) {
     area_util:      gNum("area_util"),
     area_construida: gNum("area_construida"),
     area_terreno:   gNum("area_terreno"),
+    andar:          gNum("andar"),
+    iptu:           gNum("iptu"),
+    condominio:     gNum("condominio"),
     fotos:          gStr("fotos").split("\n").map(s => s.trim()).filter(Boolean),
     data_venda:     (fpDataVenda && fpDataVenda.selectedDates.length > 0)
                       ? fpDataVenda.formatDate(fpDataVenda.selectedDates[0], "Y-m-d")
@@ -1560,6 +1582,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Referência automática: gera ao escolher o tipo (só em "Novo Imóvel",
   // e só se o usuário não tiver editado a ref manualmente).
   document.querySelector('#form-imovel [name="tipo"]').addEventListener("change", e => {
+    atualizarCamposApartamento(e.target.value);
     if (state.editandoRef) return;
     const refEl = document.querySelector('#form-imovel [name="ref"]');
     if (refEl.dataset.auto !== "1") return;
