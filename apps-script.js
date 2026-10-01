@@ -80,7 +80,7 @@ function _notificarLead(d) {
     </p>
   </td></tr>
   <tr><td style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:14px 32px;text-align:center">
-    <p style="margin:0;font-size:11px;color:#94a3b8">Magnus Imóveis · R. José do Carmo de Oliveira, 74 - Tirol, Belo Horizonte/MG</p>
+    <p style="margin:0;font-size:11px;color:#94a3b8">Magnus Imóveis · R. José do Carmo de Oliveira, 82 - Tirol, Belo Horizonte/MG</p>
     <p style="margin:3px 0 0;font-size:11px;color:#94a3b8">(31) 3321-6775 · magnusimoveisbh@hotmail.com</p>
   </td></tr>
 </table>
@@ -155,7 +155,7 @@ function _notificarAgendamento(d) {
     </p>
   </td></tr>
   <tr><td style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:14px 32px;text-align:center">
-    <p style="margin:0;font-size:11px;color:#94a3b8">Magnus Imóveis · R. José do Carmo de Oliveira, 74 - Tirol, Belo Horizonte/MG</p>
+    <p style="margin:0;font-size:11px;color:#94a3b8">Magnus Imóveis · R. José do Carmo de Oliveira, 82 - Tirol, Belo Horizonte/MG</p>
     <p style="margin:3px 0 0;font-size:11px;color:#94a3b8">(31) 3321-6775 · magnusimoveisbh@hotmail.com</p>
   </td></tr>
 </table>
@@ -206,7 +206,7 @@ function _confirmarClienteEmail(d, contexto, dataFmt) {
     </p>
   </td></tr>
   <tr><td style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:14px 32px;text-align:center">
-    <p style="margin:0;font-size:11px;color:#94a3b8">Magnus Imóveis · R. José do Carmo de Oliveira, 74 - Tirol, Belo Horizonte/MG</p>
+    <p style="margin:0;font-size:11px;color:#94a3b8">Magnus Imóveis · R. José do Carmo de Oliveira, 82 - Tirol, Belo Horizonte/MG</p>
     <p style="margin:3px 0 0;font-size:11px;color:#94a3b8">(31) 3321-6775 · magnusimoveisbh@hotmail.com</p>
   </td></tr>
 </table>
@@ -240,7 +240,7 @@ function _criarEventoCalendar(d) {
     ].join("\n");
     calendario.createEvent(titulo, dataHoraInicio, dataHoraFim, {
       description: descricao,
-      location: "R. José do Carmo de Oliveira, 74 - Tirol, Belo Horizonte, MG"
+      location: "R. José do Carmo de Oliveira, 82 - Tirol, Belo Horizonte, MG"
     });
   } catch (err) {
     Logger.log("Erro Calendar: " + err.toString());
