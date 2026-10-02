@@ -1101,9 +1101,9 @@
             <label>Vagas<input type="number" name="vagas" min="0" placeholder="—"></label>
           </div>
           <div class="form-row">
-            <label>Área útil (m²)<input type="number" name="area_util" min="0" step="0.01" placeholder="—"></label>
-            <label>Área construída (m²)<input type="number" name="area_construida" min="0" step="0.01" placeholder="—"></label>
-            <label>Área terreno (m²)<input type="number" name="area_terreno" min="0" step="0.01" placeholder="—"></label>
+            <label>Área útil (m²)<input type="text" inputmode="decimal" name="area_util" data-mascara="milhar-decimal" placeholder="ex: 84,50"></label>
+            <label>Área construída (m²)<input type="text" inputmode="decimal" name="area_construida" data-mascara="milhar-decimal" placeholder="ex: 1.000"></label>
+            <label>Área terreno (m²)<input type="text" inputmode="decimal" name="area_terreno" data-mascara="milhar-decimal" placeholder="ex: 1.000"></label>
           </div>
           <div class="form-row">
             <label>IPTU (R$/ano)<input type="text" inputmode="numeric" name="iptu" data-mascara="milhar" placeholder="ex: 1.160"></label>

@@ -7,6 +7,7 @@ const POR_PAGINA = 3;
 
 // ===== HELPERS =====
 const fmt = valor => valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
+const fmtArea = valor => valor.toLocaleString("pt-BR", { maximumFractionDigits: 2 });
 
 const waLink = (im) =>
   `https://wa.me/${WA_NUM}?text=${encodeURIComponent(`Olá! Tenho interesse no imóvel ${im.ref} - ${im.tipo} em ${im.bairro}, ${im.cidade}. Valor: ${fmt(im.preco)}. Poderia me dar mais informações?`)}`;
@@ -79,7 +80,7 @@ function renderCard(im) {
         <div class="card-features">
           ${im.quartos > 0 ? `<span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 22V12a9 9 0 0118 0v10"/><path d="M3 18h18"/></svg>${im.quartos} qts</span>` : ""}
           ${im.banheiros > 0 ? `<span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h16a1 1 0 011 1v3a4 4 0 01-4 4H7a4 4 0 01-4-4v-3a1 1 0 011-1z"/><path d="M6 12V5a2 2 0 012-2h3v2.25"/></svg>${im.banheiros} bhs</span>` : ""}
-          ${area > 0 ? `<span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/></svg>${area}m²</span>` : ""}
+          ${area > 0 ? `<span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/></svg>${fmtArea(area)}m²</span>` : ""}
         </div>` : ""}
         <div class="card-ref">Ref.: ${im.ref}</div>
       </div>

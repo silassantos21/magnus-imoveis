@@ -1,5 +1,6 @@
 // ===== HELPERS =====
 const fmt = v => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
+const fmtArea = v => v.toLocaleString("pt-BR", { maximumFractionDigits: 2 });
 const tipoImg = { "Terreno": "images/terreno.jpg", "Casa": "images/casa.jpg", "Apartamento": "images/apartamento.jpg" };
 
 const tipoIcon = (tipo) => {
@@ -213,15 +214,15 @@ function renderSpecs(im) {
   });
   if (im.area_util) specs.push({
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/></svg>`,
-    label: "Área útil", value: `${im.area_util}m²`
+    label: "Área útil", value: `${fmtArea(im.area_util)}m²`
   });
   if (im.area_construida && im.area_construida !== im.area_util) specs.push({
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>`,
-    label: "Área construída", value: `${im.area_construida}m²`
+    label: "Área construída", value: `${fmtArea(im.area_construida)}m²`
   });
   if (im.area_terreno) specs.push({
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M3 21V7l9-4 9 4v14"/></svg>`,
-    label: "Área terreno", value: `${im.area_terreno}m²`
+    label: "Área terreno", value: `${fmtArea(im.area_terreno)}m²`
   });
   if (im.andar > 0) specs.push({
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18"/></svg>`,

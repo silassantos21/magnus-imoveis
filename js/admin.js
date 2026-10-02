@@ -140,6 +140,30 @@ function parseMilhar(valor) {
   return digitos ? parseInt(digitos, 10) : null;
 }
 
+// Campos de área (m²) usam a mesma ideia, mas aceitam casa decimal (vírgula),
+// já que área pode ter fração (ex: 84,50m²). formatarMilharDecimal aceita tanto
+// um número vindo do banco (1000.5) quanto o texto sendo digitado (pode estar
+// no meio de uma vírgula, ex: "1000,"). parseMilharDecimal lê de volta pro
+// formato numérico (ponto = milhar removido, vírgula = decimal).
+function formatarMilharDecimal(valor) {
+  if (valor === null || valor === undefined || valor === "") return "";
+  if (typeof valor === "number") {
+    return valor.toLocaleString("pt-BR", { maximumFractionDigits: 2 });
+  }
+  const [inteiroRaw, decimal] = String(valor).split(",");
+  const inteiro = inteiroRaw.replace(/\D/g, "");
+  if (!inteiro && decimal === undefined) return "";
+  const inteiroFmt = inteiro ? Number(inteiro).toLocaleString("pt-BR") : "";
+  if (decimal === undefined) return inteiroFmt;
+  return (inteiroFmt || "0") + "," + decimal.replace(/\D/g, "").slice(0, 2);
+}
+function parseMilharDecimal(valor) {
+  const str = String(valor ?? "").trim();
+  if (!str) return null;
+  const n = parseFloat(str.replace(/\./g, "").replace(",", "."));
+  return isNaN(n) ? null : n;
+}
+
 // ===== AUTENTICAÇÃO =====
 
 const Auth = {
@@ -480,7 +504,7 @@ function duplicarImovel(ref) {
   if (fpDataVenda) fpDataVenda.clear();
 
   const campos = ["tipo","finalidade","status","bairro","cidade","estado",
-    "quartos","suites","banheiros","vagas","area_util","area_construida","area_terreno","descricao"];
+    "quartos","suites","banheiros","vagas","descricao"];
   campos.forEach(c => {
     const el = form.querySelector(`[name="${c}"]`);
     if (el) el.value = im[c] ?? "";
@@ -489,6 +513,10 @@ function duplicarImovel(ref) {
   ["preco","iptu"].forEach(c => {
     const el = form.querySelector(`[name="${c}"]`);
     if (el) el.value = formatarMilhar(im[c]);
+  });
+  ["area_util","area_construida","area_terreno"].forEach(c => {
+    const el = form.querySelector(`[name="${c}"]`);
+    if (el) el.value = formatarMilharDecimal(im[c]);
   });
 
   form.querySelectorAll(".campo-condicional input").forEach(input => {
@@ -772,7 +800,7 @@ function abrirFormEditar(ref) {
 
   const form = document.getElementById("form-imovel");
   const campos = ["ref","tipo","finalidade","status","titulo","bairro","cidade","estado",
-    "quartos","suites","banheiros","vagas","area_util","area_construida","area_terreno","descricao"];
+    "quartos","suites","banheiros","vagas","descricao"];
 
   campos.forEach(c => {
     const el = form.querySelector(`[name="${c}"]`);
@@ -782,6 +810,10 @@ function abrirFormEditar(ref) {
   ["preco","iptu"].forEach(c => {
     const el = form.querySelector(`[name="${c}"]`);
     if (el) el.value = formatarMilhar(im[c]);
+  });
+  ["area_util","area_construida","area_terreno"].forEach(c => {
+    const el = form.querySelector(`[name="${c}"]`);
+    if (el) el.value = formatarMilharDecimal(im[c]);
   });
 
   form.querySelectorAll(".campo-condicional input").forEach(input => {
@@ -860,9 +892,9 @@ async function salvarImovel(e) {
     suites:         gNum("suites"),
     banheiros:      gNum("banheiros"),
     vagas:          gNum("vagas"),
-    area_util:      gNum("area_util"),
-    area_construida: gNum("area_construida"),
-    area_terreno:   gNum("area_terreno"),
+    area_util:      parseMilharDecimal(gStr("area_util")),
+    area_construida: parseMilharDecimal(gStr("area_construida")),
+    area_terreno:   parseMilharDecimal(gStr("area_terreno")),
     iptu:           parseMilhar(gStr("iptu")),
     fotos:          gStr("fotos").split("\n").map(s => s.trim()).filter(Boolean),
     data_venda:     (fpDataVenda && fpDataVenda.selectedDates.length > 0)
@@ -1648,6 +1680,14 @@ document.addEventListener("DOMContentLoaded", () => {
     input.addEventListener("input", () => {
       const cursorNoFim = input.selectionEnd === input.value.length;
       input.value = formatarMilhar(input.value);
+      if (cursorNoFim) input.setSelectionRange(input.value.length, input.value.length);
+    });
+  });
+  // Mesma ideia pros campos de área (m²), que aceitam vírgula decimal (ex: "84,50").
+  document.querySelectorAll('#form-imovel [data-mascara="milhar-decimal"]').forEach(input => {
+    input.addEventListener("input", () => {
+      const cursorNoFim = input.selectionEnd === input.value.length;
+      input.value = formatarMilharDecimal(input.value);
       if (cursorNoFim) input.setSelectionRange(input.value.length, input.value.length);
     });
   });

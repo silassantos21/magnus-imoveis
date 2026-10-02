@@ -1028,23 +1028,28 @@ footer {
 }
 
 .detail-specs-box { margin-bottom: 2rem; }
+/* Flexbox em vez de grid: cada linha distribui o espaço sobrando entre os
+   cards dela mesma, então a última linha (quando não fecha a fileira toda)
+   não deixa espaço em branco — os cards dela só crescem um pouco pra
+   preencher, em vez de ficar um buraco vazio ao lado. */
 .detail-specs {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
 }
 .spec-item {
+  flex: 1 1 165px;
   background: var(--white);
   border-radius: var(--radius-sm);
-  padding: .85rem 1rem;
+  padding: 1rem 1.15rem;
   display: flex;
   align-items: center;
-  gap: .65rem;
+  gap: .75rem;
   border: 1px solid var(--gray-200);
 }
 .spec-icon {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   background: var(--gold);
   border-radius: var(--radius-sm);
   display: flex;
@@ -1052,10 +1057,10 @@ footer {
   justify-content: center;
   flex-shrink: 0;
 }
-.spec-icon svg { width: 17px; height: 17px; color: var(--white); }
+.spec-icon svg { width: 19px; height: 19px; color: var(--white); }
 .spec-info { display: flex; flex-direction: column; min-width: 0; }
-.spec-value { font-size: 1.05rem; font-weight: 800; color: var(--navy); line-height: 1.1; overflow-wrap: break-word; word-break: break-word; }
-.spec-label { font-size: .72rem; color: var(--gray-600); margin-top: .1rem; overflow-wrap: break-word; word-break: break-word; }
+.spec-value { font-size: 1.1rem; font-weight: 800; color: var(--navy); line-height: 1.15; overflow-wrap: break-word; word-break: break-word; }
+.spec-label { font-size: .74rem; color: var(--gray-600); margin-top: .15rem; overflow-wrap: break-word; word-break: break-word; }
 
 /* --- Amenidades (características de sim/não) --- */
 /* Lista fluida de ícone + texto, sem card ao redor — evita o problema de
@@ -1377,7 +1382,6 @@ footer {
   .gallery-nav { width: 36px; height: 36px; }
   .gallery-nav svg { width: 16px; height: 16px; }
   .detail-content { padding: 1.5rem 1rem; }
-  .detail-specs { grid-template-columns: 1fr 1fr; }
   .sidebar-actions { flex-direction: column; }
   .action-btn { flex: none; }
   .detail-wa-banner { flex-direction: column; text-align: center; }
