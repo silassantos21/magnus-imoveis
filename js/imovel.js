@@ -176,7 +176,19 @@ const CARACTERISTICAS_BOOL = [
   { campo: "agua_individual", label: "Água individual",
     icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.7l5.7 5.6a8 8 0 11-11.3 0z"/></svg>` },
   { campo: "monitoramento_cameras", label: "Câmeras de segurança",
-    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>` }
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>` },
+  { campo: "predio_individual", label: "Prédio individual",
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="2" width="12" height="20" rx="1"/><path d="M6 22v-3h12v3"/><path d="M9 6h.01M15 6h.01M9 10h.01M15 10h.01M9 14h.01M15 14h.01"/></svg>` },
+  { campo: "conjunto_apartamentos", label: "Conjunto de apartamentos",
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21V10l4-3 4 3v11"/><path d="M11 21V6l4-3 4 3v15"/><path d="M3 21h18"/></svg>` },
+  { campo: "lavabo", label: "Lavabo",
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="6" rx="1"/><path d="M5 8h14l-1.5 11a2.5 2.5 0 01-2.49 2H8.99a2.5 2.5 0 01-2.49-2L5 8z"/></svg>` },
+  { campo: "closet", label: "Closet",
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M12 2v20M9 11v2M15 11v2"/></svg>` },
+  { campo: "hidromassagem", label: "Hidromassagem",
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h16a1 1 0 011 1v3a4 4 0 01-4 4H7a4 4 0 01-4-4v-3a1 1 0 011-1z"/><path d="M6 12V5a2 2 0 012-2h3v2.25"/><circle cx="10" cy="8" r=".6"/><circle cx="13" cy="6" r=".6"/><circle cx="16" cy="9" r=".6"/></svg>` },
+  { campo: "energia_solar", label: "Energia solar",
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>` }
 ];
 
 // ===== SPECS =====
