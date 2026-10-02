@@ -107,35 +107,37 @@ function gerarRefUnica(tipo) {
   return ref;
 }
 
-// Tipos "verticais" (prédio) — Andar/Condomínio e as amenidades abaixo só
-// fazem sentido pra esses. IPTU não entra aqui: vale pra qualquer tipo.
-const TIPOS_VERTICAL = ["Apartamento", "Cobertura", "Área privativa"];
+// Campos de característica que só se aplicam a certos tipos de imóvel (ex:
+// Andar só em imóvel vertical, Portaria 24h em vertical+casa+terreno, mas
+// não em Terreno/Comercial/Galpão). Cada campo carrega seus próprios tipos
+// aplicáveis direto no HTML (atributo data-tipos, classe .campo-condicional)
+// — pra adicionar uma característica condicional nova no futuro, basta
+// colocar o campo no HTML com essa classe/atributo; não precisa mexer aqui.
+function atualizarCamposCondicionais(tipo) {
+  document.querySelectorAll("#form-imovel .campo-condicional").forEach(el => {
+    const tipos = (el.dataset.tipos || "").split(",");
+    const mostra = tipos.includes(tipo);
+    el.classList.toggle("campo-condicional-oculto", !mostra);
+    if (!mostra) {
+      const input = el.querySelector("input");
+      if (!input) return;
+      if (input.type === "checkbox") input.checked = false;
+      else input.value = "";
+    }
+  });
+}
 
-// Características booleanas que só existem nos tipos verticais. Lista única
-// usada em abrir/editar/duplicar/salvar — pra adicionar uma nova característica
-// assim no futuro, basta incluir o nome da coluna aqui (e o checkbox no HTML).
-const CAMPOS_BOOL_VERTICAL = [
-  "portaria_24h", "elevador", "gas_canalizado", "piscina",
-  "quadra_futsal", "playground", "salao_festas", "minimercado",
-  "luz_individual", "agua_individual"
-];
-
-// Mostra/esconde Andar+Condomínio e as amenidades conforme o Tipo, e limpa
-// os valores quando deixam de se aplicar (evita salvar lixo de um tipo antigo).
-function atualizarCamposApartamento(tipo) {
-  const row = document.getElementById("row-campos-apartamento");
-  const bloco = document.getElementById("bloco-amenidades-vertical");
-  if (!row || !bloco) return;
-  const ehVertical = TIPOS_VERTICAL.includes(tipo);
-  row.style.display = ehVertical ? "" : "none";
-  bloco.style.display = ehVertical ? "" : "none";
-  if (!ehVertical) {
-    row.querySelectorAll("input").forEach(el => el.value = "");
-    CAMPOS_BOOL_VERTICAL.forEach(c => {
-      const el = document.querySelector(`#form-imovel [name="${c}"]`);
-      if (el) el.checked = false;
-    });
-  }
+// Campos monetários (preço, IPTU, condomínio) usam máscara de milhar no
+// padrão brasileiro — o sistema não trabalha com centavos, só reais inteiros.
+// formatarMilhar: valor (número ou string) -> texto exibido no campo ("1.160").
+// parseMilhar: texto digitado -> número inteiro salvo no banco (1160).
+function formatarMilhar(valor) {
+  const digitos = String(valor ?? "").replace(/\D/g, "");
+  return digitos ? Number(digitos).toLocaleString("pt-BR") : "";
+}
+function parseMilhar(valor) {
+  const digitos = String(valor ?? "").replace(/\D/g, "");
+  return digitos ? parseInt(digitos, 10) : null;
 }
 
 // ===== AUTENTICAÇÃO =====
@@ -478,13 +480,23 @@ function duplicarImovel(ref) {
   if (fpDataVenda) fpDataVenda.clear();
 
   const campos = ["tipo","finalidade","status","bairro","cidade","estado",
-    "preco","quartos","suites","banheiros","vagas","area_util","area_construida","area_terreno",
-    "andar","iptu","condominio","descricao"];
+    "quartos","suites","banheiros","vagas","area_util","area_construida","area_terreno","descricao"];
   campos.forEach(c => {
     const el = form.querySelector(`[name="${c}"]`);
     if (el) el.value = im[c] ?? "";
   });
-  atualizarCamposApartamento(im.tipo);
+
+  ["preco","iptu"].forEach(c => {
+    const el = form.querySelector(`[name="${c}"]`);
+    if (el) el.value = formatarMilhar(im[c]);
+  });
+
+  form.querySelectorAll(".campo-condicional input").forEach(input => {
+    const nome = input.name;
+    if (input.type === "checkbox") { input.checked = !!im[nome]; return; }
+    input.value = input.dataset.mascara === "milhar" ? formatarMilhar(im[nome]) : (im[nome] ?? "");
+  });
+  atualizarCamposCondicionais(im.tipo);
 
   const tituloEl = form.querySelector('[name="titulo"]');
   if (tituloEl) tituloEl.value = "Cópia — " + (im.titulo || "");
@@ -494,11 +506,6 @@ function duplicarImovel(ref) {
 
   const financEl = form.querySelector('[name="aceita_financiamento"]');
   if (financEl) financEl.checked = !!im.aceita_financiamento;
-
-  CAMPOS_BOOL_VERTICAL.forEach(c => {
-    const el = form.querySelector(`[name="${c}"]`);
-    if (el) el.checked = !!im[c];
-  });
 
   const refEl = form.querySelector('[name="ref"]');
   refEl.disabled = false;
@@ -752,7 +759,7 @@ function abrirFormNovo() {
   form.querySelector('[name="status"]').value    = "disponivel";
   form.querySelector('[name="finalidade"]').value = "Venda";
   form.querySelector('[name="tipo"]').value       = "";
-  atualizarCamposApartamento("");
+  atualizarCamposCondicionais("");
   atualizarPreview();
   abrirDrawer();
 }
@@ -765,25 +772,30 @@ function abrirFormEditar(ref) {
 
   const form = document.getElementById("form-imovel");
   const campos = ["ref","tipo","finalidade","status","titulo","bairro","cidade","estado",
-    "preco","quartos","suites","banheiros","vagas","area_util","area_construida","area_terreno",
-    "andar","iptu","condominio","descricao"];
+    "quartos","suites","banheiros","vagas","area_util","area_construida","area_terreno","descricao"];
 
   campos.forEach(c => {
     const el = form.querySelector(`[name="${c}"]`);
     if (el) el.value = im[c] ?? "";
   });
-  atualizarCamposApartamento(im.tipo);
+
+  ["preco","iptu"].forEach(c => {
+    const el = form.querySelector(`[name="${c}"]`);
+    if (el) el.value = formatarMilhar(im[c]);
+  });
+
+  form.querySelectorAll(".campo-condicional input").forEach(input => {
+    const nome = input.name;
+    if (input.type === "checkbox") { input.checked = !!im[nome]; return; }
+    input.value = input.dataset.mascara === "milhar" ? formatarMilhar(im[nome]) : (im[nome] ?? "");
+  });
+  atualizarCamposCondicionais(im.tipo);
 
   const destEl = form.querySelector('[name="destaque"]');
   if (destEl) destEl.checked = !!im.destaque;
 
   const financEl = form.querySelector('[name="aceita_financiamento"]');
   if (financEl) financEl.checked = !!im.aceita_financiamento;
-
-  CAMPOS_BOOL_VERTICAL.forEach(c => {
-    const el = form.querySelector(`[name="${c}"]`);
-    if (el) el.checked = !!im[c];
-  });
 
   const paths = Array.isArray(im.fotos) ? im.fotos.filter(Boolean) :
     (im.fotos ? String(im.fotos).split("\n").map(s => s.trim()).filter(Boolean) : []);
@@ -843,7 +855,7 @@ async function salvarImovel(e) {
     bairro:         gStr("bairro"),
     cidade:         gStr("cidade"),
     estado:         gStr("estado") || "MG",
-    preco:          gNum("preco"),
+    preco:          parseMilhar(gStr("preco")),
     quartos:        gNum("quartos"),
     suites:         gNum("suites"),
     banheiros:      gNum("banheiros"),
@@ -851,9 +863,7 @@ async function salvarImovel(e) {
     area_util:      gNum("area_util"),
     area_construida: gNum("area_construida"),
     area_terreno:   gNum("area_terreno"),
-    andar:          gNum("andar"),
-    iptu:           gNum("iptu"),
-    condominio:     gNum("condominio"),
+    iptu:           parseMilhar(gStr("iptu")),
     fotos:          gStr("fotos").split("\n").map(s => s.trim()).filter(Boolean),
     data_venda:     (fpDataVenda && fpDataVenda.selectedDates.length > 0)
                       ? fpDataVenda.formatDate(fpDataVenda.selectedDates[0], "Y-m-d")
@@ -863,8 +873,9 @@ async function salvarImovel(e) {
     aceita_financiamento: form.querySelector('[name="aceita_financiamento"]').checked
   };
 
-  CAMPOS_BOOL_VERTICAL.forEach(c => {
-    imovel[c] = form.querySelector(`[name="${c}"]`).checked;
+  form.querySelectorAll(".campo-condicional input").forEach(input => {
+    if (input.type === "checkbox") { imovel[input.name] = input.checked; return; }
+    imovel[input.name] = input.dataset.mascara === "milhar" ? parseMilhar(input.value) : gNum(input.name);
   });
 
   if (!imovel.ref)        return showToast("Referência obrigatória", "error");
@@ -925,7 +936,7 @@ function atualizarPreview() {
   const titulo    = g("titulo") || "Título do imóvel";
   const bairro    = g("bairro") || "Bairro";
   const cidade    = g("cidade") || "Cidade";
-  const preco     = g("preco") ? fmtPreco(Number(g("preco")) || 0) : "R$ 0";
+  const preco     = g("preco") ? fmtPreco(parseMilhar(g("preco")) || 0) : "R$ 0";
   const quartos   = g("quartos");
   const vagas     = g("vagas");
   const area      = g("area_util");
@@ -1622,13 +1633,25 @@ document.addEventListener("DOMContentLoaded", () => {
   // Referência automática: gera ao escolher o tipo (só em "Novo Imóvel",
   // e só se o usuário não tiver editado a ref manualmente).
   document.querySelector('#form-imovel [name="tipo"]').addEventListener("change", e => {
-    atualizarCamposApartamento(e.target.value);
+    atualizarCamposCondicionais(e.target.value);
     if (state.editandoRef) return;
     const refEl = document.querySelector('#form-imovel [name="ref"]');
     if (refEl.dataset.auto !== "1") return;
     refEl.value = gerarRefUnica(e.target.value);
     atualizarPreview();
   });
+  // Máscara de milhar nos campos monetários (preço, IPTU, condomínio) — formata
+  // em tempo real (ex: "1160" -> "1.160") pra ficar claro qual valor está sendo
+  // digitado e evitar o "." ser lido como separador decimal (bug reportado:
+  // "1.160" salvando como 1 por causa do parseFloat tratando "." como decimal).
+  document.querySelectorAll('#form-imovel [data-mascara="milhar"]').forEach(input => {
+    input.addEventListener("input", () => {
+      const cursorNoFim = input.selectionEnd === input.value.length;
+      input.value = formatarMilhar(input.value);
+      if (cursorNoFim) input.setSelectionRange(input.value.length, input.value.length);
+    });
+  });
+
   document.querySelector('#form-imovel [name="ref"]').addEventListener("input", e => {
     delete e.target.dataset.auto;
   });
