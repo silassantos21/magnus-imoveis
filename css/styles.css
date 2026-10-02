@@ -1034,17 +1034,17 @@ footer {
   gap: 1rem;
 }
 .spec-item {
-  background: var(--gray-50);
+  background: var(--white);
   border-radius: var(--radius-sm);
-  padding: 1rem;
+  padding: .85rem 1rem;
   display: flex;
   align-items: center;
-  gap: .75rem;
+  gap: .65rem;
   border: 1px solid var(--gray-200);
 }
 .spec-icon {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   background: var(--gold);
   border-radius: var(--radius-sm);
   display: flex;
@@ -1052,10 +1052,40 @@ footer {
   justify-content: center;
   flex-shrink: 0;
 }
-.spec-icon svg { width: 18px; height: 18px; color: var(--white); }
+.spec-icon svg { width: 17px; height: 17px; color: var(--white); }
 .spec-info { display: flex; flex-direction: column; min-width: 0; }
 .spec-value { font-size: 1.05rem; font-weight: 800; color: var(--navy); line-height: 1.1; overflow-wrap: break-word; word-break: break-word; }
 .spec-label { font-size: .72rem; color: var(--gray-600); margin-top: .1rem; overflow-wrap: break-word; word-break: break-word; }
+
+/* --- Amenidades (características de sim/não) --- */
+/* Lista fluida de ícone + texto, sem card ao redor — evita o problema de
+   texto quebrando feio dentro de uma coluna estreita de grid, já que cada
+   item ocupa só a largura que precisa e quebra pro espaço disponível. */
+.detail-amenidades-box { margin-bottom: 2rem; }
+.amenidades-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .9rem 1.75rem;
+}
+.amenidade-item {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  font-size: .88rem;
+  font-weight: 600;
+  color: var(--navy);
+  white-space: nowrap;
+}
+.amenidade-item svg {
+  width: 19px;
+  height: 19px;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+@media (max-width: 640px) {
+  .amenidades-list { gap: .7rem 1.1rem; }
+  .amenidade-item { font-size: .82rem; white-space: normal; }
+}
 
 /* --- Custos adicionais (IPTU / condomínio) --- */
 .detail-custos-box { margin-bottom: 2rem; }

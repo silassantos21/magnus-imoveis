@@ -153,7 +153,7 @@ function atualizarGaleria() {
 // o campo não está marcado). Lista única: pra adicionar uma nova no futuro,
 // basta incluir aqui (e o checkbox correspondente no admin).
 const CARACTERISTICAS_BOOL = [
-  { campo: "aceita_financiamento", label: "Financia",
+  { campo: "aceita_financiamento", label: "Aceita financiamento",
     icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>` },
   { campo: "portaria_24h", label: "Portaria 24h",
     icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>` },
@@ -216,12 +216,6 @@ function renderSpecs(im) {
     label: "Andar", value: im.andar
   });
 
-  // Características simples de sim/não — só entra no card quando marcado.
-  // Pra adicionar uma nova característica assim no futuro, basta incluir aqui.
-  CARACTERISTICAS_BOOL.forEach(c => {
-    if (im[c.campo]) specs.push({ icon: c.icone, label: c.label, value: "Sim" });
-  });
-
   return specs.map(s => `
     <div class="spec-item">
       <div class="spec-icon">${s.icon}</div>
@@ -231,6 +225,16 @@ function renderSpecs(im) {
       </div>
     </div>
   `).join("");
+}
+
+// ===== AMENIDADES (características de sim/não — "O que esse imóvel oferece") =====
+// Lista fluida de ícone + texto, sem card ao redor. Pra adicionar uma nova
+// característica assim no futuro, basta incluir em CARACTERISTICAS_BOOL.
+function renderAmenidades(im) {
+  return CARACTERISTICAS_BOOL
+    .filter(c => im[c.campo])
+    .map(c => `<span class="amenidade-item">${c.icone}${c.label}</span>`)
+    .join("");
 }
 
 // ===== CUSTOS ADICIONAIS (IPTU / Condomínio) =====
@@ -383,6 +387,13 @@ function renderPage(im, todos) {
     document.getElementById("detail-specs").innerHTML = specsHtml;
   } else {
     document.getElementById("detail-specs-box").style.display = "none";
+  }
+
+  // amenidades (características de sim/não)
+  const amenidadesHtml = renderAmenidades(im);
+  if (amenidadesHtml) {
+    document.getElementById("detail-amenidades").innerHTML = amenidadesHtml;
+    document.getElementById("detail-amenidades-box").style.display = "";
   }
 
   // custos adicionais (IPTU / condomínio)
