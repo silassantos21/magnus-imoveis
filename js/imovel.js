@@ -224,9 +224,9 @@ const CARACTERISTICAS_BOOL = [
     icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.7l5.7 5.6a8 8 0 11-11.3 0z"/></svg>` },
   { campo: "monitoramento_cameras", label: "Câmeras de segurança",
     icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>` },
-  { campo: "predio_individual", label: "Prédio individual",
+  { campo: "predio_individual", label: "Prédio individual", tiposExcluidos: ["Casa"],
     icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="2" width="12" height="20" rx="1"/><path d="M6 22v-3h12v3"/><path d="M9 6h.01M15 6h.01M9 10h.01M15 10h.01M9 14h.01M15 14h.01"/></svg>` },
-  { campo: "conjunto_apartamentos", label: "Conjunto de apartamentos",
+  { campo: "conjunto_apartamentos", label: "Conjunto de apartamentos", tiposExcluidos: ["Casa"],
     icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21V10l4-3 4 3v11"/><path d="M11 21V6l4-3 4 3v15"/><path d="M3 21h18"/></svg>` },
   { campo: "lavabo", label: "Lavabo",
     icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="6" rx="1"/><path d="M5 8h14l-1.5 11a2.5 2.5 0 01-2.49 2H8.99a2.5 2.5 0 01-2.49-2L5 8z"/></svg>` },
@@ -291,7 +291,7 @@ function renderSpecs(im) {
 // característica assim no futuro, basta incluir em CARACTERISTICAS_BOOL.
 function renderAmenidades(im) {
   return CARACTERISTICAS_BOOL
-    .filter(c => im[c.campo])
+    .filter(c => im[c.campo] && !(c.tiposExcluidos && c.tiposExcluidos.includes(im.tipo)))
     .map(c => `<span class="amenidade-item">${c.icone}${c.label}</span>`)
     .join("");
 }
