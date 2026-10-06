@@ -56,13 +56,15 @@ function renderCard(im) {
   return `
     <div class="property-card fade-in" data-id="${im.id}">
       <div class="card-image">
-        <img src="${imgSrc}" alt="${im.tipo} em ${im.bairro}"
-          loading="lazy"
-          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-        <div class="card-image-placeholder" style="display:none">
-          ${tipoIcon(im.tipo)}
-          <span>${im.tipo}</span>
-        </div>
+        <a class="card-image-link" href="imovel.html?ref=${im.ref}" aria-label="Ver detalhes de ${im.tipo} em ${im.bairro}">
+          <img src="${imgSrc}" alt="${im.tipo} em ${im.bairro}"
+            loading="lazy"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+          <div class="card-image-placeholder" style="display:none">
+            ${tipoIcon(im.tipo)}
+            <span>${im.tipo}</span>
+          </div>
+        </a>
         <span class="card-badge">${im.finalidade}</span>
         <span class="badge-tipo">${im.tipo}</span>
         ${vendido ? `<div class="badge-sold"><span>VENDIDO</span></div>` : ""}
