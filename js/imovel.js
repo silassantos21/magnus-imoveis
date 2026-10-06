@@ -102,21 +102,47 @@ function initGaleria(fotos) {
     openLightbox(idx);
   });
 
-  // keyboard
+  // keyboard — com o lightbox aberto, pula vídeos (ele só exibe foto);
+  // no carrossel normal, navega pra qualquer slide (inclusive vídeo).
   document.addEventListener("keydown", e => {
     if (e.key === "Escape") return closeLightbox();
-    if (e.key === "ArrowLeft") goToSlide(galeria.atual - 1);
-    if (e.key === "ArrowRight") goToSlide(galeria.atual + 1);
+    if (e.key === "ArrowLeft") lightboxAberto() ? lightboxNavegar(-1) : goToSlide(galeria.atual - 1);
+    if (e.key === "ArrowRight") lightboxAberto() ? lightboxNavegar(1) : goToSlide(galeria.atual + 1);
   });
 }
 
 // ===== LIGHTBOX =====
+// Navegação do lightbox usa o mesmo goToSlide()/galeria do carrossel normal
+// (mesma fonte de verdade), então as duas telas ficam sempre sincronizadas.
+function lightboxAberto() {
+  const overlay = document.getElementById("lightbox-overlay");
+  return !!overlay && overlay.style.display !== "none";
+}
+
+// Anda uma foto na direção indicada (+1/-1), pulando vídeos — o lightbox só
+// exibe foto, então não faz sentido parar num slide de vídeo navegando nele.
+function lightboxNavegar(direcao) {
+  const total = galeria.fotos.length;
+  let idx = galeria.atual;
+  for (let i = 0; i < total; i++) {
+    idx = (idx + direcao + total) % total;
+    if (!_isVideo(galeria.fotos[idx])) break;
+  }
+  goToSlide(idx);
+}
+
 function openLightbox(index) {
   const src = galeria.fotos[index];
   if (_isVideo(src)) return;
+  galeria.atual = index;
   document.getElementById("lightbox-img").src = src;
+  document.getElementById("lightbox-counter").textContent = `${galeria.atual + 1} / ${galeria.fotos.length}`;
+  const mostraNav = galeria.fotos.length > 1;
+  document.getElementById("lightbox-prev").style.display = mostraNav ? "" : "none";
+  document.getElementById("lightbox-next").style.display = mostraNav ? "" : "none";
   document.getElementById("lightbox-overlay").style.display = "flex";
   document.body.style.overflow = "hidden";
+  atualizarGaleria();
 }
 
 function closeLightbox() {
@@ -132,6 +158,17 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("lightbox-overlay").addEventListener("click", e => {
     if (e.target.id === "lightbox-overlay") closeLightbox();
   });
+  document.getElementById("lightbox-prev").addEventListener("click", () => lightboxNavegar(-1));
+  document.getElementById("lightbox-next").addEventListener("click", () => lightboxNavegar(1));
+
+  // swipe no lightbox, igual ao carrossel normal
+  let lbTouchStartX = 0;
+  const lightboxImg = document.getElementById("lightbox-img");
+  lightboxImg.addEventListener("touchstart", e => { lbTouchStartX = e.touches[0].clientX; }, { passive: true });
+  lightboxImg.addEventListener("touchend", e => {
+    const diff = lbTouchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) lightboxNavegar(diff > 0 ? 1 : -1);
+  }, { passive: true });
 });
 
 function goToSlide(index) {
@@ -148,6 +185,15 @@ function atualizarGaleria() {
   thumbBtns.forEach((t, i) => t.classList.toggle("active", i === galeria.atual));
 
   document.getElementById("gallery-counter").textContent = `${galeria.atual + 1} / ${galeria.fotos.length}`;
+
+  // se o lightbox estiver aberto, mantém a foto grande sincronizada também
+  if (lightboxAberto()) {
+    const src = galeria.fotos[galeria.atual];
+    if (!_isVideo(src)) {
+      document.getElementById("lightbox-img").src = src;
+      document.getElementById("lightbox-counter").textContent = `${galeria.atual + 1} / ${galeria.fotos.length}`;
+    }
+  }
 }
 
 // Características de sim/não exibidas na página do imóvel (card some quando
