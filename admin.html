@@ -1110,26 +1110,45 @@
           </div>
           <div class="form-row">
             <label class="campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa">Andar<input type="number" name="andar" min="0" placeholder="—"></label>
-            <label class="campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa,Casa,Terreno">Condomínio (R$/mês)<input type="text" inputmode="numeric" name="condominio" data-mascara="milhar" placeholder="ex: 1.160"></label>
+            <label class="campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa,Casa,Terreno,Galpão,Comercial">Condomínio (R$/mês)<input type="text" inputmode="numeric" name="condominio" data-mascara="milhar" placeholder="ex: 1.160"></label>
+          </div>
+          <div class="form-row">
+            <label class="campo-condicional" data-tipos="Terreno,Galpão,Comercial">Topografia
+              <select name="topografia">
+                <option value="">—</option>
+                <option value="Plano">Plano</option>
+                <option value="Aclive">Aclive</option>
+                <option value="Declive">Declive</option>
+              </select>
+            </label>
           </div>
           <div class="checkbox-grid">
-            <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa,Casa,Terreno"><input type="checkbox" name="portaria_24h"> Portaria 24h</label>
-            <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa"><input type="checkbox" name="elevador"> Elevador</label>
-            <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa"><input type="checkbox" name="gas_canalizado"> Gás canalizado</label>
-            <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa"><input type="checkbox" name="piscina"> Piscina</label>
-            <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa"><input type="checkbox" name="quadra_futsal"> Quadra de futsal</label>
+            <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa,Casa,Terreno,Galpão,Comercial"><input type="checkbox" name="portaria_24h"> Portaria 24h</label>
+            <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa,Casa"><input type="checkbox" name="elevador"> Elevador</label>
+            <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa,Casa,Terreno,Galpão,Comercial"><input type="checkbox" name="gas_canalizado"> Gás canalizado</label>
+            <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa,Casa"><input type="checkbox" name="piscina"> Piscina</label>
+            <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa,Casa"><input type="checkbox" name="quadra_futsal"> Quadra de futsal</label>
             <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa,Casa,Terreno"><input type="checkbox" name="playground"> Playground</label>
-            <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa"><input type="checkbox" name="salao_festas"> Salão de festas</label>
-            <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa"><input type="checkbox" name="minimercado"> Minimercado</label>
-            <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa"><input type="checkbox" name="luz_individual"> Luz individual</label>
-            <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa"><input type="checkbox" name="agua_individual"> Água individual</label>
-            <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa,Casa,Terreno"><input type="checkbox" name="monitoramento_cameras"> Monitoramento de câmeras</label>
+            <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa,Casa"><input type="checkbox" name="salao_festas"> Salão de festas</label>
+            <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa,Casa"><input type="checkbox" name="minimercado"> Minimercado</label>
+            <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa,Casa,Terreno,Galpão,Comercial" data-rotulo-alt="Energia elétrica individual" data-rotulo-alt-tipos="Terreno,Galpão,Comercial"><input type="checkbox" name="luz_individual"> <span class="rotulo-texto" data-texto-padrao="Luz individual">Luz individual</span></label>
+            <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa,Casa,Terreno,Galpão,Comercial"><input type="checkbox" name="agua_individual"> Água individual</label>
+            <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa,Casa,Terreno,Galpão,Comercial" data-rotulo-alt="Segurança/monitoramento" data-rotulo-alt-tipos="Terreno,Galpão,Comercial"><input type="checkbox" name="monitoramento_cameras"> <span class="rotulo-texto" data-texto-padrao="Monitoramento de câmeras">Monitoramento de câmeras</span></label>
             <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa"><input type="checkbox" name="predio_individual"> Prédio Individual</label>
             <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa"><input type="checkbox" name="conjunto_apartamentos"> Conjunto de Apartamentos</label>
-            <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa"><input type="checkbox" name="lavabo"> Lavabo</label>
-            <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa"><input type="checkbox" name="closet"> Closet</label>
-            <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa"><input type="checkbox" name="hidromassagem"> Hidromassagem</label>
-            <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa"><input type="checkbox" name="energia_solar"> Energia Solar</label>
+            <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa,Casa"><input type="checkbox" name="lavabo"> Lavabo</label>
+            <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa,Casa"><input type="checkbox" name="closet"> Closet</label>
+            <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa,Casa"><input type="checkbox" name="hidromassagem"> Hidromassagem</label>
+            <label class="checkbox-label campo-condicional" data-tipos="Apartamento,Cobertura,Área privativa,Casa,Terreno,Galpão,Comercial"><input type="checkbox" name="energia_solar"> Energia Solar</label>
+            <label class="checkbox-label campo-condicional" data-tipos="Terreno,Galpão,Comercial"><input type="checkbox" name="rua_asfaltada"> Rua asfaltada</label>
+            <label class="checkbox-label campo-condicional" data-tipos="Terreno,Galpão,Comercial"><input type="checkbox" name="rede_agua"> Rede de água</label>
+            <label class="checkbox-label campo-condicional" data-tipos="Terreno,Galpão,Comercial"><input type="checkbox" name="rede_esgoto"> Rede de esgoto</label>
+            <label class="checkbox-label campo-condicional" data-tipos="Terreno,Galpão,Comercial"><input type="checkbox" name="rede_eletrica"> Rede elétrica</label>
+            <label class="checkbox-label campo-condicional" data-tipos="Terreno,Galpão,Comercial"><input type="checkbox" name="iluminacao_publica"> Iluminação pública</label>
+            <label class="checkbox-label campo-condicional" data-tipos="Terreno,Galpão,Comercial"><input type="checkbox" name="calcada"> Calçada</label>
+            <label class="checkbox-label campo-condicional" data-tipos="Terreno,Galpão,Comercial"><input type="checkbox" name="murado"> Murado</label>
+            <label class="checkbox-label campo-condicional" data-tipos="Terreno,Galpão,Comercial"><input type="checkbox" name="cercado"> Cercado</label>
+            <label class="checkbox-label campo-condicional" data-tipos="Terreno,Galpão,Comercial"><input type="checkbox" name="esquina"> Esquina</label>
           </div>
           <label class="checkbox-label">
             <input type="checkbox" name="aceita_financiamento"> Aceita financiamento?

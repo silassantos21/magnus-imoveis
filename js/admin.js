@@ -108,18 +108,30 @@ function gerarRefUnica(tipo) {
 }
 
 // Campos de característica que só se aplicam a certos tipos de imóvel (ex:
-// Andar só em imóvel vertical, Portaria 24h em vertical+casa+terreno, mas
-// não em Terreno/Comercial/Galpão). Cada campo carrega seus próprios tipos
-// aplicáveis direto no HTML (atributo data-tipos, classe .campo-condicional)
-// — pra adicionar uma característica condicional nova no futuro, basta
-// colocar o campo no HTML com essa classe/atributo; não precisa mexer aqui.
+// Andar só em imóvel vertical, Portaria 24h em todos os tipos). Cada campo
+// carrega seus próprios tipos aplicáveis direto no HTML (atributo data-tipos,
+// classe .campo-condicional) — pra adicionar uma característica condicional
+// nova no futuro, basta colocar o campo no HTML com essa classe/atributo;
+// não precisa mexer aqui.
+// Alguns campos (ex: "Monitoramento de câmeras"/"luz_individual") reaproveitam
+// a mesma coluna do banco pra tipos diferentes, só trocando o rótulo exibido —
+// data-rotulo-alt + data-rotulo-alt-tipos no HTML, aplicado ao <span class="rotulo-texto">.
 function atualizarCamposCondicionais(tipo) {
   document.querySelectorAll("#form-imovel .campo-condicional").forEach(el => {
     const tipos = (el.dataset.tipos || "").split(",");
     const mostra = tipos.includes(tipo);
     el.classList.toggle("campo-condicional-oculto", !mostra);
+
+    const spanTexto = el.querySelector(".rotulo-texto");
+    if (spanTexto) {
+      const altTipos = (el.dataset.rotuloAltTipos || "").split(",");
+      spanTexto.textContent = (el.dataset.rotuloAlt && altTipos.includes(tipo))
+        ? el.dataset.rotuloAlt
+        : spanTexto.dataset.textoPadrao;
+    }
+
     if (!mostra) {
-      const input = el.querySelector("input");
+      const input = el.querySelector("input, select");
       if (!input) return;
       if (input.type === "checkbox") input.checked = false;
       else input.value = "";
@@ -519,8 +531,9 @@ function duplicarImovel(ref) {
     if (el) el.value = formatarMilharDecimal(im[c]);
   });
 
-  form.querySelectorAll(".campo-condicional input").forEach(input => {
+  form.querySelectorAll(".campo-condicional input, .campo-condicional select").forEach(input => {
     const nome = input.name;
+    if (input.tagName === "SELECT") { input.value = im[nome] ?? ""; return; }
     if (input.type === "checkbox") { input.checked = !!im[nome]; return; }
     input.value = input.dataset.mascara === "milhar" ? formatarMilhar(im[nome]) : (im[nome] ?? "");
   });
@@ -816,8 +829,9 @@ function abrirFormEditar(ref) {
     if (el) el.value = formatarMilharDecimal(im[c]);
   });
 
-  form.querySelectorAll(".campo-condicional input").forEach(input => {
+  form.querySelectorAll(".campo-condicional input, .campo-condicional select").forEach(input => {
     const nome = input.name;
+    if (input.tagName === "SELECT") { input.value = im[nome] ?? ""; return; }
     if (input.type === "checkbox") { input.checked = !!im[nome]; return; }
     input.value = input.dataset.mascara === "milhar" ? formatarMilhar(im[nome]) : (im[nome] ?? "");
   });
@@ -905,7 +919,8 @@ async function salvarImovel(e) {
     aceita_financiamento: form.querySelector('[name="aceita_financiamento"]').checked
   };
 
-  form.querySelectorAll(".campo-condicional input").forEach(input => {
+  form.querySelectorAll(".campo-condicional input, .campo-condicional select").forEach(input => {
+    if (input.tagName === "SELECT") { imovel[input.name] = input.value || null; return; }
     if (input.type === "checkbox") { imovel[input.name] = input.checked; return; }
     imovel[input.name] = input.dataset.mascara === "milhar" ? parseMilhar(input.value) : gNum(input.name);
   });

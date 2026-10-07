@@ -218,11 +218,11 @@ const CARACTERISTICAS_BOOL = [
     icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="5"/><path d="M12 13v8M9 21h6"/></svg>` },
   { campo: "minimercado", label: "Minimercado",
     icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 002 1.6h8.6a2 2 0 002-1.6L22 6H6"/></svg>` },
-  { campo: "luz_individual", label: "Luz individual",
+  { campo: "luz_individual", label: "Luz individual", labelAlt: "Energia elétrica individual", labelAltTipos: ["Terreno", "Galpão", "Comercial"],
     icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 00-4 12.7V17h8v-2.3A7 7 0 0012 2z"/></svg>` },
   { campo: "agua_individual", label: "Água individual",
     icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.7l5.7 5.6a8 8 0 11-11.3 0z"/></svg>` },
-  { campo: "monitoramento_cameras", label: "Câmeras de segurança",
+  { campo: "monitoramento_cameras", label: "Câmeras de segurança", labelAlt: "Segurança/monitoramento", labelAltTipos: ["Terreno", "Galpão", "Comercial"],
     icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>` },
   { campo: "predio_individual", label: "Prédio individual", tiposExcluidos: ["Casa"],
     icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="2" width="12" height="20" rx="1"/><path d="M6 22v-3h12v3"/><path d="M9 6h.01M15 6h.01M9 10h.01M15 10h.01M9 14h.01M15 14h.01"/></svg>` },
@@ -235,7 +235,25 @@ const CARACTERISTICAS_BOOL = [
   { campo: "hidromassagem", label: "Hidromassagem",
     icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h16a1 1 0 011 1v3a4 4 0 01-4 4H7a4 4 0 01-4-4v-3a1 1 0 011-1z"/><path d="M6 12V5a2 2 0 012-2h3v2.25"/><circle cx="10" cy="8" r=".6"/><circle cx="13" cy="6" r=".6"/><circle cx="16" cy="9" r=".6"/></svg>` },
   { campo: "energia_solar", label: "Energia solar",
-    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>` }
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>` },
+  { campo: "rua_asfaltada", label: "Rua asfaltada",
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22L10 2M19 22L14 2M10.5 13h3"/></svg>` },
+  { campo: "rede_agua", label: "Rede de água",
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4v7a4 4 0 004 4h4M21 20v-7a4 4 0 00-4-4H9"/></svg>` },
+  { campo: "rede_esgoto", label: "Rede de esgoto",
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v10M8 9l4 4 4-4"/><rect x="4" y="19" width="16" height="2" rx="1"/></svg>` },
+  { campo: "rede_eletrica", label: "Rede elétrica",
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>` },
+  { campo: "iluminacao_publica", label: "Iluminação pública",
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M8.5 11.5L8 6h8l-.5 5.5a3.5 3.5 0 01-7 0z"/><path d="M12 15v7M8.5 22h7"/></svg>` },
+  { campo: "calcada", label: "Calçada",
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 16h18M3 16V9h18v7"/><path d="M9 9v7M15 9v7"/></svg>` },
+  { campo: "murado", label: "Murado",
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 10h18M3 16h18M9 4v6M15 10v6M9 16v4M15 4v6"/></svg>` },
+  { campo: "cercado", label: "Cercado",
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22V8M9 22V8M14 22V8M19 22V8"/><path d="M2 12h20M2 17h20"/></svg>` },
+  { campo: "esquina", label: "Esquina",
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4v10a6 6 0 006 6h10"/></svg>` }
 ];
 
 // ===== SPECS =====
@@ -274,6 +292,10 @@ function renderSpecs(im) {
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18"/></svg>`,
     label: "Andar", value: im.andar
   });
+  if (im.topografia) specs.push({
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20l5-9 3 5 3-4 7 8z"/></svg>`,
+    label: "Topografia", value: im.topografia
+  });
 
   return specs.map(s => `
     <div class="spec-item">
@@ -292,7 +314,10 @@ function renderSpecs(im) {
 function renderAmenidades(im) {
   return CARACTERISTICAS_BOOL
     .filter(c => im[c.campo] && !(c.tiposExcluidos && c.tiposExcluidos.includes(im.tipo)))
-    .map(c => `<span class="amenidade-item">${c.icone}${c.label}</span>`)
+    .map(c => {
+      const label = (c.labelAltTipos && c.labelAltTipos.includes(im.tipo)) ? c.labelAlt : c.label;
+      return `<span class="amenidade-item">${c.icone}${label}</span>`;
+    })
     .join("");
 }
 
