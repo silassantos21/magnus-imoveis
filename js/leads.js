@@ -190,6 +190,25 @@ function _criarModalLead() {
           </select>
         </div>
         <div class="form-group">
+          <label for="lead-orcamento">Até que valor (opcional)</label>
+          <select id="lead-orcamento" name="orcamento_max">
+            <option value="">Não informado</option>
+            <option value="Até R$ 300 mil">Até R$ 300 mil</option>
+            <option value="R$ 300 mil – R$ 500 mil">R$ 300 mil – R$ 500 mil</option>
+            <option value="R$ 500 mil – R$ 800 mil">R$ 500 mil – R$ 800 mil</option>
+            <option value="R$ 800 mil – R$ 1,2 milhão">R$ 800 mil – R$ 1,2 milhão</option>
+            <option value="Acima de R$ 1,2 milhão">Acima de R$ 1,2 milhão</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="lead-visita-hoje">Pode visitar hoje? (opcional)</label>
+          <select id="lead-visita-hoje" name="pode_visitar_hoje">
+            <option value="">Não informado</option>
+            <option value="Sim">Sim</option>
+            <option value="Não">Não</option>
+          </select>
+        </div>
+        <div class="form-group">
           <label for="lead-imovel">Imóvel de interesse</label>
           <input type="text" id="lead-imovel" name="imovel" readonly class="form-input-readonly">
         </div>
@@ -222,6 +241,8 @@ function _criarModalLead() {
       telefone: tel.replace(/\D/g, ""),
       email,
       interesse: form.interesse.value,
+      orcamento_max: form.orcamento_max.value,
+      pode_visitar_hoje: form.pode_visitar_hoje.value,
       ref_imovel: ref,
       origem: "site",
       vendedor_nome: vendedor.nome,
@@ -239,6 +260,8 @@ function _criarModalLead() {
         telefone:  payload.telefone,
         email:     payload.email,
         interesse: payload.interesse,
+        orcamento_max: payload.orcamento_max,
+        pode_visitar_hoje: payload.pode_visitar_hoje,
         ref_imovel: payload.ref_imovel,
         origem:    "site",
         vendedor:  payload.vendedor_nome
@@ -255,7 +278,9 @@ function _criarModalLead() {
 }
 
 function _fallbackLeadWA(p, tel, vendedor) {
-  const msg = `Olá! Tenho interesse no imóvel ${p.ref_imovel || ""}.\n\nMeu nome: ${p.nome}\nInteresse: ${p.interesse}`;
+  let msg = `Olá! Tenho interesse no imóvel ${p.ref_imovel || ""}.\n\nMeu nome: ${p.nome}\nInteresse: ${p.interesse}`;
+  if (p.orcamento_max) msg += `\nAté que valor: ${p.orcamento_max}`;
+  if (p.pode_visitar_hoje) msg += `\nPode visitar hoje: ${p.pode_visitar_hoje}`;
   window.open(`https://wa.me/${vendedor?.telefone || WA_NUM}?text=${encodeURIComponent(msg)}`, "_blank");
   _setEstado("form-lead", "sucesso", `
     <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
