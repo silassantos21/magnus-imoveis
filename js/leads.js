@@ -567,10 +567,122 @@ function _initDatePicker(inputId) {
   document.addEventListener("click", () => { popup.style.display = "none"; });
 }
 
-// ESC fecha qualquer modal de lead/agenda
+// ===== MODAL: TRABALHE CONOSCO =====
+// Vaga "cargo" fica aberta de propósito (select com uma opção só por enquanto)
+// pra facilitar adicionar outras vagas no futuro sem mexer no banco — a coluna
+// no Supabase é texto livre, não enum, então basta adicionar <option> aqui.
+function openModalCandidatura() {
+  if (!document.getElementById("modal-candidatura")) _criarModalCandidatura();
+
+  const modal = document.getElementById("modal-candidatura");
+  const form = document.getElementById("form-candidatura");
+  form.style.display = "";
+  form.reset();
+  form.querySelectorAll(".form-feedback").forEach(el => el.remove());
+
+  modal.style.display = "flex";
+  document.body.style.overflow = "hidden";
+}
+
+function _criarModalCandidatura() {
+  const modal = document.createElement("div");
+  modal.id = "modal-candidatura";
+  modal.className = "modal-overlay";
+  modal.setAttribute("role", "dialog");
+  modal.setAttribute("aria-modal", "true");
+  modal.style.display = "none";
+  modal.innerHTML = `
+    <div class="modal-box modal-form-box">
+      <button class="modal-close" id="modal-candidatura-close" aria-label="Fechar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+      <div class="modal-form-header">
+        <div class="modal-form-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+        </div>
+        <div>
+          <h3>Trabalhe Conosco</h3>
+        </div>
+      </div>
+      <form id="form-candidatura" novalidate>
+        <div class="form-group">
+          <label for="cand-nome">Seu nome *</label>
+          <input type="text" id="cand-nome" name="nome" placeholder="Nome completo" required autocomplete="name">
+        </div>
+        <div class="form-group">
+          <label for="cand-tel">WhatsApp *</label>
+          <input type="tel" id="cand-tel" name="telefone" placeholder="(31) 99999-9999" required autocomplete="tel">
+        </div>
+        <div class="form-group">
+          <label for="cand-email">E-mail (opcional)</label>
+          <input type="email" id="cand-email" name="email" placeholder="seu@email.com" autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="cand-cargo">Vaga de interesse</label>
+          <select id="cand-cargo" name="cargo">
+            <option value="Corretor">Corretor</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="cand-mensagem">Conte um pouco sobre você (opcional)</label>
+          <textarea id="cand-mensagem" name="mensagem" rows="3" placeholder="Experiência, disponibilidade, etc."></textarea>
+        </div>
+        <button type="submit" class="form-submit" data-label="Enviar candidatura">Enviar candidatura</button>
+      </form>
+    </div>`;
+  document.body.appendChild(modal);
+
+  document.getElementById("modal-candidatura-close").addEventListener("click", () => _fecharModal("modal-candidatura"));
+  modal.addEventListener("click", e => { if (e.target === modal) _fecharModal("modal-candidatura"); });
+  document.getElementById("cand-tel").addEventListener("input", e => _maskTel(e.target));
+
+  document.getElementById("form-candidatura").addEventListener("submit", async e => {
+    e.preventDefault();
+    if (_leadDebounce) return;
+    const form = e.target;
+    const nome = form.nome.value.trim();
+    const tel = form.telefone.value.trim();
+    const email = form.email.value.trim();
+    const cargo = form.cargo.value;
+    const mensagem = form.mensagem.value.trim();
+
+    if (!nome) { _setEstado("form-candidatura", "erro", "Preencha seu <strong>nome</strong>."); return; }
+    if (tel.replace(/\D/g, "").length < 10) { _setEstado("form-candidatura", "erro", "Número de <strong>WhatsApp inválido</strong>."); return; }
+
+    const payload = { tipo: "candidatura", nome, telefone: tel.replace(/\D/g, ""), email, cargo, mensagem, origem: "site" };
+
+    _setEstado("form-candidatura", "loading");
+    _leadDebounce = true;
+    setTimeout(() => { _leadDebounce = false; }, DEBOUNCE_MS);
+
+    try {
+      await _sbInsert("candidaturas", {
+        nome: payload.nome, telefone: payload.telefone, email: payload.email,
+        cargo: payload.cargo, mensagem: payload.mensagem, origem: "site"
+      });
+      _notificarAppsScript("notificar_candidatura", payload);
+      _setEstado("form-candidatura", "sucesso", `
+        <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <div><h4>Candidatura enviada!</h4><p>Recebemos seus dados. Entraremos em contato pelo WhatsApp caso seu perfil tenha aderência à vaga.</p></div>`);
+    } catch {
+      _fallbackCandidaturaWA(payload);
+    }
+  });
+}
+
+function _fallbackCandidaturaWA(p) {
+  const msg = `Olá! Gostaria de me candidatar à vaga de ${p.cargo}.\n\nMeu nome: ${p.nome}${p.mensagem ? "\n" + p.mensagem : ""}`;
+  window.open(`https://wa.me/${WA_NUM}?text=${encodeURIComponent(msg)}`, "_blank");
+  _setEstado("form-candidatura", "sucesso", `
+    <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <div><h4>WhatsApp aberto!</h4><p>Uma conversa foi aberta com seus dados pré-preenchidos.</p></div>`);
+}
+
+// ESC fecha qualquer modal de lead/agenda/candidatura
 document.addEventListener("keydown", e => {
-  if (e.key === "Escape") { _fecharModal("modal-lead"); _fecharModal("modal-agendar"); }
+  if (e.key === "Escape") { _fecharModal("modal-lead"); _fecharModal("modal-agendar"); _fecharModal("modal-candidatura"); }
 });
 
 window.openModalLead = openModalLead;
 window.openModalAgendamento = openModalAgendamento;
+window.openModalCandidatura = openModalCandidatura;

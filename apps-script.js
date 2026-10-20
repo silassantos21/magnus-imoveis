@@ -22,6 +22,7 @@ function doPost(e) {
 
     if (dados.tipo === "notificar_lead")        return _notificarLead(dados);
     if (dados.tipo === "notificar_agendamento") return _notificarAgendamento(dados);
+    if (dados.tipo === "notificar_candidatura") return _notificarCandidatura(dados);
 
     return _resposta(400, "Tipo inválido");
   } catch (err) {
@@ -172,6 +173,67 @@ function _notificarAgendamento(d) {
   _confirmarClienteEmail(d, "agendamento", dataFmt);
 
   return _resposta(200, "Email e Calendar enviados");
+}
+
+// ===== NOTIFICAÇÃO DE CANDIDATURA — "Trabalhe Conosco" (email) =====
+
+function _notificarCandidatura(d) {
+  const ts = new Date();
+
+  const htmlCand = `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f1f5f9;font-family:Arial,sans-serif">
+<table width="100%" cellpadding="0" cellspacing="0" style="padding:32px 16px"><tr><td align="center">
+<table width="540" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,.08)">
+  <tr><td style="background:#0f172a;padding:24px 32px;text-align:center">
+    <p style="margin:0;font-size:22px;font-weight:800;color:#fff;letter-spacing:2px">MAGNUS <span style="color:#c9a84c">IMÓVEIS</span></p>
+    <p style="margin:5px 0 0;font-size:11px;color:#94a3b8;letter-spacing:1px">CRECI-PJ 8817</p>
+  </td></tr>
+  <tr><td style="padding:16px 32px 12px;background:#fafafa;border-bottom:1px solid #e2e8f0">
+    <p style="margin:0;font-size:11px;font-weight:700;color:#c9a84c;text-transform:uppercase;letter-spacing:1.5px">Nova Candidatura — Trabalhe Conosco</p>
+    <p style="margin:3px 0 0;font-size:12px;color:#64748b">Recebida em ${ts.toLocaleString("pt-BR")}</p>
+  </td></tr>
+  <tr><td style="padding:24px 32px">
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr><td style="padding:9px 0;border-bottom:1px solid #f1f5f9">
+        <p style="margin:0;font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.8px">Nome</p>
+        <p style="margin:3px 0 0;font-size:15px;color:#0f172a;font-weight:600">${d.nome || "—"}</p>
+      </td></tr>
+      <tr><td style="padding:9px 0;border-bottom:1px solid #f1f5f9">
+        <p style="margin:0;font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.8px">WhatsApp</p>
+        <p style="margin:3px 0 0;font-size:15px;color:#0f172a;font-weight:600">${d.telefone || "—"}</p>
+      </td></tr>
+      <tr><td style="padding:9px 0;border-bottom:1px solid #f1f5f9">
+        <p style="margin:0;font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.8px">E-mail</p>
+        <p style="margin:3px 0 0;font-size:15px;color:#0f172a;font-weight:600">${d.email || "não informado"}</p>
+      </td></tr>
+      <tr><td style="padding:9px 0;border-bottom:1px solid #f1f5f9">
+        <p style="margin:0;font-size:10px;font-weight:700;color:#c9a84c;text-transform:uppercase;letter-spacing:.8px">Vaga de interesse</p>
+        <p style="margin:3px 0 0;font-size:15px;color:#0f172a;font-weight:600">${d.cargo || "—"}</p>
+      </td></tr>
+      ${d.mensagem ? `<tr><td style="padding:9px 0">
+        <p style="margin:0;font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.8px">Mensagem</p>
+        <p style="margin:3px 0 0;font-size:13px;color:#374151">${d.mensagem}</p>
+      </td></tr>` : ""}
+    </table>
+    <p style="margin:20px 0 0;text-align:center">
+      <a href="https://wa.me/55${(d.telefone||"").replace(/\D/g,"")}" style="display:inline-block;background:#25d366;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:13px;font-weight:700">Responder no WhatsApp</a>
+    </p>
+  </td></tr>
+  <tr><td style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:14px 32px;text-align:center">
+    <p style="margin:0;font-size:11px;color:#94a3b8">Magnus Imóveis · R. José do Carmo de Oliveira, 82 - Tirol, Belo Horizonte/MG</p>
+    <p style="margin:3px 0 0;font-size:11px;color:#94a3b8">(31) 3321-6775 · magnusimoveisbh@hotmail.com</p>
+  </td></tr>
+</table>
+<p style="margin:12px 0 0;font-size:10px;color:#94a3b8;text-align:center">Notificação automática — Magnus Imóveis</p>
+</td></tr></table></body></html>`;
+
+  MailApp.sendEmail({
+    to: EMAIL_CORRETOR,
+    subject: "Nova candidatura — " + (d.cargo || "vaga") + " — " + (d.nome || "sem nome"),
+    body: "Candidatura: " + (d.nome || "—") + " | " + (d.telefone || "—") + " | Vaga: " + (d.cargo || "—"),
+    htmlBody: htmlCand
+  });
+
+  return _resposta(200, "Email enviado");
 }
 
 // ===== CONFIRMAÇÃO AO CLIENTE (opcional, só se ele informou e-mail) =====
