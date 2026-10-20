@@ -215,6 +215,7 @@ function _notificarCandidatura(d) {
       </td></tr>` : ""}
     </table>
     <p style="margin:20px 0 0;text-align:center">
+      ${d.curriculo_url ? `<a href="${d.curriculo_url}" style="display:inline-block;background:#0f172a;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:13px;font-weight:700;margin-right:8px">Ver Currículo (PDF)</a>` : ""}
       <a href="https://wa.me/55${(d.telefone||"").replace(/\D/g,"")}" style="display:inline-block;background:#25d366;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:13px;font-weight:700">Responder no WhatsApp</a>
     </p>
   </td></tr>
@@ -229,7 +230,7 @@ function _notificarCandidatura(d) {
   MailApp.sendEmail({
     to: EMAIL_CORRETOR,
     subject: "Nova candidatura — " + (d.cargo || "vaga") + " — " + (d.nome || "sem nome"),
-    body: "Candidatura: " + (d.nome || "—") + " | " + (d.telefone || "—") + " | Vaga: " + (d.cargo || "—"),
+    body: "Candidatura: " + (d.nome || "—") + " | " + (d.telefone || "—") + " | Vaga: " + (d.cargo || "—") + (d.curriculo_url ? " | Currículo: " + d.curriculo_url : ""),
     htmlBody: htmlCand
   });
 

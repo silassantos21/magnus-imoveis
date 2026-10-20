@@ -10,6 +10,12 @@ const _SB_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsI
 const WA_NUM = "5531999845813";
 const DEBOUNCE_MS = 10000; // 10s anti-spam
 
+// Upload de currículo (PDF) — preset "unsigned" dedicado, restrito via validação
+// no próprio código (tipo e tamanho), já que o preset não limita isso no Cloudinary.
+const CLOUDINARY_CLOUD_CURRICULO  = "dfwmysxea";
+const CLOUDINARY_PRESET_CURRICULO = "curriculos";
+const CURRICULO_TAMANHO_MAX = 5 * 1024 * 1024; // 5MB
+
 // ===== VENDEDORES (rodízio) =====
 const VENDEDORES = [
   { nome: "Thiago Ferreira",  telefone: "5531999845813", email: "magnusimoveisbh@hotmail.com" },
@@ -627,6 +633,10 @@ function _criarModalCandidatura() {
           <label for="cand-mensagem">Conte um pouco sobre você (opcional)</label>
           <textarea id="cand-mensagem" name="mensagem" rows="3" placeholder="Experiência, disponibilidade, etc."></textarea>
         </div>
+        <div class="form-group">
+          <label for="cand-curriculo">Currículo em PDF (opcional, até 5MB)</label>
+          <input type="file" id="cand-curriculo" name="curriculo" accept="application/pdf">
+        </div>
         <button type="submit" class="form-submit" data-label="Enviar candidatura">Enviar candidatura</button>
       </form>
     </div>`;
@@ -645,20 +655,33 @@ function _criarModalCandidatura() {
     const email = form.email.value.trim();
     const cargo = form.cargo.value;
     const mensagem = form.mensagem.value.trim();
+    const arquivo = form.curriculo.files[0];
 
     if (!nome) { _setEstado("form-candidatura", "erro", "Preencha seu <strong>nome</strong>."); return; }
     if (tel.replace(/\D/g, "").length < 10) { _setEstado("form-candidatura", "erro", "Número de <strong>WhatsApp inválido</strong>."); return; }
-
-    const payload = { tipo: "candidatura", nome, telefone: tel.replace(/\D/g, ""), email, cargo, mensagem, origem: "site" };
+    if (arquivo && arquivo.type !== "application/pdf") { _setEstado("form-candidatura", "erro", "O currículo precisa ser um arquivo <strong>PDF</strong>."); return; }
+    if (arquivo && arquivo.size > CURRICULO_TAMANHO_MAX) { _setEstado("form-candidatura", "erro", "O currículo precisa ter no máximo <strong>5MB</strong>."); return; }
 
     _setEstado("form-candidatura", "loading");
     _leadDebounce = true;
     setTimeout(() => { _leadDebounce = false; }, DEBOUNCE_MS);
 
+    let curriculoUrl = "";
+    if (arquivo) {
+      try {
+        curriculoUrl = await _uploadCurriculo(arquivo);
+      } catch {
+        _setEstado("form-candidatura", "erro", "Falha ao enviar o currículo. Tente novamente ou remova o anexo.");
+        return;
+      }
+    }
+
+    const payload = { tipo: "candidatura", nome, telefone: tel.replace(/\D/g, ""), email, cargo, mensagem, curriculo_url: curriculoUrl, origem: "site" };
+
     try {
       await _sbInsert("candidaturas", {
         nome: payload.nome, telefone: payload.telefone, email: payload.email,
-        cargo: payload.cargo, mensagem: payload.mensagem, origem: "site"
+        cargo: payload.cargo, mensagem: payload.mensagem, curriculo_url: payload.curriculo_url || null, origem: "site"
       });
       _notificarAppsScript("notificar_candidatura", payload);
       _setEstado("form-candidatura", "sucesso", `
@@ -670,8 +693,24 @@ function _criarModalCandidatura() {
   });
 }
 
+// Upload direto do navegador pro Cloudinary (preset "unsigned" dedicado,
+// resource_type=raw — PDF não é imagem/vídeo). Tipo e tamanho já validados
+// antes de chamar essa função.
+async function _uploadCurriculo(file) {
+  const fd = new FormData();
+  fd.append("file", file);
+  fd.append("upload_preset", CLOUDINARY_PRESET_CURRICULO);
+  const r = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_CURRICULO}/raw/upload`, {
+    method: "POST",
+    body: fd
+  });
+  if (!r.ok) throw new Error("Upload do currículo falhou");
+  const dados = await r.json();
+  return dados.secure_url;
+}
+
 function _fallbackCandidaturaWA(p) {
-  const msg = `Olá! Gostaria de me candidatar à vaga de ${p.cargo}.\n\nMeu nome: ${p.nome}${p.mensagem ? "\n" + p.mensagem : ""}`;
+  const msg = `Olá! Gostaria de me candidatar à vaga de ${p.cargo}.\n\nMeu nome: ${p.nome}${p.mensagem ? "\n" + p.mensagem : ""}${p.curriculo_url ? "\nCurrículo: " + p.curriculo_url : ""}`;
   window.open(`https://wa.me/${WA_NUM}?text=${encodeURIComponent(msg)}`, "_blank");
   _setEstado("form-candidatura", "sucesso", `
     <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
