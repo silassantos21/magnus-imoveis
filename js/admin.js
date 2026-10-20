@@ -1017,6 +1017,97 @@ function atualizarPreview() {
     </div>`;
 }
 
+// ===== GERAR DESCRIÇÃO AUTOMÁTICA =====
+// Monta um texto padrão a partir dos dados já cadastrados (sem IA — puro
+// template), respeitando o gênero gramatical de cada tipo de imóvel.
+const TIPO_TEXTO = {
+  "Apartamento":    { artigo: "o", nome: "apartamento",    masc: true  },
+  "Casa":           { artigo: "a", nome: "casa",           masc: false },
+  "Cobertura":      { artigo: "a", nome: "cobertura",      masc: false },
+  "Área privativa": { artigo: "a", nome: "área privativa", masc: false },
+  "Terreno":        { artigo: "o", nome: "lote",           masc: true  },
+  "Galpão":         { artigo: "o", nome: "galpão",         masc: true  },
+  "Comercial":      { artigo: "o", nome: "imóvel comercial", masc: true }
+};
+
+function _listaNatural(itens) {
+  if (itens.length === 0) return "";
+  if (itens.length === 1) return itens[0];
+  return itens.slice(0, -1).join(", ") + " e " + itens[itens.length - 1];
+}
+
+function gerarDescricaoAutomatica() {
+  const form = document.getElementById("form-imovel");
+  const g = n => (form.querySelector(`[name="${n}"]`)?.value || "").trim();
+
+  const tipo = g("tipo");
+  const info = TIPO_TEXTO[tipo];
+  if (!tipo || !info) return showToast("Selecione o tipo do imóvel primeiro", "error");
+
+  const textareaDesc = form.querySelector('[name="descricao"]');
+  if (textareaDesc.value.trim() && !confirm("Já existe uma descrição escrita. Substituir pelo texto gerado automaticamente?")) return;
+
+  const bairro = g("bairro") || "—";
+  const cidade = g("cidade") || "—";
+  const estado = g("estado") || "MG";
+  const nomeCap = info.nome.charAt(0).toUpperCase() + info.nome.slice(1);
+
+  const frase1 = `${nomeCap} à venda na região do ${bairro}, em ${cidade}/${estado}.`;
+
+  // Frase 2: especificações — varia bastante entre terreno/galpão/comercial (área + topografia)
+  // e os tipos residenciais verticais/casa (área + cômodos).
+  let frase2 = "";
+  const ehTerrenoLike = ["Terreno", "Galpão", "Comercial"].includes(tipo);
+  if (ehTerrenoLike) {
+    const area = parseMilharDecimal(g("area_terreno")) || parseMilharDecimal(g("area_util"));
+    const topografia = g("topografia");
+    const TOPOGRAFIA_TEXTO = { "Plano": "topografia plana", "Aclive": "topografia em aclive", "Declive": "topografia em declive" };
+    const partes = [];
+    if (area) partes.push(`${formatarMilharDecimal(area)} m²`);
+    if (topografia && TOPOGRAFIA_TEXTO[topografia]) partes.push(TOPOGRAFIA_TEXTO[topografia]);
+    if (partes.length) frase2 = `${nomeCap} com ${_listaNatural(partes)}.`;
+  } else {
+    const areaUtil = parseMilharDecimal(g("area_util"));
+    const areaConstruida = parseMilharDecimal(g("area_construida"));
+    const area = areaUtil || areaConstruida;
+    const quartos = g("quartos");
+    const banheiros = g("banheiros");
+    const vagas = g("vagas");
+    const partes = [];
+    if (area) partes.push(`${formatarMilharDecimal(area)} m² de área ${areaUtil ? "útil" : "construída"}`);
+    if (quartos) partes.push(`${quartos} quarto${quartos == 1 ? "" : "s"}`);
+    if (banheiros) partes.push(`${banheiros} banheiro${banheiros == 1 ? "" : "s"}`);
+    if (vagas) partes.push(`${vagas} vaga${vagas == 1 ? "" : "s"} de garagem`);
+    if (partes.length) frase2 = `${info.artigo.charAt(0).toUpperCase() + info.artigo.slice(1)} ${info.nome} conta com ${_listaNatural(partes)}.`;
+  }
+
+  // Frase 3: características marcadas (só as visíveis/aplicáveis ao tipo atual)
+  const caracteristicas = [...form.querySelectorAll(".campo-condicional:not(.campo-condicional-oculto) input[type=checkbox]:checked, .checkbox-label:not(.campo-condicional) input[type=checkbox]:checked")]
+    .filter(el => el.name !== "destaque" && el.name !== "aceita_financiamento")
+    .map(el => {
+      const label = el.closest("label");
+      const span = label.querySelector(".rotulo-texto");
+      return (span ? span.textContent : label.textContent).trim();
+    })
+    .filter(Boolean);
+  const frase3 = caracteristicas.length ? `Possui ${_listaNatural(caracteristicas.map(c => c.toLowerCase()))}.` : "";
+
+  // Frase 3b: financiamento — fora da lista genérica porque o rótulo do checkbox
+  // é uma pergunta ("Aceita financiamento?"), não ficaria bem no meio de "Possui...".
+  const frase3b = form.querySelector('[name="aceita_financiamento"]').checked ? "Aceita financiamento." : "";
+
+  // Frase 4: valor
+  const preco = parseMilhar(g("preco"));
+  const frase4 = preco ? `Valor: R$ ${preco.toLocaleString("pt-BR")},00.` : "";
+
+  // Frase 5: contato
+  const frase5 = "Telefone: (31) 99984-5813.";
+
+  textareaDesc.value = [frase1, frase2, frase3, frase3b, frase4, frase5].filter(Boolean).join(" ");
+  atualizarPreview();
+  showToast("Descrição gerada!", "success");
+}
+
 // ===== LEADS =====
 
 function getLeadsFiltrados() {
@@ -1706,6 +1797,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (cursorNoFim) input.setSelectionRange(input.value.length, input.value.length);
     });
   });
+
+  document.getElementById("btn-gerar-descricao").addEventListener("click", gerarDescricaoAutomatica);
 
   document.querySelector('#form-imovel [name="ref"]').addEventListener("input", e => {
     delete e.target.dataset.auto;
