@@ -240,6 +240,8 @@ const CARACTERISTICAS_BOOL = [
     icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>` },
   { campo: "ponto_ar_condicionado", label: "Ponto de ar-condicionado",
     icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="7" rx="2"/><path d="M6 13v4M10 13v4M14 13v4M18 13v4"/><circle cx="19" cy="9.5" r=".6"/></svg>` },
+  { campo: "ponto_recarga_eletrica", label: "Ponto de recarga elétrica",
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="10" width="12" height="9" rx="2"/><path d="M6 10V6a1 1 0 011-1h0a1 1 0 011 1v4M10 10V6a1 1 0 011-1h0a1 1 0 011 1v4"/><path d="M15 13h3l-2 3h3l-4 5v-4h-2"/></svg>` },
   { campo: "agua_aquecida_cozinha", label: "Pré disposição - Água aquecida na cozinha",
     icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 2c.4.9.9.9.9 1.8M14 2c.4.9.9.9.9 1.8"/><path d="M12 5.5l5.7 6.2a8 8 0 11-11.4 0z"/></svg>` },
   { campo: "agua_aquecida_suite", label: "Pré disposição - Água aquecida na suíte",
