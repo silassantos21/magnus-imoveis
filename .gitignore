@@ -1,3 +1,15 @@
 .DS_Store
 *.log
 node_modules/
+
+# Documentos internos/sensíveis (contrato, horas, senhas) — vivem fora do
+# repositório, em ../documentos-privados-magnus/. Essas entradas são só uma
+# proteção extra caso alguém recrie esses arquivos dentro de docs/ por engano.
+docs/registro-horas.html
+docs/registro-horas-outubro.html
+docs/contrato-servicos.html
+docs/faq-contrato.html
+docs/tutorial-corretor.html
+docs/briefing-sistema.html
+docs/apresentacao-comercial.html
+docs/*.pdf
